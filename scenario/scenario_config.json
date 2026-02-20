@@ -5,29 +5,29 @@
         "randomSeed": 268965854,
         "projection": {
             "centerCoordinates": {
-                "latitude": 52.525192,
-                "longitude": 13.422281
+                "latitude": 52.500631,
+                "longitude": 13.312406
             },
             "cartesianOffset": {
-                "x": -369461.94,
-                "y": -5798955.14
+                "x": -372355.94,
+                "y": -5804722.35
             }
         },
         "network": {
-           "netMask": "255.0.0.0",
-           "vehicleNet": "10.0.0.0",
-           "rsuNet": "11.0.0.0",
-           "tlNet": "12.0.0.0",
-           "csNet": "13.0.0.0",
-           "serverNet": "14.0.0.0",
-           "tmcNet": "15.0.0.0"
+            "netMask": "255.0.0.0",
+            "vehicleNet": "10.0.0.0",
+            "rsuNet": "11.0.0.0",
+            "tlNet": "12.0.0.0",
+            "csNet": "13.0.0.0",
+            "serverNet": "14.0.0.0",
+            "tmcNet": "15.0.0.0"
         }
     },
     "federates": {
         "application": true,
         "cell": false,
         "sns": false,
-        "sumo": true,    
+        "sumo": true,
         "output": false
     }
 }
