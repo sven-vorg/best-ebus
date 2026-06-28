@@ -1,0 +1,65 @@
+<additional>
+    <!-- Solaris Urbino 18 electric -->
+    <!-- Source: SpecSheet https://www.ebusco.com/wp-content/uploads/Website_Brochure_EN_V2-1.pdf -->
+    <!-- Secondary Source: https://www.urban-transport-magazine.com/en/first-ebusco-2-2-for-bvg-berlin-unveiled/ -->
+    <!-- This Bus Model is taken from a magazin concerning the order of 90 vehicles in 2022-->
+    <vType id="Ebusco2.2electric12m"
+            vClass="bus"
+            guiShape="bus"
+            length="12.0"
+            minGap="2.50" 
+            maxSpeed="29.06" 
+            color="yellow" 
+            accel="1.0" 
+            decel="1.0" 
+            sigma="0.0" 
+            emissionClass="Energy/unknown" 
+            mass="12850"> 
+        <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
+        <param key="device.battery.capacity" value="525000"/>
+        <param key="maximumPower" value="150000"/>    
+        <param key="frontSurfaceArea" value="8.211"/>      
+        <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
+        <param key="rotatingMass" value="40"/>                      <!-- Unknown -->
+        <param key="radialDragCoefficient" value="0.1"/>            <!-- Unknown -->
+        <param key="rollDragCoefficient" value="0.01"/>             <!-- Unknown -->
+        <param key="constantPowerIntake" value="100"/>              <!-- Unknown -->
+        <param key="propulsionEfficiency" value=".98"/>             <!-- Unknown -->
+        <param key="recuperationEfficiency" value=".96"/>           <!-- Unknown -->
+        <param key="stoppingThreshold" value="0.1"/>                <!-- Unknown -->             
+        <param key="device.battery.maximumChargeRate" value="150000"/>   
+<!--    <param key="device.battery.chargeLevelTable"/>                   Unknown -->  
+    </vType>
+
+    <!-- Ebusco 2.2 12m -->
+    <!-- Source: SpecSheet https://www.ebusco.com/wp-content/uploads/Website_Brochure_EN_V2-1.pdf -->
+    <!-- Secondary Source: https://www.urban-transport-magazine.com/en/first-ebusco-2-2-for-bvg-berlin-unveiled/ -->
+    <!-- This Bus Model is taken from a magazin concerning the order of 90 vehicles in 2022-->
+    <vType id="Ebusco2.2electric12m"
+            vClass="bus"
+            guiShape="bus"
+            length="12.0"
+            minGap="2.50" 
+            maxSpeed="29.06" 
+            color="yellow" 
+            accel="1.0" 
+            decel="1.0" 
+            sigma="0.0" 
+            emissionClass="Energy/unknown" 
+            mass="12850"> 
+        <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
+        <param key="device.battery.capacity" value="525000"/>
+        <param key="maximumPower" value="150000"/>    
+        <param key="frontSurfaceArea" value="8.211"/>      
+        <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
+        <param key="rotatingMass" value="40"/>                      <!-- Unknown -->
+        <param key="radialDragCoefficient" value="0.1"/>            <!-- Unknown -->
+        <param key="rollDragCoefficient" value="0.01"/>             <!-- Unknown -->
+        <param key="constantPowerIntake" value="100"/>              <!-- Unknown -->
+        <param key="propulsionEfficiency" value=".98"/>             <!-- Unknown -->
+        <param key="recuperationEfficiency" value=".96"/>           <!-- Unknown -->
+        <param key="stoppingThreshold" value="0.1"/>                <!-- Unknown -->             
+        <param key="device.battery.maximumChargeRate" value="150000"/>   
+<!--    <param key="device.battery.chargeLevelTable"/>                   Unknown -->  
+    </vType>
+</additional>

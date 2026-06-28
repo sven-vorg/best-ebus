@@ -1,0 +1,54 @@
+
+<!--
+    Author: Sven Vorgheim \
+    Project: Masterthesis \
+    Disclaimer: The Creation of this File was aided by ChatGPT
+-->
+
+<additional>
+     <taz id="taz_Depot_Muellerstrasse" edges="-E5 -E1 E5 E1 E0 E4 -E0 -E4 -E6.15 E6.15 E14 -E14 E7.32 -E7.32 -E7 E7 -E11 E11 E1.51 -E1.51 -E10 -E2 E10 E9 E2 -E9 -E8 E8 -E2.26 E2.26 -E3 E3 E12 -E12 E13 -E13 E12.26 -E12.26 E15 -E15"/>
+    <chargingStation
+        id="cd_Muellerstrasse_01"
+        name="Depot Müllerstraße"
+        lane="-E19_0"
+        startPos="0"
+        endPos="510.64"
+        power="150000"
+        efficiency="0.95"
+        chargeInTransit="false">
+        <param key="group" value="DepotMS"/>
+    </chargingStation>
+    <chargingStation
+        id="cd_Muellerstrasse_02"
+        name="Depot Müllerstraße"
+        lane="E19.203_0"
+        startPos="0"
+        endPos="489.56"
+        power="150000"
+        efficiency="0.95"
+        chargeInTransit="false">
+        <param key="group" value="DepotMS"/>
+    </chargingStation>
+        <chargingStation
+        id="cd_Cicerostrasse_01"
+        name="Depot Cicerostraße"
+        lane="E1.51_0"
+        startPos="0"
+        endPos="275.24"
+        power="150000"
+        efficiency="0.95"
+        chargeInTransit="false">
+        <param key="group" value="DepotCS"/>
+    </chargingStation>
+    <chargingStation
+        id="cd_Cicerostrasse_02"
+        name="Depot Cicerostraße"
+        lane="-E1.51_0"
+        startPos="0"
+        endPos="263.08"
+        power="150000"
+        efficiency="0.95"
+        chargeInTransit="false">
+        <param key="group" value="DepotCS"/>
+    </chargingStation>
+</additional>
