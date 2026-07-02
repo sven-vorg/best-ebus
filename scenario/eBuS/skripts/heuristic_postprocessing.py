@@ -30,18 +30,6 @@ class HeuristicPostprocessing:
             | self.get_station_decisions(solution_cicerostrasse)
         )
 
-        cs_root = etree.Element(
-            "additional",
-            nsmap={
-                "xsi": "http://www.w3.org/2001/XMLSchema-instance",
-            },
-        )
-
-        cs_root.set(
-            "{http://www.w3.org/2001/XMLSchema-instance}noNamespaceSchemaLocation",
-            "http://sumo.dlr.de/xsd/additional_file.xsd",
-        )
-
         for chargingStation in cs_root.findall("id"):
             id = chargingStation.get(id)
             if id.partition("_")[2] not in combined_stations:
@@ -51,7 +39,7 @@ class HeuristicPostprocessing:
         # Write XML
         tree = etree.ElementTree(cs_root)
         tree.write(
-            "../files/charging_stations_heuristic.add.xml",
+            "./best-ebus/scenario/eBuS/files/charging_stations_heuristic.add.xml",
             encoding="utf-8",
             xml_declaration=True,
             pretty_print=True,
