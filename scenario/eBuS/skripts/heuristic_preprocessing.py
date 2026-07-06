@@ -22,21 +22,6 @@ class HeuristicPreprocessing:
         self.parser.add_argument("--input", type=str, default="./merged_routes.csv", help="Path to the input CSV file")
         self.parser.add_argument("--output", type=str, default="../filess/", help="Path to the output directory for trip files")
 
-    def consolidate_routes(self):
-            files = ["./best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml", "./best-ebus/scenario/eBuS/files/deadhead_routes_cicero_mueller.rou.xml"]
-            root = etree.Element("routes")
-
-            for file in files:
-                tree = etree.parse(file)
-                for route in tree.getroot():
-                    root.append(route)
-
-            etree.ElementTree(root).write(
-                "./best-ebus/scenario/eBuS/files/deadhead_routes_cicero_mueller.rou.xml",
-                encoding="UTF-8",
-                xml_declaration=True,
-            )
-
     def routes_to_trips(self):
         df = pd.read_csv("./best-ebus/scenario/eBuS/files/merged_routes.csv")
 
@@ -85,4 +70,3 @@ class HeuristicPreprocessing:
 if __name__ == "__main__":
     hp = HeuristicPreprocessing()
     hp.routes_to_trips()
-    hp.consolidate_routes()
