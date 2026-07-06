@@ -7,7 +7,7 @@
 
     <input>
         <net-file value="berlin.net.xml"/>
-        <route-files value="electric/optimized_buses.rou.xml"/>
+        <route-files value="electric/routes_sorted.rou.xml"/> 
         <additional-files value="berlin_bus_stops.add.xml"/>
     </input>
 
