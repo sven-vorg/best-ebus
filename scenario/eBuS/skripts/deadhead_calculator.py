@@ -115,8 +115,6 @@ class DeadheadCalculator():
             pretty_print=True,
         )
 
-        os.remove(self.ROUTES)
-
     def main(self):
 
         net = sumolib.net.readNet(self.NETWORK)
@@ -204,8 +202,6 @@ class DeadheadCalculator():
                 color="240,215,34",
                 edges=route["Edges"],
             )
-
-        os.remove(self.ROUTES)    
 
         etree.ElementTree(root).write(
             "best-ebus/scenario/eBuS/files/deadhead_routes_cicero_mueller.rou.xml",

@@ -15,58 +15,32 @@ import pandas as pd
 import numpy as np
 import argparse
 
+from filter_lines import FilterLines
+from routes_to_trips import RoutesToTrips
+from cut_lines import CutLines
+from deadhead_calculator import DeadheadCalculator
+from merge_lines import MergeLines
+
 class HeuristicPreprocessing:
     def __init__(self):
-        self.parser = argparse.ArgumentParser()
-        self.parser.parse_args()
-        self.parser.add_argument("--input", type=str, default="./merged_routes.csv", help="Path to the input CSV file")
-        self.parser.add_argument("--output", type=str, default="../filess/", help="Path to the output directory for trip files")
+        pass
 
-    def routes_to_trips(self):
-        df = pd.read_csv("./best-ebus/scenario/eBuS/files/merged_routes.csv")
+    def main(self):
+        fl = FilterLines()
+        fl.main()
 
-        # explode repetitions
-        df = df.loc[df.index.repeat(df["nr_of_trips_pd"])].copy()
-        df["repetition"] = df.groupby(level=0).cumcount()
+        rtp = RoutesToTrips()
+        rtp.routes_to_trips()
 
-        # Compute timestamps
-        df["trip_begin"] = df["flow_begin"] + df["repetition"] * df["period"]
-        df["trip_end"] = df["trip_begin"] + df["duration"]
+        cl = CutLines()
+        cl.main()
 
-        # Rename columns
-        df = df.rename(columns={
-            "route": "ORIGINAL_TRIP_ID",
-            "trip_begin": "START_TIMESTAMP",
-            "trip_end": "END_TIMESTAMP",
-            "start_stop_id": "START_STOP_ID",
-            "end_stop_id": "END_STOP_ID",
-        })
+        dc = DeadheadCalculator()
+        dc.caculate_station_deadheads()
 
-        # Remove unneeded columns
-        df = df.drop(columns=[
-            "nr_of_buses",
-            "nr_of_repetitions",
-            "nr_of_trips_pd",
-            "line",
-            "flow_begin",
-            "flow_end",
-            "bothdepots",
-            "doubledecker",
-            "period",
-            "duration",
-            "repetition",
-            "type"
-        ])
-
-        df.reset_index(drop=True, inplace=True)
-
-        # Split by depot
-        for depot, depot_df in df.groupby("depot"):
-            depot_df.drop(columns="depot")
-            depot_df.insert(0, "TRIP_ID", range(1, len(depot_df) + 1))
-            depot_df.to_csv(f"./best-ebus/scenario/eBuS/files//trips_{depot}.txt", index=False, sep=";")
-
+        ml = MergeLines()
+        ml.main()
 
 if __name__ == "__main__":
     hp = HeuristicPreprocessing()
-    hp.routes_to_trips()
+    hp.main()

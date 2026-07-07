@@ -3,67 +3,120 @@
 # Imports
 import pandas as pd
 from lxml import etree
+from pathlib import Path
 import math
 import os
 
 class FilterLines():
 
-    def __init__(self):
-        self.SELECTED_LINES = pd.read_csv("best-ebus/scenario/eBuS/files/depot_line_type.csv",sep=",")
-        self.LINES = set(self.SELECTED_LINES["line"])
+#    def __init__(self, output_path: str = "./best-ebus/scenario/eBuS/files/"):
+#        self.output_path = output_path
+#        self.selected_lines = pd.read_csv("best-ebus/scenario/eBuS/files/depot_line_type.csv",sep=",")
+#        self.lines = set(self.selected_lines["line"])
+#
+#        ROUTES = "best-ebus/scenario/sumo/berlin_bus.rou.xml"
+#        self.routes_tree = etree.parse(ROUTES)
+#        self.routes_root = self.routes_tree.getroot()#
+#
+#        self.route_calculations = pd.DataFrame()
 
-        ROUTES = "best-ebus/scenario/sumo/berlin_bus.rou.xml"
-        self.routes_tree = etree.parse(ROUTES)
+
+    def __init__(
+        self,
+        routes_file: str = "best-ebus/scenario/sumo/berlin_bus.rou.xml",
+        selected_lines_file: str = "best-ebus/scenario/eBuS/files/depot_line_type.csv",
+        output_dir: str = "./best-ebus/scenario/eBuS/files/",
+    ):
+        self.routes_file = Path(routes_file)
+        self.selected_lines_file = Path(selected_lines_file)
+        self.output_dir = Path(output_dir)
+
+        self.selected_lines = pd.read_csv(self.selected_lines_file)
+        self.lines = set(self.selected_lines["line"])
+
+        self.routes_tree = etree.parse(self.routes_file)
         self.routes_root = self.routes_tree.getroot()
 
         self.route_calculations = pd.DataFrame()
 
-    def remove_routes(self):
+    def _remove_routes(self):
         for route in self.routes_root.findall("route"):
             anchor = route.get("id").split("_", 1)[0]
-            if anchor not in self.LINES:
+            if anchor not in self.lines:
                 self.routes_root.remove(route)
 
-    def remove_flows(self):
+    def _remove_flows(self):
         for flow in self.routes_root.findall("flow"):
             anchor = flow.get("id").split("_", 1)[0]
-            if anchor not in self.LINES:
+            if anchor not in self.lines:
                 self.routes_root.remove(flow)
+
+    def _find_flow(self, route_id: str):
+        for flow in self.routes_root.findall("flow"):
+            if flow.get("route") == route_id:
+                return flow
+        return None
+
+    def _get_terminal_stops(self, route):
+        stops = route.findall("stop")
+
+        return (
+            stops[0].get("busStop"),
+            stops[-1].get("busStop"),
+            float(stops[-1].get("until")),
+        )
+
+    def _calculate_statistics(
+        self,
+        route_id: str,
+        flow,
+        start_stop_id: str,
+        end_stop_id: str,
+        duration: float,
+    ):
+        period = float(flow.get("period"))
+
+        flow_begin = self.parse_time(flow.get("begin"))
+        flow_end = self.parse_time(flow.get("end"))
+
+        return {
+            "route": route_id,
+            "start_stop_id": start_stop_id,
+            "end_stop_id": end_stop_id,
+            "flow_begin": flow_begin,
+            "flow_end": flow_end,
+            "period": period,
+            "duration": duration,
+            "nr_of_buses": math.ceil(duration / period),
+            "nr_of_repetitions": int((flow_end - flow_begin) / duration),
+            "nr_of_trips_pd": int((flow_end - flow_begin) / period),
+        }
     
     def extract_flow_information(self):
         rows = []
-        for i, route in enumerate(self.routes_root.findall("route")):
-            anchor = route.get("id")
-            stops = route.findall("stop")
-            if stops:
-                start_stop_id = stops[0].get("busStop")
-                end_stop_id = stops[-1].get("busStop")
-            for flow in self.routes_root.findall("flow"):
-                if flow.get("route") == anchor:
-                    period = float(flow.get("period"))
-                    duration = float(stops[-1].get("until"))
-                    nr_of_buses = math.ceil(int(duration) / int(period))
-                    flow_end = self.parse_time(flow.get("end"))
-                    flow_begin = self.parse_time(flow.get("begin"))
-                    # print(flow.get("begin"),flow_begin,flow.get("end"),flow_end)
-                    nr_of_repetitions = (flow_end-flow_begin)/duration
-                    nr_of_trips_pd = (flow_end-flow_begin)/period
-                    # Add the repeat attribute to the route
-                    # route.set("repeat", str(int(nr_of_repetitions)))
-                    rows.append({
-                        "route": anchor,
-                        "start_stop_id": start_stop_id,
-                        "end_stop_id": end_stop_id,
-                        "flow_end": flow_end,
-                        "flow_begin": flow_begin,
-                        "period": period,
-                        "duration": duration,
-                        "nr_of_buses": nr_of_buses,
-                        "nr_of_repetitions": int(nr_of_repetitions),
-                        "nr_of_trips_pd": int(nr_of_trips_pd)
-                    })
-                    self.routes_root.remove(flow)
-            self.route_calculations = pd.DataFrame(rows)
+
+        for route in self.routes_root.findall("route"):
+            route_id = route.get("id")
+
+            flow = self._find_flow(route_id)
+            if flow is None:
+                continue
+
+            start_stop, end_stop, duration = self._get_terminal_stops(route)
+
+            rows.append(
+                self._calculate_statistics(
+                    route_id,
+                    flow,
+                    start_stop,
+                    end_stop,
+                    duration,
+                )
+            )
+
+            self.routes_root.remove(flow)
+
+        self.route_calculations = pd.DataFrame(rows)
 
     def write_xml_to_file(self):
         self.routes_tree.write(
@@ -77,14 +130,71 @@ class FilterLines():
         # Extract the line name from the route ID
         self.route_calculations["line"] = self.route_calculations["route"].str.split("_").str[0]
         # Join on the Line column
-        merged = self.route_calculations.merge(self.SELECTED_LINES, on="line", how="left")
+        merged = self.route_calculations.merge(self.selected_lines, on="line", how="left")
         merged.to_csv("best-ebus/scenario/eBuS/files/merged_routes.csv", index=False)
 
 
+    def routes_to_trips(self, create_csv: bool = True) -> dict:
+        """
+        Creates mutliple csv / dict{df} of the desired format for each depot in the input: 
+        TRIP_ID;ORIGINAL_TRIP_ID;START_STOP_ID;END_STOP_ID;START_TIMESTAMP;END_TIMESTAMP
+        """
+        # Extract the line name from the route ID
+        self.route_calculations["line"] = self.route_calculations["route"].str.split("_").str[0]
+        # Join on the Line column
+        df = self.route_calculations.merge(self.selected_lines, on="line", how="left")
+
+        # explode repetitions
+        df = df.loc[df.index.repeat(df["nr_of_trips_pd"])].copy()
+        df["repetition"] = df.groupby(level=0).cumcount()
+
+        # Compute timestamps
+        df["trip_begin"] = df["flow_begin"] + df["repetition"] * df["period"]
+        df["trip_end"] = df["trip_begin"] + df["duration"]
+
+        # Rename columns
+        df = df.rename(columns={
+            "route": "ORIGINAL_TRIP_ID",
+            "trip_begin": "START_TIMESTAMP",
+            "trip_end": "END_TIMESTAMP",
+            "start_stop_id": "START_STOP_ID",
+            "end_stop_id": "END_STOP_ID",
+        })
+
+        # Remove unneeded columns
+        df = df.drop(columns=[
+            "nr_of_buses",
+            "nr_of_repetitions",
+            "nr_of_trips_pd",
+            "line",
+            "flow_begin",
+            "flow_end",
+            "bothdepots",
+            "doubledecker",
+            "period",
+            "duration",
+            "repetition",
+            "type"
+        ])
+
+        df.reset_index(drop=True, inplace=True)
+
+        depot_dict = {}
+        # Split by depot
+        for depot, depot_df in df.groupby("depot"):
+            depot_df.drop(columns="depot")
+            depot_df.insert(0, "TRIP_ID", range(1, len(depot_df) + 1))
+            if create_csv:
+                depot_df.to_csv(f"{self.output_dir}trips_{depot}.txt", index=False, sep=";")
+            depot_dict[f"{depot}"] = depot_df
+
+        return depot_dict
+
     def main(self):
-        self.remove_routes()
-        self.remove_flows()
+        self._remove_routes()
+        self._remove_flows()
         self.extract_flow_information()
+        self.routes_to_trips(True)
         self.write_xml_to_file()
         self.write_merged_csv_to_file()
 
