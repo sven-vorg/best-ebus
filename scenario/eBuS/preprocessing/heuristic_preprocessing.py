@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-"""Skript for simplyfying rou.xml files for use in a heuristic method.
-Output-Format: TRIP_ID;ORIGINAL_TRIP_ID;START_STOP_ID;END_STOP_ID;depot;START_TIMESTAMP;END_TIMESTAMP"""
-
 __author__ = "Sven Vorgheim"
 __license__ = "GPL v2 or later (In accoardance to SUMO)"
 __maintainer__ = "Sven Vorgheim"
@@ -16,7 +13,7 @@ import numpy as np
 import argparse
 
 from filter_lines import FilterLines
-from routes_to_trips import RoutesToTrips
+#from routes_to_trips import RoutesToTrips
 from cut_lines import CutLines
 from deadhead_calculator import DeadheadCalculator
 from merge_lines import MergeLines
@@ -29,11 +26,8 @@ class HeuristicPreprocessing:
         fl = FilterLines()
         fl.main()
 
-        rtp = RoutesToTrips()
-        rtp.routes_to_trips()
-
         cl = CutLines()
-        cl.main()
+        cl.trim_routes()
 
         dc = DeadheadCalculator()
         dc.caculate_station_deadheads()

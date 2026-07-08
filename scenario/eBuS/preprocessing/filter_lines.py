@@ -9,18 +9,6 @@ import os
 
 class FilterLines():
 
-#    def __init__(self, output_path: str = "./best-ebus/scenario/eBuS/files/"):
-#        self.output_path = output_path
-#        self.selected_lines = pd.read_csv("best-ebus/scenario/eBuS/files/depot_line_type.csv",sep=",")
-#        self.lines = set(self.selected_lines["line"])
-#
-#        ROUTES = "best-ebus/scenario/sumo/berlin_bus.rou.xml"
-#        self.routes_tree = etree.parse(ROUTES)
-#        self.routes_root = self.routes_tree.getroot()#
-#
-#        self.route_calculations = pd.DataFrame()
-
-
     def __init__(
         self,
         routes_file: str = "best-ebus/scenario/sumo/berlin_bus.rou.xml",
@@ -185,7 +173,7 @@ class FilterLines():
             depot_df.drop(columns="depot")
             depot_df.insert(0, "TRIP_ID", range(1, len(depot_df) + 1))
             if create_csv:
-                depot_df.to_csv(f"{self.output_dir}trips_{depot}.txt", index=False, sep=";")
+                depot_df.to_csv(f"{self.output_dir}/trips_{depot}.txt", index=False, sep=";")
             depot_dict[f"{depot}"] = depot_df
 
         return depot_dict

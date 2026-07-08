@@ -9,7 +9,7 @@ stop, between consecutive trips, and back to the depot.
 Entry point:
     main() -> builds everything in memory, rebases stop "until"
                timestamps, sorts vehicles by depart time, and writes two
-               files (nothing intermediate is written to disk):
+               files:
                  - ROUTES_OUTPUT:   one <route id=... edges=...> per bus,
                                     each carrying its ordered <stop>s
                  - VEHICLES_OUTPUT: one <vehicle> per bus, referencing its
@@ -134,7 +134,8 @@ class RouteConcatenation:
                 vehicles_root,
                 "vehicle",
                 id=f"cicero_{bus['bus_id']}",
-                type="bus",
+                # Do the conversion to electric here?
+                type="Ebusco2.2electric12m",
                 route=route_id,
                 depart=str(self.trip_to_depart[trip_sequence[0]]),
                 color="1,0,0",
@@ -161,6 +162,7 @@ class RouteConcatenation:
             pretty_print=True,
         )
         logger.info("Wrote %s", path)
+        print(f"Written {path} to disk.")
 
     # ------------------------------------------------------------------
     # Internal helpers
