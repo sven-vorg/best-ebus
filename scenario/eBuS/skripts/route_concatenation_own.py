@@ -19,10 +19,6 @@ Each generated <route> carries the ordered passenger <stop> elements of
 its real trips (deadhead legs contribute none), with their "until"
 timestamps re-based so they increase monotonically across the whole
 concatenated route instead of resetting at each original trip boundary.
-
-Before any of that stitching happens, adapt_duration_attributes() widens
-the charging window at every individual trip's own first and last
-passenger stop (see its docstring for details).
 """
 
 from __future__ import annotations
@@ -49,6 +45,7 @@ class RouteConcatenation:
         self,
         input_path: str = "./best-ebus/scenario/eBuS/files/solution_cicerostrasse.json",
         input_dict: str = "./best-ebus/scenario/eBuS/files/trips_cicerostrasse.txt",
+        chargers_dict: str = "/best-ebus/scenario/eBuS/files/charging_stations.txt",
         routes_path: str = "./best-ebus/scenario/eBuS/files/merged_deadheads_routes.rou.xml",
         routes_output_path: str = "./best-ebus/scenario/sumo/electric/e_routes.rou.xml",
         vehicles_output_path: str = "./best-ebus/scenario/sumo/electric/e_vehicles.rou.xml",
@@ -61,11 +58,6 @@ class RouteConcatenation:
         self._load_trip_dictionary(input_dict)
         self._load_route_lookups()
 
-        # Must happen before any edge/stop stitching (join_edges_by_route_id /
-        # join_stops_by_route_id), since those read per-trip stops out of
-        # self.trip_stops, which this call populates.
-        self.adapt_duration_attributes()
-
     # ------------------------------------------------------------------
     # Setup helpers
     # ------------------------------------------------------------------
@@ -74,18 +66,13 @@ class RouteConcatenation:
         Parse trips_cicerostrasse.txt into per-trip lookup dicts.
 
         The file maps every TRIP_ID to its original SUMO trip id, its
-        start/end stop, and its scheduled departure/arrival timestamps.
+        start/end stop, and its scheduled departure timestamp.
         """
         trip_df = pd.read_csv(input_dict, sep=";").set_index("TRIP_ID")
         self.trip_to_original: dict[Any, Any] = trip_df["ORIGINAL_TRIP_ID"].to_dict()
         self.trip_to_start: dict[Any, Any] = trip_df["START_STOP_ID"].to_dict()
         self.trip_to_end: dict[Any, Any] = trip_df["END_STOP_ID"].to_dict()
         self.trip_to_depart: dict[Any, Any] = trip_df["START_TIMESTAMP"].to_dict()
-        # NOTE: assumes trips_cicerostrasse.txt has an "END_TIMESTAMP" column
-        # holding each trip's scheduled end-of-service time, mirroring
-        # START_TIMESTAMP. Rename this if the actual column is called
-        # something else.
-        self.trip_to_arrival: dict[Any, Any] = trip_df["END_TIMESTAMP"].to_dict()
 
     def _load_route_lookups(self) -> None:
         """
@@ -95,13 +82,6 @@ class RouteConcatenation:
         This covers both real trip routes (which have <stop> children with
         passenger-stop info) and "<a>_<b>" deadhead connector routes (which
         have edges but no <stop> children, so "stops" is just an empty list).
-
-        Note: several TRIP_IDs in trips_cicerostrasse.txt can share the same
-        ORIGINAL_TRIP_ID (the same physical route pattern run at different
-        times of day), so route_lookup["stops"] is a shared template, not
-        something specific to one scheduled trip. adapt_duration_attributes
-        copies out of it rather than mutating it in place for exactly this
-        reason.
         """
         route_root = etree.parse(str(self.ROUTES)).getroot()
 
@@ -121,60 +101,8 @@ class RouteConcatenation:
             for route in route_root.findall("route")
         }
 
-    def adapt_duration_attributes(self) -> None:
-        """
-        For every scheduled trip in trips_cicerostrasse.txt, put that
-        trip's stops onto the real seconds-since-midnight timeline and
-        widen the charging window at its last passenger stop, storing the
-        result in self.trip_stops (TRIP_ID -> list of stop dicts) for
-        later stitching.
-
-        route_lookup["stops"] holds "until" values on a trip-local clock
-        (e.g. stepping by a fixed default dwell like 60, 120, 180...)
-        rather than the real-world seconds-since-midnight basis that
-        trips_cicerostrasse.txt's START_TIMESTAMP/END_TIMESTAMP use, and
-        the same route pattern (ORIGINAL_TRIP_ID) is reused by many
-        different scheduled TRIP_IDs at different times of day. So for
-        each TRIP_ID this:
-          1. takes a fresh copy of its route pattern's stops (never
-             mutates route_lookup directly, since it's a shared template),
-          2. rebases every stop's "until" onto the real timeline by
-             anchoring the first stop to the trip's real START_TIMESTAMP
-             and shifting every other stop by that same offset, which
-             preserves the spacing between stops while fixing the basis
-             mismatch,
-          3. at the (now rebased) last stop, the bus could keep charging
-             until the trip's real END_TIMESTAMP, so "until" is pushed out
-             to END_TIMESTAMP and "duration" grows by however much later
-             that is than the rebased "until".
-
-        Must run before any route concatenation (join_edges_by_route_id /
-        join_stops_by_route_id) and before adapt_until_values, since both
-        of those work from the rebased "until" values produced here.
-        """
-        self.trip_stops: dict[Any, list[dict]] = {}
-
-        for trip_id, original_trip_id in self.trip_to_original.items():
-            stops = [dict(stop) for stop in self.route_lookup[original_trip_id]["stops"]]
-            self.trip_stops[trip_id] = stops
-
-            if not stops:
-                continue
-
-            first_stop = stops[0]
-            if first_stop["until"] is not None:
-                start_timestamp = float(self.trip_to_depart[trip_id])
-                offset = start_timestamp - first_stop["until"]
-                for stop in stops:
-                    if stop["until"] is not None:
-                        stop["until"] += offset
-
-            last_stop = stops[-1]
-            if last_stop["until"] is not None:
-                end_timestamp = float(self.trip_to_arrival[trip_id])
-                extra_charging_time = max(0.0, end_timestamp - last_stop["until"])
-                last_stop["duration"] = (last_stop["duration"] or 0.0) + extra_charging_time
-                last_stop["until"] = end_timestamp
+    def _load_chargers_dict(self, chargers_dict: str):
+        self.chargers = pd.read_csv(chargers_dict)
 
     # ------------------------------------------------------------------
     # Public entry points
@@ -281,16 +209,11 @@ class RouteConcatenation:
         Only real trip routes carry passenger stops; deadhead connector
         routes (depot <-> stop) contribute nothing, so this walks the
         original trip ids only rather than the full edge-joining sequence.
-
-        Reads from self.trip_stops (per-TRIP_ID, already widened by
-        adapt_duration_attributes) rather than self.route_lookup directly,
-        and returns fresh copies so later per-route mutations (e.g.
-        adapt_until_values acting on the XML built from these) never leak
-        back into self.trip_stops for reuse by another bus.
         """
         stops: list[dict] = []
         for trip_id in trip_ids:
-            stops.extend(dict(stop) for stop in self.trip_stops[trip_id])
+            original_trip_id = self.trip_to_original[trip_id]
+            stops.extend(self.route_lookup[original_trip_id]["stops"])
         return stops
 
     def adapt_until_values(self, routes_root: etree.Element) -> None:

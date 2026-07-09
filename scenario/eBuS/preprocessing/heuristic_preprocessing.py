@@ -13,7 +13,6 @@ import numpy as np
 import argparse
 
 from filter_lines import FilterLines
-#from routes_to_trips import RoutesToTrips
 from cut_lines import CutLines
 from deadhead_calculator import DeadheadCalculator
 from merge_lines import MergeLines

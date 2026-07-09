@@ -19,19 +19,6 @@ class DeadheadCalculator():
         station_tree = etree.parse(ADDITIONAL)
         self.station_root = station_tree.getroot()
 
-    def get_termination_points(self) -> list:
-        end_edges = [
-            "E19.203",
-            "-E10",
-        ]
-
-        for route in self.routes_root.findall("route"):
-            edges = route.get("edges").split()
-            end_edges.append(edges[0])  # departing edge
-            end_edges.append(edges[-1])  # destination edge
-
-        return end_edges
-
     def caculate_station_deadheads(self):
         print("Starting Network Calculations")
         stations = []
