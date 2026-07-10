@@ -6,7 +6,7 @@ import json
 from sumolib.geomhelper import positionAtShapeOffset
 import datetime
 
-class CharginStations():
+class ChargingStations():
 
     def __init__(self):
         self.net = sumolib.net.readNet("best-ebus/scenario/sumo/berlin.net.xml")
@@ -133,5 +133,5 @@ class CharginStations():
         )
 
 if __name__ == "__main__":
-    cs = CharginStations()
+    cs = ChargingStations()
     cs.main()

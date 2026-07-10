@@ -49,7 +49,7 @@ class RouteConcatenation:
         self,
         input_path: str = "./best-ebus/scenario/eBuS/files/solution_cicerostrasse.json",
         input_dict: str = "./best-ebus/scenario/eBuS/files/trips_cicerostrasse.txt",
-        routes_path: str = "./best-ebus/scenario/eBuS/files/merged_deadheads_routes.rou.xml",
+        routes_path: str = "./best-ebus/scenario/eBuS/files/merged_routes.rou.xml",
         routes_output_path: str = "./best-ebus/scenario/sumo/electric/e_routes.rou.xml",
         vehicles_output_path: str = "./best-ebus/scenario/sumo/electric/e_vehicles.rou.xml",
     ) -> None:

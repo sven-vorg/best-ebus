@@ -15,7 +15,6 @@ import argparse
 from filter_lines import FilterLines
 from cut_lines import CutLines
 from deadhead_calculator import DeadheadCalculator
-from merge_lines import MergeLines
 from termination_points import TerminationPoints
 
 class HeuristicPreprocessing:
@@ -33,10 +32,7 @@ class HeuristicPreprocessing:
         cl.trim_routes()
 
         dc = DeadheadCalculator()
-        dc.caculate_station_deadheads()
-
-        ml = MergeLines()
-        ml.main()
+        dc.calculate_station_deadheads()
 
 if __name__ == "__main__":
     hp = HeuristicPreprocessing()

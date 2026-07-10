@@ -5,7 +5,7 @@ from lxml import etree
 class CutLines():
 
     def __init__(self, 
-        stations_path: str = "best-ebus/scenario/ebus/files/termination_points.add.xml",
+        stations_path: str = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml",
         routes_path: str = "best-ebus/scenario/ebus/files/cicero_mueller_routes.rou.xml",
         output_path: str = "best-ebus/scenario/ebus/files/cicero_mueller_routes_trimmed.rou.xml"
         ):
@@ -14,8 +14,7 @@ class CutLines():
         self.output_path = Path(output_path)
 
     def _load_xml(self):
-        self.stations_tree = etree.parse(self.stations_path)
-        self.stations_root = self.stations_tree.getroot()
+        self.stations_root = etree.parse(self.stations_path).getroot()
 
         self.routes_tree = etree.parse(self.routes_path)
         self.routes_root = self.routes_tree.getroot() 
@@ -25,7 +24,7 @@ class CutLines():
         route_edges = edges.split()
 
         start_index = route_edges.index(start_edge)
-        end_index = route_edges.index(end_edge)
+        end_index = len(route_edges) - 1 - route_edges[::-1].index(end_edge)
 
         return " ".join(route_edges[start_index:end_index + 1])
 
@@ -36,8 +35,8 @@ class CutLines():
             first_stop = stops[0].get("busStop")
             last_stop = stops[-1].get("busStop")
 
-            first_station = self.stations_root.find(f".//chargingStation[@id='{first_stop}']")
-            last_station = self.stations_root.find(f".//chargingStation[@id='{last_stop}']")
+            first_station = self.stations_root.find(f".//busStop[@id='{first_stop}']")
+            last_station = self.stations_root.find(f".//busStop[@id='{last_stop}']")
 
             first_edge = first_station.get("lane").rsplit("_", 1)[0]
             last_edge = last_station.get("lane").rsplit("_", 1)[0]
