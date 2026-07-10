@@ -16,6 +16,7 @@ from filter_lines import FilterLines
 from cut_lines import CutLines
 from deadhead_calculator import DeadheadCalculator
 from merge_lines import MergeLines
+from termination_points import TerminationPoints
 
 class HeuristicPreprocessing:
     def __init__(self):
@@ -24,6 +25,9 @@ class HeuristicPreprocessing:
     def main(self):
         fl = FilterLines()
         fl.main()
+
+        tp = TerminationPoints()
+        tp.main()
 
         cl = CutLines()
         cl.trim_routes()
