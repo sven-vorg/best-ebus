@@ -1,0 +1,10 @@
+# Output Files
+scenario/sumo/output/
+
+# Large Files
+scenario/sumo/berlin.net.xml
+scenario/sumo/berlin_bus.rou.xml
+
+# Untracked generated scenario files
+scenario/sumo/electric/e_stations.add.xml
+scenario/sumo/electric/e_routes.rou.xml
