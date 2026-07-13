@@ -6,24 +6,32 @@ import os
 
 class DeadheadCalculator():
 
-    def __init__(self, network = "best-ebus/scenario/sumo/berlin.net.xml", stations = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml", output = "./best-ebus/scenario/eBuS/files/merged_routes.rou.xml"):
+    def __init__(
+            self, 
+            network: str = "best-ebus/scenario/sumo/berlin.net.xml", 
+            stations: str = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml", 
+            routes: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes_trimmed.rou.xml",
+            termination_points: str = "best-ebus/scenario/eBuS/files/termination_points.txt",
+            depots: tuple = ("cicerostrasse", "muellerstrasse"),
+            output: str = "./best-ebus/scenario/eBuS/files"):
         # Read Network
         self.net = sumolib.net.readNet(network)
         # Parse Routes
-        self.routes_root = etree.parse("best-ebus/scenario/ebus/files/cicero_mueller_routes_trimmed.rou.xml").getroot()
+        self.routes_root = etree.parse(routes).getroot()
         # Parse Stations
         self.station_root = etree.parse(stations).getroot()
         # Load Termination Points
-        self.termination_points = self._load_termination_points("best-ebus/scenario/ebus/files/termination_points.txt")
+        self.termination_points = self._load_termination_points(termination_points)
+        self.depots = depots
         # Set Output
         self.output = output
+
 
 
     def _load_termination_points(self, path):
         return set(pd.read_csv(path, header = None)[0].astype(str))
 
-    def calculate_station_deadheads(self):
-        print("Starting Network Deadhead Calculations")
+    def _get_stations(self):
         stations = []
         for bus_stop in self.station_root.findall("busStop"):
             if bus_stop.attrib["id"] in self.termination_points:
@@ -36,39 +44,62 @@ class DeadheadCalculator():
                     "end_pos": bus_stop.attrib["endPos"],
                     "start_pos": bus_stop.attrib["startPos"],
                 })
+        return stations
 
-        for skip_idx, output_file in [
-            (0, "best-ebus/scenario/ebus/files/deadhead_time_cicerostrasse.txt"),
-            (1, "best-ebus/scenario/ebus/files/deadhead_time_muellerstrasse.txt"),
-        ]:
-            selected = stations[:skip_idx] + stations[skip_idx + 1:]
-            selected[0]["id"] = "1"
+    def _write_deadhead_time(self, time_rows):
+        for depot in self.depots:
+            rows = []
 
-            time_rows = []
-            routes = []
+            for row in time_rows:
+                row = row.copy()
 
-            for origin in selected:
-                from_edge = self.net.getEdge(origin["edge"])
-                from_pos = float(origin["end_pos"])
-                for dest in selected:
-                    to_edge = self.net.getEdge(dest["edge"])
-                    to_pos = float(dest["start_pos"])
-                    edges, cost = self.net.getFastestPath(from_edge, to_edge, fromPos=from_pos, toPos=to_pos)
-                    
-                    edge_ids = [edge.getID() for edge in edges]
-                    time_rows.append({
-                        "FromStopID": origin["id"],
-                        "ToStopID": dest["id"],
-                        "RunTime": round(cost),
-                    })
-                    routes.append({
-                        "FromStopID": origin["id"],
-                        "ToStopID": dest["id"],
-                        "Edges": " ".join(edge_ids),
-                    })
+                if depot in str(row["FromStopID"]):
+                    row["FromStopID"] = "1"
+                if depot in str(row["ToStopID"]):
+                    row["ToStopID"] = "1"
 
-            pd.DataFrame(time_rows).to_csv(output_file, sep=";", index=False)
-        # Routes
+                rows.append(row)
+
+            pd.DataFrame(rows).to_csv(
+                f"{self.output}/deadhead_time_{depot}.txt",
+                sep=";",
+                index=False
+            )
+            print(f"Written deadhead_time_{depot}.txt")
+
+
+    def calculate_station_deadheads(self):
+        print("Starting Network Deadhead Calculations")
+        time_rows = []
+        routes = []
+
+        selected = self._get_stations()
+
+        for origin in selected:
+            from_edge = self.net.getEdge(origin["edge"])
+            from_pos = float(origin["end_pos"])
+            for dest in selected:
+                to_edge = self.net.getEdge(dest["edge"])
+                to_pos = float(dest["start_pos"])
+                edges, cost = self.net.getFastestPath(
+                    from_edge, to_edge, fromPos=from_pos, toPos=to_pos
+                )
+                edge_ids = [edge.getID() for edge in edges]
+                time_rows.append({
+                    "FromStopID": origin["id"],
+                    "ToStopID": dest["id"],
+                    "RunTime": round(cost),
+                })
+                routes.append({
+                    "FromStopID": origin["id"],
+                    "ToStopID": dest["id"],
+                    "Edges": " ".join(edge_ids),
+                })
+        
+        print("Completed Network Deadhead Calculations")
+
+        self._write_deadhead_time(time_rows)
+
         for route in routes:
             etree.SubElement(
                 self.routes_root,
@@ -77,11 +108,11 @@ class DeadheadCalculator():
                 color="0,153,153",
                 edges=route["Edges"],
             )
+
         etree.indent(self.routes_root, space="    ")
-        # Write XML
         tree = etree.ElementTree(self.routes_root)
         tree.write(
-            self.output,
+            f"{self.output}/merged_routes.rou.xml",
             encoding="utf-8",
             xml_declaration=True,
             pretty_print=True,

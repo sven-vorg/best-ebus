@@ -43,7 +43,7 @@ class RouteConcatenation:
     """Builds linked SUMO route + vehicle files from an optimized bus-assignment solution."""
 
     #: id used to anchor deadhead edges ("<DEPOT_ID>_<stop>" / "<stop>_<DEPOT_ID>")
-    DEPOT_ID = "1"
+    DEPOT_ID = "bs_cicerostrasse"
 
     def __init__(
         self,

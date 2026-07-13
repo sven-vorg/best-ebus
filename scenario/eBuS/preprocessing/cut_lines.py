@@ -6,8 +6,8 @@ class CutLines():
 
     def __init__(self, 
         stations_path: str = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml",
-        routes_path: str = "best-ebus/scenario/ebus/files/cicero_mueller_routes.rou.xml",
-        output_path: str = "best-ebus/scenario/ebus/files/cicero_mueller_routes_trimmed.rou.xml"
+        routes_path: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml",
+        output_path: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes_trimmed.rou.xml"
         ):
         self.stations_path = Path(stations_path)
         self.routes_path = Path(routes_path)

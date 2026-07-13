@@ -11,8 +11,8 @@ class ChargingStations():
     def __init__(self):
         self.net = sumolib.net.readNet("best-ebus/scenario/sumo/berlin.net.xml")
         self.STATION_ROOT = etree.parse("best-ebus/scenario/sumo/berlin_bus_stops.add.xml").getroot()
-        self.ROUTE_ROOT = etree.parse("best-ebus/scenario/ebus/files/cicero_mueller_routes.rou.xml").getroot()
-        self.OUTPUT_PATH = "best-ebus/scenario/sumo/electric/"
+        self.ROUTE_ROOT = etree.parse("best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml").getroot()
+        self.OUTPUT_PATH = "best-ebus/scenario/sumo/electric"
 
     def charging_stations_from_solution(self):
         # Parse JSON File
@@ -126,7 +126,7 @@ class ChargingStations():
         # Write the XML to a file
         tree = etree.ElementTree(additional)
         tree.write(
-            f"{self.OUTPUT_PATH}e_stations.add.xml",
+            f"{self.OUTPUT_PATH}/e_stations.add.xml",
             pretty_print=True,
             xml_declaration=True,
             encoding="UTF-8",

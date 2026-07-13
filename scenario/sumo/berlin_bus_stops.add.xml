@@ -5,6 +5,8 @@
 -->
 
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
+    <busStop id="bs_muellerstrasse"  lane="-E19_0" startPos="0" endPos="510.64" name="Depot Müllerstraße" friendlyPos="true" parkingLength="0.00"/>
+    <busStop id="bs_cicerostrasse" lane="E1.51_0" startPos="0" endPos="275.24" name="Depot Cicerostraße" friendlyPos="true" parkingLength="0.00"/>
     <busStop id="9627_2" lane="151525565#3_0" startPos="51.67" endPos="64.67" name="Breitscheidplatz (Berlin)" friendlyPos="true" parkingLength="14.00"/>
     <busStop id="9627_3" lane="529244460#1_0" startPos="56.94" endPos="69.94" name="Bayreuther Str. (Berlin)" friendlyPos="true" parkingLength="14.00"/>
     <busStop id="9627_4" lane="188491275#1_0" startPos="141.69" endPos="154.69" name="Schillstr. (Berlin)" friendlyPos="true" parkingLength="14.00"/>
