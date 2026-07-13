@@ -1,3 +1,4 @@
+
 # In Therory extends sumo chargingStation
 class IntegratedEnergyHub():
 
@@ -16,3 +17,4 @@ class IntegratedEnergyHub():
         essCapacity: float = 500.00,
         ):
         self.essCapacity = essCapacity
+
