@@ -68,6 +68,52 @@ class DeadheadCalculator():
             print(f"Written deadhead_time_{depot}.txt")
 
 
+    def calculate_edge_deadheads(self):
+        print("Starting Network Deadhead Calculations")
+        time_rows = []
+        routes = []
+        for route in self.routes_root.findall("route"):
+            parts = route.get("edges").split(" ")
+            from_edge = self.net.getEdge(parts[0])
+            to_edge = self.net.getEdge(parts[-1])
+            stops = route.findall("stop")
+            from_stop = stops[0].get("busStop")
+            to_stop = stops[-1].get("busStop")
+            edges, cost = self.net.getFastestPath(from_edge, to_edge)
+            time_rows.append({
+                    "FromStopID": from_stop,
+                    "ToStopID": to_stop,
+                    "RunTime": round(cost),
+                })
+            routes.append({
+                    "FromStopID": from_stop,
+                    "ToStopID": to_stop,
+                    "Edges": edges,
+                })        
+        print("Completed Network Deadhead Calculations")
+
+        #self._write_deadhead_time(time_rows)
+        print(routes)
+        return "String"
+        for route in routes:
+            etree.SubElement(
+                self.routes_root,
+                "route",
+                id=f"{route['FromStopID']}_{route['ToStopID']}",
+                color="0,153,153",
+                edges=route["Edges"],
+            )
+
+        etree.indent(self.routes_root, space="    ")
+        tree = etree.ElementTree(self.routes_root)
+        tree.write(
+            f"{self.output}/merged_routes.rou.xml",
+            encoding="utf-8",
+            xml_declaration=True,
+            pretty_print=True,
+        )
+        print(f"Written {self.output} to disk")
+
     def calculate_station_deadheads(self):
         print("Starting Network Deadhead Calculations")
         time_rows = []
@@ -121,4 +167,4 @@ class DeadheadCalculator():
 
 if __name__ == "__main__":
     dc = DeadheadCalculator()
-    dc.calculate_station_deadheads()
+    dc.calculate_edge_deadheads()

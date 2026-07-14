@@ -28,11 +28,11 @@ class HeuristicPreprocessing:
         tp = TerminationPoints()
         tp.main()
 
-        cl = CutLines()
-        cl.trim_routes()
+        #cl = CutLines()
+        #cl.trim_routes()
 
         dc = DeadheadCalculator()
-        dc.calculate_station_deadheads()
+        dc.calculate_edge_deadheads()
 
 if __name__ == "__main__":
     hp = HeuristicPreprocessing()
