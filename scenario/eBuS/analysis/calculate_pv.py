@@ -18,7 +18,6 @@ step_power;step_time
 
 
 from lxml import etree
-import time
 from pathlib import Path
 import pandas as pd
 

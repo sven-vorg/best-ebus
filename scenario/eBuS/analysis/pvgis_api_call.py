@@ -2,6 +2,7 @@ from pathlib import Path
 from lxml import etree
 import pandas as pd
 import requests
+import ast
 
 class PVGISApiCall():
 
@@ -9,9 +10,11 @@ class PVGISApiCall():
             self,
             stations: str = "best-ebus/scenario/sumo/electric/e_stations.add.xml",
             ):
-        self.df = self.v6(stations)
+        #self.df = self.v6(stations)
+        self.output = "best-ebus/scenario/eBuS/files"
+        pass
 
-    def v6(self, stations: Path, pv: Path, csv: bool = True):
+    def v6(self, stations: Path, csv: bool = False):
         root = etree.parse(stations).getroot()
         # Load station output
         # Liste für Ergebnisse initialisieren
@@ -54,3 +57,28 @@ class PVGISApiCall():
             df.to_csv("best-ebus/scenario/eBuS/files/pv_data.csv")
         print(f"/nVerarbeitung abgeschlossen. {len(results)} Stationen verarbeitet.")
         return df
+
+    def optimize_csv(self):
+        df = pd.read_csv("best-ebus/scenario/eBuS/files/pv_data.csv")
+        # Convert the string into a Python dictionary
+        df["solar_data"] = df["solar_data"].apply(ast.literal_eval)
+
+        # Extract the power list
+        columns = [(i + 1) * 3600 for i in range(24)]
+
+        power_df = pd.DataFrame(
+            df["solar_data"].apply(lambda x: x["Power ⌁"]).tolist(),
+            columns=columns
+        )
+
+        # Combine with station_id (or keep other columns if desired)
+        result = pd.concat([df[["station_id"]], power_df], axis=1)
+
+        print(result.head())
+
+        # Save
+        result.to_csv(f"{self.output}/solar_expanded.csv", index=False)
+
+if __name__ == "__main__":
+    pac = PVGISApiCall()
+    pac.optimize_csv()
