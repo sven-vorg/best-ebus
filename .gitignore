@@ -1,9 +1,13 @@
 # Output Files
 scenario/sumo/output/
 
-# Large Files
+# Large Files and Archives
 scenario/sumo/berlin.net.xml
 scenario/sumo/berlin_bus.rou.xml
+scenario/sumo/berlin.rou.gz
+
+# Unchanging BeST Files
+scenario/sumo/berlin.sumocfg
 
 # Scenario cutout Files from BeST
 scenario/sumo/cutouts/
@@ -15,3 +19,5 @@ scenario/sumo/electric/e_routes.rou.xml
 # Pycache Directorys
 scenario/eBuS/postprocessing/__pycache__/
 scenario/eBuS/preprocessing/__pycache__/
+
+
