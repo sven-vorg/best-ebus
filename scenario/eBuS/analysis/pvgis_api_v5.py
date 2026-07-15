@@ -9,16 +9,26 @@ class PVGISApiCall():
     def __init__(
             self,
             stations: str = "best-ebus/scenario/sumo/electric/e_stations.add.xml",
+            stations_df: str = "best-ebus/scenario/sumo/output/electric_bus_2026-07-15-10-18-08_chargingsstations.csv"
             ):
-        #self.df = self.v6(stations)
+
+        self.df = self.v5_off_grid(stations, stations_df)
         self.output = "best-ebus/scenario/eBuS/files"
         pass
 
-    def v6(self, stations: Path, csv: bool = False):
+    def v5_off_grid(self, stations: Path, stations_df, csv: bool = False):
         root = etree.parse(stations).getroot()
         # Load station output
         # Liste für Ergebnisse initialisieren
         results = []
+        # OutputStations
+        station_df = pd.read_csv(stations_df, sep=";")
+        print(station_df.columns.tolist())
+        last_values = (
+            station_df.sort_values("step_time")
+            .groupby("chargingStation_id")["chargingStation_totalEnergyCharged"]
+            .last()
+            )
         # Alle chargingStation Elemente durchlaufen
         for station in root.findall(".//chargingStation"):
             # Koordinaten extrahieren und in Float umwandeln
@@ -30,17 +40,17 @@ class PVGISApiCall():
 
                 # API-Request an Photovoltaic GIS
                 response = requests.get(
-                    "http://photovoltaic-geographic-information-system.ec.europa.eu/api/v6/power/broadband",
+                    "https://re.jrc.ec.europa.eu/api/SHScalc?",
                     params={
-                        "latitude": latitude,
-                        "longitude": longitude,
-                        "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
-                        "start_time": "2024-07-10 00:00:00",
-                        "end_time": "2024-07-10 23:59:59",
-                        "surface_position_optimisation_mode": "Orientation & Tilt",
-                        "frequency": "Minutely",
-                        "timezone": "Europe/Berlin",
-                        "peak-power": 500,
+                        "lat": latitude,
+                        "lon": longitude,
+                        "userhorizon": 1,
+                        "raddatabase": "PVGIS-SARAH3",
+                        "peakpower": 500,
+                        "angle": "90",
+                        "batterysize": 500,
+                        "cutoff": 10,
+                        "consumptionday": f"{last_values[station.get("id")]}",
                     },
                     timeout=10  # Timeout für bessere Stabilität
                 )
@@ -50,7 +60,7 @@ class PVGISApiCall():
                 # Ergebnis als Dictionary speichern
                 results.append({
                     "station_id": station.get("id"),
-                    "solar_data": response.json() if response.status_code == 200 else None,
+                    "solar_data": response.json(),
                 })
         df = pd.DataFrame(results)
         if csv:
@@ -81,4 +91,4 @@ class PVGISApiCall():
 
 if __name__ == "__main__":
     pac = PVGISApiCall()
-    pac.optimize_csv()
+    #pac.optimize_csv()
