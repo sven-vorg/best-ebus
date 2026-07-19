@@ -7,10 +7,8 @@ __status__ = "Prototype"
 __date__ = "02.07.2026"
 
 # Imports
-from lxml import etree
 import pandas as pd
 import numpy as np
-import argparse
 
 from filter_lines import FilterLines
 from cut_lines import CutLines

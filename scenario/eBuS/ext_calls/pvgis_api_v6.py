@@ -34,15 +34,15 @@ class PVGISApiCall():
                     params={
                         "latitude": latitude,
                         "longitude": longitude,
-                        "installation_height": 100, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
+                        "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
                         "start_time": "2024-07-10 00:00:00",
                         "end_time": "2024-07-10 23:59:59",
-                        #"surface_position_optimisation_mode": "Orientation & Tilt",
-                        "surface_orientation": "180",
-                        "surface_tilt": "45",
+                        "surface_position_optimisation_mode": "Orientation & Tilt",
+                        #"surface_orientation": "180",
+                        #"surface_tilt": "45",
                         "frequency": "Minutely",
                         "timezone": "Europe/Berlin",
-                        "peak-power": 5000,
+                        "peak-power": 5, # in kWp
                     },
                     timeout=10  # Timeout für bessere Stabilität
                 )
@@ -79,7 +79,7 @@ class PVGISApiCall():
         print(result.head())
 
         # Save
-        result.to_csv(f"{self.output}/solar_power.csv", index=False)
+        result.to_csv(f"{self.output}/solar_power_v6.csv", index=False)
 
 if __name__ == "__main__":
     pac = PVGISApiCall()

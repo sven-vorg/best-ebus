@@ -207,7 +207,7 @@ class PVGISApiCall:
         )
 
         result = pd.concat([df[["station_id"]], power_df], axis=1)
-        out_path = self.output / "solar_expanded.csv"
+        out_path = self.output / "solar_power_v5.csv"
         result.to_csv(out_path, index=False)
         logger.info("Saved expanded solar data to %s", out_path)
         return result

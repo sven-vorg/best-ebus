@@ -1,10 +1,14 @@
 # AI-generated on 2026-07-14
 
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from dotenv import load_dotenv
 
 def plot_rand_20():
-    df = pd.read_csv("best-ebus\scenario\sumo\output\electric_bus_2026-07-14-09-31-34_battery.csv", sep=";")
+    load_dotenv()
+    latest_run = os.getenv("latest_timestamp")
+    df = pd.read_csv(f"best-ebus\scenario\sumo\output\electric_bus_{latest_run}_battery.csv", sep=";")
     df = df.sort_values(["vehicle_id", "timestep_time"])
 
     plt.figure(figsize=(12, 6))
