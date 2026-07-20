@@ -6,12 +6,13 @@ class TerminationPoints():
 
     def __init__(
             self, 
-            routes: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml",
-            depots: tuple = ("cicerostrasse", "muellerstrasse"),
-            output: str = "best-ebus/scenario/eBuS/files"):
-        self.ROUTE_ROOT = etree.parse(Path(routes)).getroot()
+            routes: Path,
+            depots: tuple,
+            output: Path
+        ):
+        self.ROUTE_ROOT = etree.parse(routes).getroot()
         self.depots = depots
-        self.OUTPUT_PATH = Path(output)
+        self.OUTPUT_PATH = output
 
     def get_final_stop_ids(self):
         # Store unique final stop IDs
@@ -27,8 +28,14 @@ class TerminationPoints():
             final_stop_ids.add(f"bs_{depot}")
         return final_stop_ids
 
+    def _append_depots(self, final_stop_ids):
+        for depot in self.depots:
+            final_stop_ids.add(f"bs_{depot}")
+        return final_stop_ids
+
     def txt_for_heuristic(self):
         df = pd.DataFrame(self.get_final_stop_ids())
+        df = self._append_depots(df)
         df.to_csv(f"{self.OUTPUT_PATH}/termination_points.txt", index=False, sep=";", header= False)
 
     def main(self):
@@ -36,6 +43,12 @@ class TerminationPoints():
         self.txt_for_heuristic()
     
 if __name__ == "__main__":
-    tp = TerminationPoints()
+
+    HERE = Path(__file__).resolve().parent
+    
+    routes: Path = (HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
+    depots: tuple = ("cicerostrasse", "muellerstrasse")
+    output: Path = (HERE / "../files").resolve()
+    tp = TerminationPoints(routes, depots, output)
     tp.main()
 

@@ -17,7 +17,8 @@ scenario/sumo/electric/e_stations.add.xml
 scenario/sumo/electric/e_routes.rou.xml
 
 # Pycache Directorys
-scenario/eBuS/postprocessing/__pycache__/
-scenario/eBuS/preprocessing/__pycache__/
+**/__pycache__/
+**/.pyc
 
-
+# Draw.io temporary files
+**.bkp

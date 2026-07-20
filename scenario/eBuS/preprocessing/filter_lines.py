@@ -5,19 +5,18 @@ import pandas as pd
 from lxml import etree
 from pathlib import Path
 import math
-import os
 
 class FilterLines():
 
     def __init__(
         self,
-        routes_file: str = "best-ebus/scenario/sumo/berlin_bus.rou.xml",
-        selected_lines_file: str = "best-ebus/scenario/eBuS/files/depot_line_type.csv",
-        output_dir: str = "./best-ebus/scenario/eBuS/files/",
+        routes_file: Path,
+        selected_lines_file: Path,
+        output_dir: Path,
     ):
-        self.routes_file = Path(routes_file)
-        self.selected_lines_file = Path(selected_lines_file)
-        self.output_dir = Path(output_dir)
+        self.routes_file = routes_file
+        self.selected_lines_file = selected_lines_file
+        self.output_dir = output_dir
 
         self.selected_lines = pd.read_csv(self.selected_lines_file)
         self.lines = set(self.selected_lines["line"])
@@ -192,5 +191,11 @@ class FilterLines():
         return h * 3600 + m * 60 + s
 
 if __name__ == "__main__":
-    fl = FilterLines()
+    
+    HERE = Path(__file__).resolve().parent
+
+    routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
+    selected_lines_file = (HERE / "../files/depot_line_type.csv").resolve()
+    output_dir = (HERE / "../files").resolve()
+    fl = FilterLines(routes_file, selected_lines_file, output_dir)
     fl.main()

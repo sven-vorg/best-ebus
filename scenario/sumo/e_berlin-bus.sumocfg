@@ -22,13 +22,15 @@
         <summary-output value="summary.xml"/>
         <statistic-output value="statistics.xml"/>
 
-        <battery-output value="battery.xml"/>
-        <chargingstations-output value="chargingsstations.xml"/>
+        <battery-output value="battery.parquet"/>
+        <chargingstations-output value="chargingstations.parquet"/>
+        <tripinfo-output value="tripinfo.parquet"/>
+        <tripinfo-output.write-unfinished value="true"/>
         <!-- <emission-output value="emissions.xml"/>
         <vehroute-output  value="vehroute.xml.gz"/>
         <vehroute-output.route-length value="true"/>
         <stop-output value="stop.xml.gz"/>
-        <tripinfo-output value="tripinfo.xml.gz"/>
+
         <edgedata-output value="edgedata.xml"/>-->
     </output>
 

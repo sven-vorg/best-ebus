@@ -17,6 +17,7 @@ Run:  python dashboard.py
 import tkinter as tk
 from tkinter import ttk
 from functools import partial
+from pathlib import Path
 import numpy as np
 import matplotlib
 matplotlib.use("TkAgg")
@@ -408,7 +409,7 @@ def plot_histogram(ax):
 # ---------------------------------------------------------------------
 
 class App(tk.Tk):
-    def __init__(self, db_path):
+    def __init__(self, db_path: Path):
         super().__init__()
         self.title("SUMO BeST-eBuS Dashboard")
         self.geometry("1600x1200")

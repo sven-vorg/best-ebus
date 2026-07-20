@@ -1,19 +1,20 @@
 # Imports
-from lxml import etree
+import lxml.etree as etree
 import sumolib
 import pandas as pd
-import os
+from pathlib import Path
 
 class DeadheadCalculator():
 
     def __init__(
             self, 
-            network: str = "best-ebus/scenario/sumo/berlin.net.xml", 
-            stations: str = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml", 
-            routes: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes_trimmed.rou.xml",
-            termination_points: str = "best-ebus/scenario/eBuS/files/termination_points.txt",
-            depots: tuple = ("cicerostrasse", "muellerstrasse"),
-            output: str = "./best-ebus/scenario/eBuS/files"):
+            network: Path, 
+            stations: Path, 
+            routes: Path,
+            termination_points: Path,
+            depots: tuple,
+            output: Path,
+        ):
         # Read Network
         self.net = sumolib.net.readNet(network)
         # Parse Routes
@@ -67,7 +68,6 @@ class DeadheadCalculator():
             )
             print(f"Written deadhead_time_{depot}.txt")
 
-
     def calculate_edge_deadheads(self):
         print("Starting Network Deadhead Calculations")
         time_rows = []
@@ -80,6 +80,7 @@ class DeadheadCalculator():
             from_stop = stops[0].get("busStop")
             to_stop = stops[-1].get("busStop")
             edges, cost = self.net.getFastestPath(from_edge, to_edge)
+            edge_ids = [edge.getID() for edge in edges]
             time_rows.append({
                     "FromStopID": from_stop,
                     "ToStopID": to_stop,
@@ -88,13 +89,12 @@ class DeadheadCalculator():
             routes.append({
                     "FromStopID": from_stop,
                     "ToStopID": to_stop,
-                    "Edges": edges,
-                })        
+                    "Edges": " ".join(edge_ids),
+                })
+             
         print("Completed Network Deadhead Calculations")
 
-        #self._write_deadhead_time(time_rows)
-        print(routes)
-        return "String"
+        self._write_deadhead_time(time_rows)
         for route in routes:
             etree.SubElement(
                 self.routes_root,
@@ -166,5 +166,14 @@ class DeadheadCalculator():
         print(f"Written {self.output} to disk")
 
 if __name__ == "__main__":
-    dc = DeadheadCalculator()
+    
+    HERE = Path(__file__).resolve().parent
+
+    network: Path = (HERE / "../../sumo/berlin.net.xml").resolve()
+    stations: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
+    routes: Path = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
+    termination_points: Path = (HERE / "../files/termination_points.txt").resolve()
+    depots: tuple = ("cicerostrasse", "muellerstrasse")
+    output: Path = (HERE / "../files").resolve()
+    dc = DeadheadCalculator(network, stations, routes, termination_points, depots, output)
     dc.calculate_edge_deadheads()

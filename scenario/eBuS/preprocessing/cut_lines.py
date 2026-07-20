@@ -5,9 +5,9 @@ from lxml import etree
 class CutLines():
 
     def __init__(self, 
-        stations_path: str = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml",
-        routes_path: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml",
-        output_path: str = "best-ebus/scenario/eBuS/files/cicero_mueller_routes_trimmed.rou.xml"
+        stations_path: Path,
+        routes_path: Path,
+        output_path: Path
         ):
         self.stations_path = Path(stations_path)
         self.routes_path = Path(routes_path)
@@ -61,5 +61,9 @@ class CutLines():
 
 
 if __name__ == "__main__":
-    cl = CutLines()
+    HERE = Path(__file__).resolve().parent
+    stations_path: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml")
+    routes_path: Path = HERE / "../files/cicero_mueller_routes.rou.xml"
+    output_path: Path = HERE / "../files/cicero_mueller_routes_trimmed.rou.xml"
+    cl = CutLines(stations_path, routes_path, output_path)
     cl.trim_routes()

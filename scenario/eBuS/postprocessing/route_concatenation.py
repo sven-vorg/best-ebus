@@ -47,16 +47,16 @@ class RouteConcatenation:
 
     def __init__(
         self,
-        input_path: str = "./best-ebus/scenario/eBuS/files/solution_cicerostrasse.json",
-        input_dict: str = "./best-ebus/scenario/eBuS/files/trips_cicerostrasse.txt",
-        routes_path: str = "./best-ebus/scenario/eBuS/files/merged_routes.rou.xml",
-        routes_output_path: str = "./best-ebus/scenario/sumo/electric/e_routes.rou.xml",
-        vehicles_output_path: str = "./best-ebus/scenario/sumo/electric/e_vehicles.rou.xml",
+        input_path: Path,
+        input_dict: Path,
+        merged_routes: Path,
+        merged_routes_output: Path,
+        vehicles_output: Path,
     ) -> None:
-        self.INPUT = Path(input_path)
-        self.ROUTES = Path(routes_path)
-        self.ROUTES_OUTPUT = Path(routes_output_path)
-        self.VEHICLES_OUTPUT = Path(vehicles_output_path)
+        self.INPUT = input_path
+        self.ROUTES = merged_routes
+        self.ROUTES_OUTPUT = merged_routes_output
+        self.VEHICLES_OUTPUT = vehicles_output
 
         self._load_trip_dictionary(input_dict)
         self._load_route_lookups()
@@ -69,7 +69,7 @@ class RouteConcatenation:
     # ------------------------------------------------------------------
     # Setup helpers
     # ------------------------------------------------------------------
-    def _load_trip_dictionary(self, input_dict: str) -> None:
+    def _load_trip_dictionary(self, input_dict: Path) -> None:
         """
         Parse trips_cicerostrasse.txt into per-trip lookup dicts.
 
@@ -352,5 +352,12 @@ class RouteConcatenation:
 
 
 if __name__ == "__main__":
-    rc = RouteConcatenation()
+
+    HERE = Path(__file__).resolve().parent
+    input_path = Path(HERE / "../files/solution_cicerostrasse.json").resolve()
+    input_dict = Path(HERE / "../files/trips_cicerostrasse.txt").resolve()
+    routes_path = Path(HERE / "../files/merged_routes.rou.xml").resolve()
+    routes_output_path = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
+    vehicles_output_path = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
+    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path)
     rc.main()

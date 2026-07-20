@@ -2,17 +2,24 @@
 from lxml import etree
 import pandas as pd
 import sumolib
+from pathlib import Path
 import json
 from sumolib.geomhelper import positionAtShapeOffset
 import datetime
 
 class ChargingStations():
 
-    def __init__(self):
-        self.net = sumolib.net.readNet("best-ebus/scenario/sumo/berlin.net.xml")
-        self.STATION_ROOT = etree.parse("best-ebus/scenario/sumo/berlin_bus_stops.add.xml").getroot()
-        self.ROUTE_ROOT = etree.parse("best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml").getroot()
-        self.OUTPUT_PATH = "best-ebus/scenario/sumo/electric"
+    def __init__(
+            self,
+            net: Path,
+            station_root: Path,
+            route_root: Path,
+            output_path: Path
+            ):
+        self.net = sumolib.net.readNet(net)
+        self.STATION_ROOT = etree.parse(station_root).getroot()
+        self.ROUTE_ROOT = etree.parse(route_root).getroot()
+        self.OUTPUT_PATH = output_path
 
     def charging_stations_from_solution(self):
         # Parse JSON File
@@ -133,5 +140,10 @@ class ChargingStations():
         )
 
 if __name__ == "__main__":
-    cs = ChargingStations()
+    HERE = Path(__file__).resolve().parent
+    net = Path(HERE / "../../sumo/berlin.net.xml").resolve()
+    station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
+    route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
+    output_path = Path(HERE / "../../sumo/electric/").resolve()
+    cs = ChargingStations(net, station_root, route_root, output_path)
     cs.main()
