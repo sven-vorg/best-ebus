@@ -123,4 +123,5 @@ class DBVisualisation:
 if __name__ == "__main__":
     db_path = "best-ebus/scenario/eBuS/database/ebus.db"
     visualizer = DBVisualisation(db_path)
+    visualizer.create_diagram()
     visualizer.export_mermaid(db_path, out_file="best-ebus/scenario/eBuS/docs/schema.mmd")

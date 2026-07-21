@@ -81,10 +81,6 @@ class RouteConcatenation:
         self.trip_to_start: dict[Any, Any] = trip_df["START_STOP_ID"].to_dict()
         self.trip_to_end: dict[Any, Any] = trip_df["END_STOP_ID"].to_dict()
         self.trip_to_depart: dict[Any, Any] = trip_df["START_TIMESTAMP"].to_dict()
-        # NOTE: assumes trips_cicerostrasse.txt has an "END_TIMESTAMP" column
-        # holding each trip's scheduled end-of-service time, mirroring
-        # START_TIMESTAMP. Rename this if the actual column is called
-        # something else.
         self.trip_to_arrival: dict[Any, Any] = trip_df["END_TIMESTAMP"].to_dict()
 
     def _load_route_lookups(self) -> None:
@@ -206,12 +202,22 @@ class RouteConcatenation:
             for stop in self.join_stops_by_route_id(trip_sequence):
                 etree.SubElement(route, "stop", **self._stop_attributes(stop))
 
+            if bus["bus_type_name"] == "EN":
+                type = "Ebusco2.2electric12m"
+            elif bus["bus_type_name"] == "GN":
+                type = "SolarsisUrbino18electric12m"
+            else:
+                logger.warning(
+                    "Unknown bus_type_name '%s' for bus %s; defaulting to Ebusco2.2electric12m",
+                    bus["bus_type_name"], bus["bus_id"]
+                )
+                type = "Ebusco2.2electric12m"
+
             etree.SubElement(
                 vehicles_root,
                 "vehicle",
                 id=f"cicero_{bus['bus_id']}",
-                # Do the conversion to electric here?
-                type="Ebusco2.2electric12m",
+                type=type,
                 route=route_id,
                 depart=str(self.trip_to_depart[trip_sequence[0]]),
                 color="1,0,0",

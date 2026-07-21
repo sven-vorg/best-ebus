@@ -27,8 +27,6 @@ class DeadheadCalculator():
         # Set Output
         self.output = output
 
-
-
     def _load_termination_points(self, path):
         return set(pd.read_csv(path, header = None)[0].astype(str))
 
@@ -68,6 +66,7 @@ class DeadheadCalculator():
             )
             print(f"Written deadhead_time_{depot}.txt")
 
+    # deprecated, going back to trimmed routes
     def calculate_edge_deadheads(self):
         print("Starting Network Deadhead Calculations")
         time_rows = []
@@ -176,4 +175,4 @@ if __name__ == "__main__":
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     output: Path = (HERE / "../files").resolve()
     dc = DeadheadCalculator(network, stations, routes, termination_points, depots, output)
-    dc.calculate_edge_deadheads()
+    dc.calculate_station_deadheads()

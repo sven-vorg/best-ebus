@@ -39,29 +39,15 @@ erDiagram
         FLOAT step_maximumBatteryCapacity
         VARCHAR simulation_timestamp
     }
-    pricing_data {
-        BIGINT statistics_code
-        VARCHAR statistics_label
-        VARCHAR time_code
-        VARCHAR time_label
-        BIGINT time
-        VARCHAR _1_variable_code
-        VARCHAR _1_variable_label
-        VARCHAR _1_variable_attribute_code
-        VARCHAR _1_variable_attribute_label
-        VARCHAR _2_variable_code
-        VARCHAR _2_variable_label
-        VARCHAR _2_variable_attribute_code
-        VARCHAR _2_variable_attribute_label
-        VARCHAR _3_variable_code
-        VARCHAR _3_variable_label
-        VARCHAR _3_variable_attribute_code
-        VARCHAR _3_variable_attribute_label
-        VARCHAR value
-        VARCHAR value_unit
-        VARCHAR value_variable_code
-        VARCHAR value_variable_label
-        VARCHAR value_q
+    day_ahead_prices_long {
+        TIMESTAMP start_time
+        TIMESTAMP end_time
+        DOUBLE price_eur_per_mwh
+        VARCHAR zone
+        DOUBLE price_eur_per_kwh
+        BIGINT hour_of_day
+        DATE date
+        VARCHAR weekday
     }
     solar_power_v6 {
         VARCHAR station_id
@@ -89,6 +75,12 @@ erDiagram
         DOUBLE _79200
         DOUBLE _82800
         DOUBLE _86400
+    }
+    sumo_config {
+        VARCHAR simulation_timestamp
+        VARCHAR section
+        VARCHAR option
+        VARCHAR value
     }
     tripinfo {
         VARCHAR tripinfo_id

@@ -1,14 +1,12 @@
 """
 DuckDB connection helpers for the dashboard.
-
-Replaces the old sqlite3-based db.py. Only two functions are needed
-by dashboard.py: get_connection() and list_runs().
 """
 
 import duckdb
+from pathlib import Path
 
 
-def get_connection(db_path: str):
+def get_connection(db_path: Path) -> duckdb.DuckDBPyConnection:
     """
     Open a read-only connection to the shared DuckDB database.
 
@@ -20,7 +18,7 @@ def get_connection(db_path: str):
     return duckdb.connect(db_path, read_only=True)
 
 
-def list_runs(conn) -> list[str]:
+def list_runs(conn: duckdb.DuckDBPyConnection) -> list[str]:
     """
     Return all distinct simulation_timestamp values present in the
     database - this is what identifies a "run" in the new schema

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <!--Generated using ChargingStations Skript on 2026-07-20 11:14:15.081513-->
+  <!--Generated using ChargingStations Skript on 2026-07-21 14:16:09.952329-->
   <chargingStation id="cd_Muellerstrasse_01" name="Depot Müllerstraße" lane="-E19_0" startPos="0" endPos="510.64" power="150000" efficiency="0.95" chargeInTransit="false" energyStorageCap="50000" coordinates="13.33776446744273,52.56058715781662"/>
   <chargingStation id="cd_Cicerostrasse_01" name="Depot Cicerostraße" lane="E1.51_0" startPos="0" endPos="275.24" power="150000" efficiency="0.95" chargeInTransit="false" energyStorageCap="50000" coordinates="13.303440333503405,52.492583731258065"/>
   <chargingStation id="cs_9735_25" name="U Oskar-Helene-Heim (Berlin)_Charger" lane="718428117#1_0" startPos="111.80" endPos="124.80" power="150000" efficiency="0.95" chargeInTransit="false" friendlyPos="true" parkingLength="14.00" energyStorageCap="500" coordinates="13.270448,52.451036"/>

@@ -11,8 +11,8 @@ class HeuristicPostprocessing:
             station_root: Path,
             route_root: Path,
             output_path: Path,
-            input_path: Path,
-            input_dict: Path,
+            input_path: list[Path],
+            input_dict: list[Path],
             merged_routes: Path,
             merged_routes_output: Path,
             vehicles_output: Path
@@ -40,15 +40,16 @@ class HeuristicPostprocessing:
         # Work in Progress
         # pv for stations
 
-        # Create the combined routes for all electric buses in the simulation
-        rc = RouteConcatenation(
-            input_path=self.input_path,
-            input_dict=self.input_dict,
-            merged_routes=self.merged_routes,
-            merged_routes_output=self.merged_routes_output,
-            vehicles_output=self.vehicles_output
-        )
-        rc.main()
+        for i, _ in enumerate(self.input_path):
+            # Create the merged routes for all electric buses in the simulation
+            rc = RouteConcatenation(
+                input_path=self.input_path[i],
+                input_dict=self.input_dict[i],
+                merged_routes=self.merged_routes,
+                merged_routes_output=self.merged_routes_output,
+                vehicles_output=self.vehicles_output
+            )
+            rc.main()
 
 if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
@@ -58,8 +59,8 @@ if __name__ == "__main__":
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
 
-    input_path = Path(HERE / "../files/solution_cicerostrasse.json").resolve()
-    input_dict = Path(HERE / "../files/trips_cicerostrasse.txt").resolve()
+    input_path = [Path(HERE / "../files/solution_cicerostrasse.json").resolve(), Path(HERE / "../files/solution_muellerstrasse.json").resolve()]
+    input_dict = [Path(HERE / "../files/trips_cicerostrasse.txt").resolve(),Path(HERE / "../files/trips_muellerstrasse.txt").resolve()]
     merged_routes = Path(HERE / "../files/merged_routes.rou.xml").resolve()
     merged_routes_output = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
