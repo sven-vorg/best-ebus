@@ -1,3 +1,4 @@
+from __future__ import annotations
 #!/usr/bin/env python
 __author__ = "Sven Vorgheim"
 __license__ = "GPL v2 or later (In accoardance to SUMO)"
@@ -6,38 +7,44 @@ __email__ = "sven.vorgheim@fu-berlin.de"
 __status__ = "Prototype"
 __date__ = "02.07.2026"
 
-import os
 import glob
-import sys
-import dotenv
+import os
 import subprocess
+import sys
 from pathlib import Path
 
-from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
-from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
+import dotenv
+
 from database.db_ebus import DBeBuS
-from visualisation import dashboard
+from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
+from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 
 PROJECT_ROOT = Path(__file__).resolve().parent
+SCENARIO_ROOT = PROJECT_ROOT.parent
 
-class EbusMain():
-    def __init__(self):
-        pass
+SUMO_DIR = SCENARIO_ROOT / "sumo"
+EBUS_DIR = SCENARIO_ROOT / "eBuS"
+FILES_DIR = EBUS_DIR / "files"
 
-    def run_heruistic_preprocessing(self):
-        routes_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus.rou.xml").resolve()
-        stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml")
-        network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
+class EBusMain():
+    def __init__(self) -> None:
+        """Create an eBuS controller."""
 
-        selected_lines_file: Path = (PROJECT_ROOT / "../eBuS/files/depot_line_type.csv").resolve()
-        combined_routes: Path = (PROJECT_ROOT / "../eBuS/files/cicero_mueller_routes.rou.xml").resolve()
-        trimmed_routes: Path = (PROJECT_ROOT / "../eBuS/files/cicero_mueller_routes_trimmed.rou.xml").resolve()
-        termination_points: Path = (PROJECT_ROOT / "../eBuS/files/termination_points.txt").resolve()
+    def run_heuristic_preprocessing(self):
+        routes_file: Path = SUMO_DIR / "berlin_bus.rou.xml"
+        stations_file: Path = SUMO_DIR / "berlin_bus_stops.add.xml"
+        network_file: Path = SUMO_DIR / "berlin.net.xml"
 
-        depots: tuple = ("cicerostrasse", "muellerstrasse")
+        selected_lines_file: Path = FILES_DIR / "depot_line_type.csv"
+        combined_routes: Path = FILES_DIR / "cicero_mueller_routes.rou.xml"
+        trimmed_routes: Path = FILES_DIR / "cicero_mueller_routes_trimmed.rou.xml"
+        termination_points: Path = FILES_DIR / "termination_points.txt"
+
+        depots: tuple[str,str] = ("cicerostrasse", "muellerstrasse")
         
-        output_dir: Path = (PROJECT_ROOT / "../eBuS/files").resolve()
-        hp = HeuristicPreprocessing(
+        output_dir: Path = FILES_DIR
+
+        HeuristicPreprocessing(
             routes_file,
             stations_file,
             network_file,
@@ -49,7 +56,7 @@ class EbusMain():
             output_dir,
         ).main()
 
-    def run_heruistic_postprocessing(self):
+    def run_heuristic_postprocessing(self):
         network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
         stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml").resolve()
         routes_file: Path = (PROJECT_ROOT / "../eBuS/files/cicero_mueller_routes.rou.xml").resolve()
@@ -74,7 +81,7 @@ class EbusMain():
             PROJECT_ROOT / "../sumo/electric/e_vehicles.rou.xml"
         ).resolve()
 
-        hp = HeuristicPostprocessing(
+        HeuristicPostprocessing(
             network_file,
             stations_file,
             routes_file,
@@ -86,7 +93,8 @@ class EbusMain():
             vehicles_output,
         ).main()
 
-    def update_database(self):
+    def update_database(self) -> None:
+        """Update the DuckDB database with the latest simulation output."""
         DBeBuS()._update_db()
 
 
@@ -108,12 +116,30 @@ class EbusMain():
         print("Timestamp latest runtime set.")
 
     def produce_dashboard(self, db_path: Path):
-            app = dashboard.Dashboard(db_path)
+        print(PROJECT_ROOT)
+        print((PROJECT_ROOT / "..").resolve())
+        dashboard_script = (PROJECT_ROOT / "../eBuS/visualisation/dashboard.py").resolve()
+
+        subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "streamlit",
+                "run",
+                str(dashboard_script),
+                "--",
+                str(db_path),
+            ],
+            cwd=(PROJECT_ROOT / "..").resolve(),  # scenario/
+        )
 
     def main(self):
         pass
 
     def run_simulation(self):
+        """
+        Execute the SUMO simulation using the electric bus configuration.
+        """
         config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
         result = subprocess.run([
             "sumo",
@@ -127,9 +153,9 @@ if __name__ == "__main__":
 
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
-    eb = EbusMain()
-    eb.run_heruistic_preprocessing()
-    eb.run_heruistic_postprocessing()
+    eb = EBusMain()
+    eb.run_heuristic_preprocessing()
+    eb.run_heuristic_postprocessing()
     eb.run_simulation()
     timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     if timestamp is not None:
@@ -138,5 +164,5 @@ if __name__ == "__main__":
     eb.update_database()
     
 
-    #eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))
+    eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))
     pass

@@ -42,9 +42,6 @@ logger = logging.getLogger(__name__)
 class RouteConcatenation:
     """Builds linked SUMO route + vehicle files from an optimized bus-assignment solution."""
 
-    #: id used to anchor deadhead edges ("<DEPOT_ID>_<stop>" / "<stop>_<DEPOT_ID>")
-    DEPOT_ID = "bs_cicerostrasse"
-
     def __init__(
         self,
         input_path: Path,
@@ -52,11 +49,14 @@ class RouteConcatenation:
         merged_routes: Path,
         merged_routes_output: Path,
         vehicles_output: Path,
+        depot_id: str,
+        append: bool,
     ) -> None:
         self.INPUT = input_path
         self.ROUTES = merged_routes
         self.ROUTES_OUTPUT = merged_routes_output
         self.VEHICLES_OUTPUT = vehicles_output
+        self.DEPOT_ID = depot_id
 
         self._load_trip_dictionary(input_dict)
         self._load_route_lookups()
@@ -65,6 +65,7 @@ class RouteConcatenation:
         # join_stops_by_route_id), since those read per-trip stops out of
         # self.trip_stops, which this call populates.
         self.adapt_duration_attributes()
+        self.append = append
 
     # ------------------------------------------------------------------
     # Setup helpers
@@ -191,7 +192,7 @@ class RouteConcatenation:
 
         for bus in solution["bus_assignments"]:
             trip_sequence = bus["trip_sequence"]
-            route_id = f"cicero_{bus['bus_id']}_route"
+            route_id = f"{self.DEPOT_ID}_{bus['bus_id']}_route"
 
             route = etree.SubElement(
                 routes_root,
@@ -199,6 +200,7 @@ class RouteConcatenation:
                 id=route_id,
                 edges=self.join_edges_by_route_id(trip_sequence),
             )
+            print(route.get("route_id")) # Riesen Bug Hier, checke morgen, gerade kein Plan, hoffentlich bald Mulit-Depot working
             for stop in self.join_stops_by_route_id(trip_sequence):
                 etree.SubElement(route, "stop", **self._stop_attributes(stop))
 
@@ -216,7 +218,7 @@ class RouteConcatenation:
             etree.SubElement(
                 vehicles_root,
                 "vehicle",
-                id=f"cicero_{bus['bus_id']}",
+                id=f"{self.DEPOT_ID}_{bus['bus_id']}",
                 type=type,
                 route=route_id,
                 depart=str(self.trip_to_depart[trip_sequence[0]]),
@@ -230,21 +232,60 @@ class RouteConcatenation:
         # Sort vehicles by depart time before writing.
         self._sort_vehicles_by_depart(vehicles_root)
 
-        self._write(routes_root, self.ROUTES_OUTPUT)
-        self._write(vehicles_root, self.VEHICLES_OUTPUT)
+        self._write_routes(routes_root, self.ROUTES_OUTPUT, self.append)
+        self._write_vehicles(vehicles_root, self.VEHICLES_OUTPUT, self.append)
 
-    @staticmethod
-    def _write(root: etree.Element, path: Path) -> None:
-        """Write an lxml element tree to `path`, creating parent dirs as needed."""
+    def _write_vehicles(self, root: etree.Element, path: Path, append: bool) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        etree.ElementTree(root).write(
-            str(path),
-            encoding="UTF-8",
-            xml_declaration=True,
-            pretty_print=True,
-        )
-        logger.info("Wrote %s", path)
-        print(f"Written {path} to disk.")
+
+        if append and path.exists():
+            tree = etree.parse(str(path))
+            existing_root = tree.getroot()
+
+            # Append all children from the new root
+            for child in root:
+                if child.tag == "vehicle":
+                    existing_root.append(child)
+            self._sort_vehicles_by_depart(existing_root)
+            etree.indent(tree, space="    ")
+            tree.write(
+                str(path),
+                encoding="UTF-8",
+                xml_declaration=True,
+                pretty_print=True,
+            )
+        else:
+            etree.ElementTree(root).write(
+                str(path),
+                encoding="UTF-8",
+                xml_declaration=True,
+                pretty_print=True,
+            )
+
+    def _write_routes(self, root: etree.Element, path:Path, append: bool) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        if append and path.exists():
+            tree = etree.parse(str(path))
+            existing_root = tree.getroot()
+
+            # Append all children from the new root
+            for child in root:
+                existing_root.append(child)
+            etree.indent(tree, space="    ")
+            tree.write(
+                str(path),
+                encoding="UTF-8",
+                xml_declaration=True,
+                pretty_print=True,
+            )
+        else:
+            etree.ElementTree(root).write(
+                str(path),
+                encoding="UTF-8",
+                xml_declaration=True,
+                pretty_print=True,
+            )
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -270,14 +311,14 @@ class RouteConcatenation:
 
         Consecutive duplicate edges are then collapsed.
         """
-        depart_station = self.DEPOT_ID
+        depart_station = f"bs_{self.DEPOT_ID}"
         edges = []
         for trip_id in trip_ids:
             edges.append(self.route_lookup[f"{depart_station}_{self.trip_to_start[trip_id]}"]["edges"])
             original_trip_id = self.trip_to_original[trip_id]
             edges.append(self.route_lookup[original_trip_id]["edges"])
             depart_station = self.trip_to_end[trip_id]
-        edges.append(self.route_lookup[f"{depart_station}_{self.DEPOT_ID}"]["edges"])
+        edges.append(self.route_lookup[f"{depart_station}_bs_{self.DEPOT_ID}"]["edges"])
         return self._remove_consecutive_duplicates(" ".join(edges))
 
     def join_stops_by_route_id(self, trip_ids: list) -> list[dict]:
@@ -365,5 +406,6 @@ if __name__ == "__main__":
     routes_path = Path(HERE / "../files/merged_routes.rou.xml").resolve()
     routes_output_path = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output_path = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
-    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path)
+    depot_id = "cicerostrasse"
+    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path, depot_id=depot_id)
     rc.main()

@@ -12,7 +12,7 @@
     <statistic-output value="statistics.xml"/>
     <battery-output value="battery.parquet"/>
     <chargingstations-output value="chargingstations.parquet"/>
-    <tripinfo-output value="tripinfo.xml"/>
+    <tripinfo-output value="tripinfo.parquet"/>
     <tripinfo-output.write-unfinished value="true"/>
   </output>
   <time>

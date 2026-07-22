@@ -1,162 +1,186 @@
-# Berlin Sumo Traffic (BeST) Scenario
+# ReadMe for the eBuS extension to the BeST-Scenario
 
-https://user-images.githubusercontent.com/2386865/186914163-1225cb32-7a1f-4bdd-8550-2be9ce9a96dd.mp4
+The **electric Bus utilization Scenario (eBuS)** is a fork of the **[Berlin Sumo Traffic (BeST) Scenario.](https://github.com/mosaic-addons/best-scenario)**
+It is being developed as part of a masters-thesis at the FU-Berlin in 2026 with the goal of extending the capabilitys of **BeST** to simulate electric buses and their charging stations to generate data on charging behaviour and energy requierments.
+Additionaly skripts for extending charging stations into integrated energy hubs, using energy storage systems and photovoltaic power generation, are planned.
 
-## License and Attribution
+The simulation is intended to be able to handle multiple depots, service lines, charging stations and bus models.
 
-All files belonging to this scenario definition are licensed under <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"> <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a>.
+To limit the scope during the development and the proof-of-concept phase, the implementation focuses on two depots, each designed for 200+ buses, servicing 49 lines and implementing 94 charging Stations.
 
-The usage of this scenario has to be attributed by either providing a link to this repository, or by citing this reference:
+Dependencys:
+* [Eclipse Sumo (Version 1.27.0)](https://github.com/eclipse-sumo/sumo/tree/main/docs)
+* An electric Vehicle Scheduling Problem (eVSP) solving methode for a baseline solution
+* Online connectivity for [PVGIS-API](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en) calls
+* Day-ahead [pricing data](https://www.smard.de/en/downloadcenter/download-market-data/?downloadAttributes=%7B%22superCategoryId%22:3,%22subcategoryId%22:8,%22regionId%22:%22DE%22,%22resolution%22:%22hour%22,%22fileType%22:%22CSV%22,%22from%22:1783807200000,%22to%22:1784671200000%7D) for the german/luxembourg electricity market provided by the Bundesnetzagentur
 
-> Schrab, K., Protzmann, R., Radusch, I. (2023). *A Large-Scale Traffic Scenario of Berlin for Evaluating Smart Mobility Applications*. In: Nathanail, E.G., Gavanas, N., Adamos, G. (eds) Smart Energy for Smart Transport. CSUM 2022. Lecture Notes in Intelligent Transportation and Infrastructure. Springer, Cham. https://doi.org/10.1007/978-3-031-23721-8_24
-> 
-## 24 Hours of Traffic in Berlin for SUMO and Eclipse MOSAIC
+## Instructions
+The **eBuS** directory contains most of the files and skripts needed to prepare and start a complete run of the **BeST-eBuS(cenario)**. An overview of the **eBuS** subdirectorys is provided in the *structur* sections.
 
-This simulation scenario provides **motorized private transport** traffic for over **24 hours for the whole city of Berlin**. 
-With about **2,25 million trips** within an area of 800 km², this is **the largest microscopic traffic simulation scenario** we are currently aware of.
+### Order of Operations
 
-The scenario was made for [Eclipse MOSAIC](https://github.com/eclipse/mosaic) and thus requires it to run. 
-It is, however, also possible to run it with [Eclipse SUMO](https://github.com/eclipse/sumo) only.
-If you plan to test your own mobility solutions encoperating V2X technology or message exchange via LTE/5G, then Eclipse MOSAIC is your way to go. 
-Here you can combine the traffic with communcation and application simulation, thus creating a holistic system solution on a large-scale.
+#### Heuristic Preprocessing
 
-The scenario is based on the [MATSim Open Berlin Scenario](https://github.com/matsim-scenarios/matsim-berlin) [^1]. 
-We extracted traffic demand from this scenario and re-calibrated all routes to achieve a user equilibrium.
-More details on our creation process can be found in the provided reference and in the background section and the bottom of this file.
+Skripts in *preprocessing* are used to create textfiles used as input for a solving heuristic. It perfomrs the definition of depots and belonging service lines. For that it assumes a csv file with the header and name: *depot,line,type*. \
+Available lines are taken from *berlin_bus.rou.xml*, where there is a *to* and *from* for each.
+For eBuS this data has been taken from the website [berliner-lininchronik.de](https://www.berliner-linienchronik.de/fahrzeuge-bvg.html) (Sawall, Fabian; 2026) \
+While manual definition of routes is possible, and adjustments can be made to fine-tune simulation behaviour, the assignment of vehciles to services is computed by a heuristic solving method (Janus, Robert; n.y.)
 
-[^1]: D. Ziemke, I. Kaddoura, K. Nagel; [The MATSim Open Berlin Scenario: A multimodal agent-based transport simulation scenario based on synthetic demand modeling and Open Data](https://doi.org/10.1016/j.procs.2019.04.120); Procedia Computer Science, Volume 151, 2019, 870-877
+1. *heuristic_preprocessing.py* is a wrapper for all other skripts in the *preprocessing* directory, performing the functions calls in order.
+2. Begining with *filter_lines.py* where first every route and flow not found in the *depot_line_type.csv" is removed from *berlin_bus.rou.xml*.
+    While **BeST** operates on the **SUMO** flow-functionality, which generates and destroys vehicles for a given route periodically, **eBuS** requieres the use of persistent vehicles. Therefore different parameters are calculated from the combined routes and flows of each line. 
+    This operation creates a *to* and *from* for each route, and calculates the number of requiered repetitions and period intevals from the corresponding flows. The result is a *merged_routes.csv* which in turn can be used to create trip defintions for each depot.
+3. As there was an issue, with routes continuing beyond their last passenger stations, presumably to travel to operational stations, *cut_lines.py* removes these sections of routes. While it would be more accurate to also model operation stations as charging-points, this simplification was made for time expenditure reasons.
+4. The calculation of deadheads, e.g. trips without passengers between service stations, is requiered to build the complete tour of a single vehicle. The skript produces not only information on the travel time between every stop of the network, but also creates a reference *.rou.xml* from which all later routes are constructed. Deadhead timings are also exportet as *.txt* to be used as solver input.
 
-As an additional effort, the scenario was extended with bus traffic based on real GTFS feeds. 89\% of all bus lines in Berlin 
-have been mapped to the network. The bus trips have been set up to match real bus schedules. More information on the integration
-of bus traffic can be read in the following publication.
+##### Limitations
+Currently bus service is performed on a 24 Hour schedule with fixed timings. \
+E.g. even though in reality a bus line may be operated on a 20 Minute schedule, but is increased to 10 Minute intervalls during rush hour, this is not modeled in eBuS.
 
-> Schweppenhäuser M., Großmann T., Schrab K., Protzmann, R., Radusch, I. (2025). *Modeling Bus Traffic for the Berlin SUMO Traffic Scenario*. SUMO User Conference 2025. https://sumo.dlr.de/pdf/2025/pre-print-2613.pdf
+**eBuS** currently does not provide the heuristic solver that has been used. Users are requiered to either use the solutions provided within the repository, use their own solver, or adjust the given solution as needed.
 
-## Characteristics
+#### Heuristic Postprocessing
 
-Some basic characteristics describing the scenario:
+1. Assumes a solver output with a specific format. \
+    One *solution.json* for each depot. This includes all vehicles and the trips they perform, aswell as designated charging stations and times.
+2. Designated charging station ids are read from the solution, corresponding busStops are read from *berlin_bus_stops.add.xml* and modfied into charging stations at the same position. Chargers at the depots are added. Here modifcations to charging station parameters can be made. For future functionality geo coordinates are calculated and saved.
+3. The building of the final routes concatenates the building blocks from the reference route file accoarding to the solution. To handle differing departure times, vehicles and routes are split into two *e_vehicles.rou.xml* and *e_routes.rou.xml. This way timing values in the later are automatically relative to the departure time of the vehicles.
 
-|Characteristic|Number|
-|-----------------|--------|
-| Number of nodes | 28 547 |
-| Number of edges	| 71 651 |
-| Number of junctions controlled by traffic signals | 2 249 |
-| Number of bus stops | 6 246 |
-| Number of car trips | 2 246 917 |
-| Number of bus trips | 25 724 |
-| Average duration of each trip | 817 s |
-| Average distance of each trip | 7,9 km |
-| Overall mean speed compared to speed limits | 0,71 |
-| Total number of teleports | 2 332 |
-| Simulation duration on 3,4 GHz CPU (no GUI) | 7 h |
+#### External Calls
+1. *pvgis_api_v5.py* and *pvgis_api_v6*.py currently are work in progress, photovoltaic power generation for charging stations is requested from PVGIS via API calls and saved to *ext_data*
+2. *melt_day_ahead_prices.py* is a ai-generated conversion skript for the pricing data. No thorough inspection of it has been done as of yet.
 
-We furthermore compared the simulated counts on some certain streets against real data from [Digitale Plattform Berlin](https://api.viz.berlin.de/daten/verkehrsdetektion):
+## eBuS Directory Structure
 
-![Vehicle counts on A100 East direction](docs/img/counts-a100-east.svg)
-![Vehicle counts on A100 Altmoabit East direction](docs/img/counts-altmoabit-east.svg)
-![Vehicle counts on A100 Siemensdamm East direction](docs/img/counts-siemensdamm-east.svg)
-![Vehicle counts on Treskowallee South direction](docs/img/counts-treskowallee-south.svg)
+    eBuS
+    │   .env
+    │   ebus_main.py
+    │   __init__.py
+    │   
+    ├───analysis
+    │       anlysis.ipynb
+    │       calculate_pv.py
+    │       charging_pv_analysis.py
+    │       integrated_energy_hub.py
+    │       sumo_tool.py
+    │       __init__.py
+    │       
+    ├───configuration
+    │       sumo_configuration.py
+    │       
+    ├───database
+    │       db_connector.py
+    │       db_ebus.py
+    │       db_visualisation.py
+    │       ebus.db
+    │       __init__.py
+    │           
+    ├───docs
+    │       diagramms.drawio
+    │       eBuS-README.md
+    │       schema.mmd
+    │       schema.svg
+    │       
+    ├───ext_calls
+    │       melt_day_ahead_prices.py
+    │       pvgis_api_v5.py
+    │       pvgis_api_v6.py
+    │       __init__.py
+    │       
+    ├───ext_data
+    │       day_ahead_prices_long.csv
+    │       smard_day_ahead_prices.csv
+    │       solar_power_v5.csv
+    │       solar_power_v6.csv
+    │       
+    ├───files
+    │       charging_stations.txt
+    │       cicero_mueller_routes.rou.xml
+    │       cicero_mueller_routes_trimmed.rou.xml
+    │       deadhead_time_cicerostrasse.txt
+    │       deadhead_time_muellerstrasse.txt
+    │       depot_line_type.csv
+    │       merged_routes.csv
+    │       merged_routes.rou.xml
+    │       solution_cicerostrasse.json
+    │       solution_muellerstrasse.json
+    │       termination_points.txt
+    │       trips_cicerostrasse.txt
+    │       trips_muellerstrasse.txt
+    │       
+    ├───postprocessing
+    │       charging_stations.py
+    │       heuristic_postprocessing.py
+    │       route_concatenation.py
+    │       __init__.py
+    │           
+    ├───preprocessing
+    │       cut_lines.py
+    │       deadhead_calculator.py
+    │       filter_lines.py
+    │       heuristic_preprocessing.py
+    │       termination_points.py
+    │              
+    └───visualisation
+            dashboard.py
+            tkinter_dashboard.py
+            __init__.py
+        
+           
+### SUMO & electric Files
+
+#### Depots and Vehicle Types
+
+*e_depots.add.xml* and *e_type.add.xml*.
+These short files are manually created, and define TAZ zones for both depots, as well as available vehicle types to perform the routes. Currently two bus types are defined.
+
+##### Limitations
+Due to long vehicles blocking the comparatively short bus stops for long durations, bus length has been set to one meter. This is a workaround for not modeling the real service stations at multiple locations. If that is done, the *cut_lines* skript will be obsolete, and the route generation will need to be adjusted.
+
+#### Sumo Config File
+
+**eBuS** comes with its own **SUMO** configuration file, *e_berlin.sumocfg*. This config loads all previously created *e_* files and sets the simulation parameters. Additional output requierments are set, creating logs for charging and battery output.
+
+## SUMO Directory Structure
+    sumo
+    │   berlin-charlottenburg.sumocfg
+    │   berlin-mitte.sumocfg
+    │   berlin-reinickendorf.sumocfg
+    │   berlin.net.xml
+    │   berlin_bus.rou.xml
+    │   berlin_bus_stops.add.xml
+    │   download_best_scenario.py
+    │   e_berlin-bus.sumocfg
+    │   sumo_config.json
+    │   
+    ├───electric
+    │       e_depots.add.xml
+    │       e_routes.rou.xml
+    │       e_stations.add.xml
+    │       e_type.add.xml
+    │       e_vehicles.rou.xml
+    │       
+    └───output
 
 
-## Installation and Usage
+## ToDos
+* *split filter_lines.py* into a file responsible for filtering, and a file responsible for providing heuristic input
+* Integrate *cut_lines.py* into filtering
+* Integrate old *gtfs_worker.ipynb* into heuristic input skript
+* Take charging time from *solution* file
+* Add more vehicle types and implement type choice dependet upon *depot_line_type.csv*
 
-1. Install **Eclipse MOSAIC 25.0** [^2], e.g., by following [this manual](https://www.eclipse.org/mosaic/docs/getting_started)
-2. Install **Eclipse SUMO 1.22.0** [^2], e.g., from https://sumo.dlr.de/docs/Downloads.php
-3. Clone this repository to an arbitrary folder.
-   ```sh
-   git clone https://github.com/mosaic-addons/best-scenario.git
-   ```
-4. To download the SUMO files for the scenario (~420 MB), execute the `download_best_scenario.py`[^3] script in `/path/to/repository/scenario/sumo` using [Python 3](https://www.python.org/downloads).
-   ```sh
-   cd /path/to/repository/scenario/sumo
-   py download_best_scenario.py
-   ```
-5. Go to the installation directory of **Eclipse MOSAIC** and type:
-   ```sh
-   mosaic.bat -c /path/to/repository/scenario/scenario_config.json -w 120 # Windows
-   ./mosaic.sh -c /path/to/repository/scenario/scenario_config.json -w 120 # Linux
-   ```
-6. Be aware that completing this scenario requires several hours to complete. You can, however, reduce the simulation duration in the `scenario_config.json`.
+## Modifications to files provided by BeST
+Minor adjustments have been made to *berlin.net.xml*, to include two bus depots, one at **Cicerostraße** in Charlottenburg-Wilmersdorf, and the other at **Müllerstraße**, Wedding. Within the code these are named cicerostrasse and muellerstrasse respectively.
+Additionaly whenever changes to intersections or lanes where made, these had to be mirrored by adapting the *berlin_bus.rou.xml* accordingly.
 
-[^2]: We calibrated and tested the BeST scenario using the mentioned versions of SUMO and MOSAIC. The scenario may still work with newer versions, but we cannot guarantee that the same results will be created.
-[^3]: The download executed by this script will be counted for statistical purposes on www.dcaiti.tu-berlin.de. To disable recording the download, you can set the field `record` in the `download_best_scenario.py` to `False`. Details about tracking on that site can be found at https://www.dcaiti.tu-berlin.de/contact/imprint
+## Information & Contact
+**Author:** Sven Vorgheim \
+**License:** \
+**Maintainer:** Sven Vorgheim \
+**Email:** sven.vorgheim@fu-berlin.de \
+**Project status:** Prototype v1.0\
+**Last updated:** 22.07.2026
 
-In order to see a visualization of the traffic, simply edit the file `etc/runtime.json` in the Eclipse MOSAIC main directory.
-Replace `SumoAmbassador` with `SumoGuiAmbassador` and save the file. 
-Then execute the scenario.
-Please note that using the visualization in `sumo-gui` slows down the simulation significantly due to its immense size.
-
-```
-...
-  {
-    "id": "sumo",
-    "classname": "org.eclipse.mosaic.fed.sumo.ambassador.SumoGuiAmbassador",
-    "configuration": "sumo_config.json",
-    ...
-  }
-...
-```
-
----
-The scenario can also be used with SUMO only. Once you installed the scenario, you can execute it with SUMO directly:
-
-```sh
-sumo -c /path/to/repository/scenario/sumo/berlin.sumocfg
-```
-
-## The MOSAIC scenario
-
-This scenario is compatible with Eclipse MOSAIC. It is prepared to extends the traffic simulation in SUMO with communication and application simulation. 
-You can easily enable and disable simulators in the bottom section of the `scenario_config.json`. Currently, only `sumo` and `application` is activated.
-
-```json
-"federates": {
-     "application": true,
-     "cell": false,
-     "sns": false,
-     "sumo": true,    
-     "output": false
-}
-```
-
-In the `mapping/mapping_config.json`, you will find that 1% of all vehicles are equipped with a [`HelloWorldApp`](https://github.com/eclipse/mosaic/blob/main/app/tutorials/example-applications/src/main/java/org/eclipse/mosaic/app/tutorial/eventprocessing/sampling/HelloWorldApp.java), which simply prints out the type of the vehicle in every simulation step. 
-You can map our other [Example Applications](https://www.eclipse.org/mosaic/tutorials/additional_examples/), or [develop your own applications](https://www.eclipse.org/mosaic/docs/develop_applications/) and map them onto a proportion of all vehicles.
-
-```json
-{
-  "prototypes":[
-    {
-      "name":"DefaultVehicle",
-      "weight": 0.01,
-      "applications":[ "org.eclipse.mosaic.app.tutorial.eventprocessing.sampling.HelloWorldApp" ]
-    }
-  ]
-}
-```
-
-Furthermore, if you want to add communication between vehicles/their applications to the scenario, you can either activate `sns` for adhoc-communication, or `cell` for cell-based communication. Configuration files for both simulators, where you can configure delay times, paket loss, and other communication properties, can be found in `sns/sns_config.json` and `cell/network.json` files. To enable communication in applications, you furthermore need to activate the communication module accordingly in your application, and use it to send V2X messages. For more details on that, follow our [tutorials](https://www.eclipse.org/mosaic/tutorials).
-
-Following an example for an application, which sends a Cooperative Awareness Message (CAM) via adhoc communication to its neighboring vehicles:
-```java
-public class V2xApp
-   extends AbstractApplication<VehicleOperatingSystem>
-   implements CommunicationApplication, VehicleApplication {
-
-   public void onStartup() {
-     getAdhocModule().enable();
-   }
-
-   public void onVehicleUpdated() {
-     getAdhocModule().sendCam();
-   }
-
-   public void onMessageReceived(ReceivedV2xMessage msg) {
-     if (msg.getMessage() instanceof Cam) {
-       String senderId = msg.getMessage().getRouting().getSource().getSourceName();
-       GeoPoint otherPos = ((Cam)msg.getMessage()).getPosition();
-       // todo
-     }
-   }
-}
-```
+### Disclaimer 
+Generative AI was used in the creation process for some skripts.

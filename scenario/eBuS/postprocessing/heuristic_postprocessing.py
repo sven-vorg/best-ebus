@@ -1,8 +1,12 @@
 # Imports
+import logging
 from pathlib import Path
 
 from .charging_stations import ChargingStations
 from .route_concatenation import RouteConcatenation
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 class HeuristicPostprocessing:
     def __init__(
@@ -15,7 +19,7 @@ class HeuristicPostprocessing:
             input_dict: list[Path],
             merged_routes: Path,
             merged_routes_output: Path,
-            vehicles_output: Path
+            vehicles_output: Path,
             ):
         self.net = net
         self.station_root = station_root
@@ -40,14 +44,20 @@ class HeuristicPostprocessing:
         # Work in Progress
         # pv for stations
 
-        for i, _ in enumerate(self.input_path):
-            # Create the merged routes for all electric buses in the simulation
+        for i, depot_file in enumerate(self.input_path):
+            logger.info(
+                "Running RouteConcatenation for Depot: '%s'",
+                self.input_dict[i]
+            )
+            depot = Path(depot_file).stem.removeprefix("solution_")
             rc = RouteConcatenation(
                 input_path=self.input_path[i],
                 input_dict=self.input_dict[i],
                 merged_routes=self.merged_routes,
                 merged_routes_output=self.merged_routes_output,
-                vehicles_output=self.vehicles_output
+                vehicles_output=self.vehicles_output,
+                depot_id=depot,
+                append = (i > 0) # Setting append true for all iterations after 0
             )
             rc.main()
 

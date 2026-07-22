@@ -1,8 +1,12 @@
+import sys
 import altair as alt
 import streamlit as st
 from pathlib import Path
 
-from database.db_connector import get_connection, list_runs
+# Make eBuS/ importable regardless of how/where this script is launched from
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from database import db_connector
 
 # Solar power table (solar_power_v6) is stored wide: one column per hour-end
 # second of the day ("3600", "7200", ..., "86400"). We unpivot it to compute
@@ -16,7 +20,7 @@ PRICE_DATE = "2023-12-07"
 class Dashboard:
     def __init__(self, db_path: Path):
         self.db_path = db_path
-        self.conn = get_connection(db_path)
+        self.conn = db_connector.get_connection(db_path)
         self._build_surface()
         #self._show_vehicle_stats()
         self._plot_consumed_energy_per_hour()
@@ -28,7 +32,7 @@ class Dashboard:
         # Dropdown
         selected_id = st.selectbox(
             "Select a sumo run",
-            options=list_runs(self.conn),
+            options=db_connector.list_runs(self.conn),
         )
 
     def _show_vehicle_stats(self):
@@ -85,7 +89,7 @@ class Dashboard:
         """
         st.subheader("Kumulierter verbrauchter Strom pro Stunde")
 
-        conn = get_connection(self.db_path)
+        conn = db_connector.get_connection(self.db_path)
         try:
             df = conn.execute(
                 """
@@ -116,7 +120,7 @@ class Dashboard:
         """
         st.subheader("Geladene / generierte Energie und Strompreis pro Stunde")
 
-        conn = get_connection(self.db_path)
+        conn = db_connector.get_connection(self.db_path)
         try:
             charged_df = conn.execute(
                 """
@@ -217,7 +221,7 @@ class Dashboard:
         """
         st.subheader("Wert generierter Solarenergie vs. Kosten Ladestationen pro Stunde")
 
-        conn = get_connection(self.db_path)
+        conn = db_connector.get_connection(self.db_path)
         try:
             charged_df = conn.execute(
                 """
@@ -295,3 +299,11 @@ class Dashboard:
             x="hour",
             y=["wert_generierte_energie_eur", "kosten_ladestationen_eur"],
         )
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1:
+        db_path = Path(sys.argv[1])
+    else:
+        raise SystemExit("Usage: streamlit run dashboard.py -- <db_path>")
+
+    Dashboard(db_path)
