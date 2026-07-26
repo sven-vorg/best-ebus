@@ -23,18 +23,10 @@ def list_runs(conn: duckdb.DuckDBPyConnection) -> list[str]:
     Return all distinct simulation_timestamp values present in the
     database - this is what identifies a "run" in the new schema
     (set by DBeBuS._load_output() at import time).
-
-    Pulled as a UNION of battery and chargingstations so a run shows
-    up even if one of the two tables is missing rows for it.
-    solar_power_v6 has no simulation_timestamp - it looks like a
-    single static solar profile reused across every run.
     """
     df = conn.execute(
         """
-        SELECT DISTINCT simulation_timestamp AS run_id FROM battery
-        UNION
-        SELECT DISTINCT simulation_timestamp AS run_id FROM chargingstations
-        ORDER BY run_id
+        SELECT DISTINCT simulation_timestamp AS run_id FROM sumo_config
         """
     ).df()
     return df["run_id"].tolist()

@@ -14,10 +14,14 @@ import sys
 from pathlib import Path
 
 import dotenv
+import logging
 
 from database.db_ebus import DBeBuS
 from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+logger = logging.getLogger(__name__)
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 SCENARIO_ROOT = PROJECT_ROOT.parent
@@ -55,6 +59,7 @@ class EBusMain():
             depots,
             output_dir,
         ).main()
+        logger.info("Heuristic Preprocessing completed")
 
     def run_heuristic_postprocessing(self):
         network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
@@ -92,6 +97,7 @@ class EBusMain():
             merged_routes_output,
             vehicles_output,
         ).main()
+        logger.info("Heuristic Postprocessing completed")
 
     def update_database(self) -> None:
         """Update the DuckDB database with the latest simulation output."""

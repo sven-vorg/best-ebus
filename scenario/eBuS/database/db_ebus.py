@@ -124,8 +124,8 @@ class DBeBuS():
                 rows,
             )
 
-    def _manual_update_db(self):
-        timestamp = "2023-12-07_00-00-00"
+    def _manual_update_db(self, timestamp):
+
         files = [
             f"best-ebus/scenario/sumo/output/electric_bus_{timestamp}_battery.parquet",
             f"best-ebus/scenario/sumo/output/electric_bus_{timestamp}_tripinfo.parquet",

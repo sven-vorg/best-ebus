@@ -1,3 +1,4 @@
+import os
 import sys
 import altair as alt
 import streamlit as st
@@ -7,6 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from database import db_connector
+from basic_sim_stats import BasicSimStats
 
 # Solar power table (solar_power_v6) is stored wide: one column per hour-end
 # second of the day ("3600", "7200", ..., "86400"). We unpivot it to compute
@@ -21,65 +23,24 @@ class Dashboard:
     def __init__(self, db_path: Path):
         self.db_path = db_path
         self.conn = db_connector.get_connection(db_path)
+        self.run_id: str | None = os.getenv("LATEST_TIMESTAMP")
+
+        if self.run_id is None:
+            raise RuntimeError("LATEST_TIMESTAMP is not set in the .env file.")
         self._build_surface()
-        #self._show_vehicle_stats()
+        BasicSimStats.basic_stats_table(self.run_id, self.db_path)
         self._plot_consumed_energy_per_hour()
         self._plot_charged_generated_price_per_hour()
         self._plot_solar_value_vs_charging_cost()
 
+
     def _build_surface(self):
         st.title("eBuS Visualisation")
-        # Dropdown
-        selected_id = st.selectbox(
+
+        self.run_id = st.selectbox(
             "Select a sumo run",
             options=db_connector.list_runs(self.conn),
         )
-
-    def _show_vehicle_stats(self):
-        # Get all keys
-        ids = self.conn.execute(
-            "SELECT trip_id FROM fact_trip ORDER BY trip_id").fetchdf()["trip_id"].tolist()
-
-        # Dropdown
-        selected_id = st.selectbox(
-            "Select a vehicle",
-            options=ids,
-        )
-
-        # Query selected row from battery
-        if selected_id is not None:
-            df = self.conn.execute(
-                """
-                SELECT *
-                FROM battery
-                WHERE vehicle_id = ?
-                """,
-                [selected_id],
-            ).fetchdf()
-
-            st.line_chart(
-                df,
-                x="timestep_time",
-                y=["vehicle_energyCharged",
-                   "vehicle_energyConsumed",
-                   "vehicle_totalEnergyRegenerated",
-                   "vehicle_totalEnergyConsumed"]
-            )
-
-        def other():
-            # Query selected row from fact_trip
-            if selected_id is not None:
-                df = self.conn.execute(
-                    """
-                    SELECT *
-                    FROM fact_trip
-                    WHERE trip_id = ?
-                    """,
-                    [selected_id],
-                ).fetchdf()
-
-                st.line_chart(df)
-                pass
 
     def _plot_consumed_energy_per_hour(self):
         """Plot 1: Kumulierter verbrauchter Strom pro Stunde.
@@ -95,11 +56,13 @@ class Dashboard:
                 """
                 SELECT
                     CAST(FLOOR(CAST(timestep_time AS DOUBLE) / 3600) AS BIGINT) AS hour,
-                    SUM("vehicle_energyConsumed") AS energy_consumed_wh
+                    SUM(vehicle_energyConsumed) AS energy_consumed_wh
                 FROM battery
+                WHERE simulation_timestamp = ?
                 GROUP BY hour
                 ORDER BY hour
-                """
+                """,
+                [self.run_id],  # Parameters
             ).fetchdf()
         finally:
             conn.close()
@@ -128,9 +91,11 @@ class Dashboard:
                     CAST(FLOOR(CAST(step_time AS DOUBLE) / 3600) AS BIGINT) AS hour,
                     SUM("step_energyCharged") AS energy_charged_wh
                 FROM chargingstations
+                WHERE simulation_timestamp = ?
                 GROUP BY hour
                 ORDER BY hour
-                """
+                """,
+                [self.run_id],  # Parameters
             ).fetchdf()
 
             solar_columns = ", ".join(f'"{s}"' for s in SOLAR_HOUR_SECONDS)
