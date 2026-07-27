@@ -200,7 +200,7 @@ class RouteConcatenation:
                 id=route_id,
                 edges=self.join_edges_by_route_id(trip_sequence),
             )
-            print(route.get("route_id")) # Riesen Bug Hier, checke morgen, gerade kein Plan, hoffentlich bald Mulit-Depot working
+            print(route.get("route_id"))
             for stop in self.join_stops_by_route_id(trip_sequence):
                 etree.SubElement(route, "stop", **self._stop_attributes(stop))
 
@@ -221,7 +221,8 @@ class RouteConcatenation:
                 id=f"{self.DEPOT_ID}_{bus['bus_id']}",
                 type=type,
                 route=route_id,
-                depart=str(self.trip_to_depart[trip_sequence[0]]),
+                depart="0",  
+                #depart=str(self.trip_to_depart[trip_sequence[0]]),
                 color="1,0,0",
             )
 
@@ -336,8 +337,20 @@ class RouteConcatenation:
         back into self.trip_stops for reuse by another bus.
         """
         stops: list[dict] = []
+        stops.append({
+            "busStop": f"bs_{self.DEPOT_ID}",
+            "parking": "true",
+            "duration": str(self.trip_to_depart[trip_ids[0]]),
+            "until": str(self.trip_to_depart[trip_ids[0]]),
+        })
         for trip_id in trip_ids:
             stops.extend(dict(stop) for stop in self.trip_stops[trip_id])
+        stops.append({
+            "busStop": f"bs_{self.DEPOT_ID}",
+            "parking": "true",
+            "duration": "0",
+            "until": "84600",
+        })
         return stops
 
     def adapt_until_values(self, routes_root: etree.Element) -> None:
@@ -377,8 +390,7 @@ class RouteConcatenation:
         """
         Build the string attribute dict for a <stop> element, omitting
         "duration"/"until" when unset instead of writing the literal
-        string "None" (a bug in the reference implementation this is
-        based on).
+        string "None".
         """
         attrs = {"busStop": stop["busStop"], "parking": str(stop["parking"]).lower()}
         if stop["duration"] is not None:

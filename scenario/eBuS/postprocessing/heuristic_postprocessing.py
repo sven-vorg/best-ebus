@@ -15,6 +15,7 @@ class HeuristicPostprocessing:
             station_root: Path,
             route_root: Path,
             output_path: Path,
+            area_path: Path,
             input_path: list[Path],
             input_dict: list[Path],
             merged_routes: Path,
@@ -25,6 +26,7 @@ class HeuristicPostprocessing:
         self.station_root = station_root
         self.route_root = route_root
         self.output_path = output_path
+        self.area_path = area_path
         self.input_path = input_path
         self.input_dict = input_dict
         self.merged_routes = merged_routes
@@ -37,7 +39,8 @@ class HeuristicPostprocessing:
             net=self.net,
             station_root=self.station_root,
             route_root=self.route_root,
-            output_path=self.output_path
+            output_path=self.output_path,
+            area_path=self.area_path
         )
         cs.main()
 
@@ -68,6 +71,7 @@ if __name__ == "__main__":
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
+    area_path = Path(HERE / "../files/pv_area_estimation.csv").resolve()
 
     input_path = [Path(HERE / "../files/solution_cicerostrasse.json").resolve(), Path(HERE / "../files/solution_muellerstrasse.json").resolve()]
     input_dict = [Path(HERE / "../files/trips_cicerostrasse.txt").resolve(),Path(HERE / "../files/trips_muellerstrasse.txt").resolve()]
@@ -80,6 +84,7 @@ if __name__ == "__main__":
         station_root=station_root,
         route_root=route_root,
         output_path=output_path,
+        area_path=area_path,
         input_path=input_path,
         input_dict=input_dict,
         merged_routes=merged_routes,
