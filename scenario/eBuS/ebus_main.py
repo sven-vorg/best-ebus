@@ -65,6 +65,7 @@ class EBusMain:
         network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
         stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml").resolve()
         routes_file: Path = (PROJECT_ROOT / "../eBuS/files/cicero_mueller_routes.rou.xml").resolve()
+        area_file: Path = (PROJECT_ROOT / "../eBuS/files/pv_area_estimation.csv").resolve()
 
         output_dir: Path = (PROJECT_ROOT / "../sumo/electric").resolve()
 
@@ -91,6 +92,7 @@ class EBusMain:
             stations_file,
             routes_file,
             output_dir,
+            area_file,
             solution_files,
             trip_files,
             merged_routes,
@@ -167,7 +169,7 @@ if __name__ == "__main__":
     if timestamp is not None:
         print(f"Latest runtime: {timestamp}")
         eb.set_latest_runtime(timestamp)
-    #eb.update_database()
+    eb.update_database()
     
 
     eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))

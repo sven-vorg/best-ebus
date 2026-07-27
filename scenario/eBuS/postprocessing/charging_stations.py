@@ -14,12 +14,17 @@ class ChargingStations():
             net: Path,
             station_root: Path,
             route_root: Path,
-            output_path: Path
+            output_path: Path,
+            area_path: Path
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
         self.ROUTE_ROOT = etree.parse(route_root).getroot()
         self.OUTPUT_PATH = output_path
+        self.AREA_LOOKUP = self.area_lookup(pd.read_csv(area_path, sep=";"))
+
+    def area_lookup(self, area_df: pd.DataFrame):
+        return area_df.set_index("chargingStation_id")["free_area"].to_dict()
 
     def charging_stations_from_solution(self):
         # Parse JSON File
@@ -85,7 +90,8 @@ class ChargingStations():
                     chargeInTransit="false",
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
-                    coordinates= self._get_stop_coordinates(bus_stop)
+                    coordinates= self._get_stop_coordinates(bus_stop),
+                    area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
 
         # Insert charging stations at the beginning of the <additional> element
@@ -101,7 +107,8 @@ class ChargingStations():
                 power="150000",
                 efficiency="0.95",
                 chargeInTransit="false",
-                coordinates= "13.303440333503405,52.492583731258065"
+                coordinates= "13.303440333503405,52.492583731258065",
+                area= str(self.AREA_LOOKUP.get("cd_Cicerostrasse_01"))
             ),
         )
 
@@ -117,7 +124,8 @@ class ChargingStations():
                 power="150000",
                 efficiency="0.95",
                 chargeInTransit="false",
-                coordinates= "13.33776446744273,52.56058715781662"
+                coordinates= "13.33776446744273,52.56058715781662",
+                area= str(self.AREA_LOOKUP.get("cd_Muellerstrasse_01"))
             ),
         )
 
@@ -142,5 +150,6 @@ if __name__ == "__main__":
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
+    area_path = Path(HERE / "../files/pv_area_estimation.csv").resolve()
     cs = ChargingStations(net, station_root, route_root, output_path)
     cs.main()

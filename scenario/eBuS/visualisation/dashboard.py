@@ -31,7 +31,7 @@ class Dashboard:
             raise RuntimeError("LATEST_TIMESTAMP is not set in the .env file.")
         self._build_surface()
         #BasicSimStats.basic_stats_table(self.run_id, self.db_path)
-        self._plot_ess()
+        #self._plot_ess()
         self._plot_consumed_energy_per_hour()
         self._plot_charged_generated_price_per_hour()
         self._plot_solar_value_vs_charging_cost()
