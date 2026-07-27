@@ -4,14 +4,13 @@
 Creates the DuckDB database schema for SUMO simulation results.
 """
 
-
 from pathlib import Path
 from lxml import etree
 import duckdb
 import os
 from dotenv import load_dotenv
 
-class DBeBuS():
+class DBeBuS:
     def __init__(self) -> None:
         load_dotenv()
         self.latest_timestamp = os.getenv("latest_timestamp")
@@ -68,7 +67,7 @@ class DBeBuS():
         db_path = "best-ebus/scenario/eBuS/database/ebus.db"
         with duckdb.connect(db_path) as conn:
             conn.execute(
-                f"""
+                """
                 CREATE TABLE IF NOT EXISTS solar_power_v6 AS
                 SELECT *,
 
@@ -83,7 +82,7 @@ class DBeBuS():
         db_path = "best-ebus/scenario/eBuS/database/ebus.db"
         with duckdb.connect(db_path) as conn:
             conn.execute(
-                f"""
+                """
                 CREATE TABLE IF NOT EXISTS day_ahead_prices_long AS
                 SELECT *,
 
@@ -142,7 +141,7 @@ class DBeBuS():
                 print(f"Loading data for table: {table_name}")
                 # Create the table on the first import
                 conn.execute(
-                    f"""
+                    """
                     CREATE TABLE IF NOT EXISTS {table_name} AS
                     SELECT *,
                         ? AS simulation_timestamp
@@ -154,7 +153,7 @@ class DBeBuS():
 
                 # Append this simulation's data
                 conn.execute(
-                    f"""
+                    """
                     INSERT INTO {table_name}
                     SELECT *,
                         ? AS simulation_timestamp

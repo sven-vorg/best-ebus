@@ -39,6 +39,12 @@ erDiagram
         FLOAT step_maximumBatteryCapacity
         VARCHAR simulation_timestamp
     }
+    curtailed_pv {
+        BIGINT station_id
+        VARCHAR step_time
+        DOUBLE value
+        VARCHAR run_timestamp
+    }
     day_ahead_prices_long {
         TIMESTAMP start_time
         TIMESTAMP end_time
@@ -48,6 +54,12 @@ erDiagram
         BIGINT hour_of_day
         DATE date
         VARCHAR weekday
+    }
+    energy_storage {
+        BIGINT station_id
+        VARCHAR step_time
+        DOUBLE value
+        VARCHAR run_timestamp
     }
     solar_power_v6 {
         VARCHAR station_id
@@ -109,4 +121,10 @@ erDiagram
         VARCHAR battery_totalEnergyConsumed
         VARCHAR battery_totalEnergyRegenerated
         VARCHAR simulation_timestamp
+    }
+    unmet_demand {
+        BIGINT station_id
+        VARCHAR step_time
+        DOUBLE value
+        VARCHAR run_timestamp
     }

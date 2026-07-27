@@ -86,42 +86,7 @@ class DBVisualisation:
 
         return fks
 
-    def create_diagram(self):
-
-        con = duckdb.connect(self.db_path)
-
-        tables = con.execute("""
-            SELECT table_name, column_name, data_type
-            FROM information_schema.columns
-            ORDER BY table_name, ordinal_position
-        """).fetchall()
-
-        dot = graphviz.Digraph(node_attr={"shape": "plaintext"})
-
-        # group columns by table
-        from collections import defaultdict
-        schema = defaultdict(list)
-        for table, col, dtype in tables:
-            schema[table].append((col, dtype))
-
-        for table, cols in schema.items():
-            label = f'<<TABLE BORDER="1" CELLBORDER="0"><TR><TD BGCOLOR="lightblue"><B>{table}</B></TD></TR>'
-            for col, dtype in cols:
-                label += f'<TR><TD ALIGN="LEFT">{col} : {dtype}</TD></TR>'
-            label += "</TABLE>>"
-            dot.node(table, label=label)
-
-        # add foreign keys if you have them defined via constraints
-        fks = con.execute("""
-            SELECT constraint_column_names, referenced_table
-            FROM duckdb_constraints()
-            WHERE constraint_type = 'FOREIGN KEY'
-        """).fetchall()
-
-        dot.render("C:/Users/svens/Documents/FU-Berlin/BeST-eBuS/best-ebus/scenario/eBuS/docs/schema", format="svg", cleanup=True)
-
 if __name__ == "__main__":
     db_path = "best-ebus/scenario/eBuS/database/ebus.db"
     visualizer = DBVisualisation(db_path)
-    visualizer.create_diagram()
     visualizer.export_mermaid(db_path, out_file="best-ebus/scenario/eBuS/docs/schema.mmd")

@@ -30,7 +30,7 @@ SUMO_DIR = SCENARIO_ROOT / "sumo"
 EBUS_DIR = SCENARIO_ROOT / "eBuS"
 FILES_DIR = EBUS_DIR / "files"
 
-class EBusMain():
+class EBusMain:
     def __init__(self) -> None:
         """Create an eBuS controller."""
 
@@ -160,14 +160,14 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    eb.run_heuristic_preprocessing()
-    eb.run_heuristic_postprocessing()
-    eb.run_simulation()
+    #eb.run_heuristic_preprocessing()
+    #eb.run_heuristic_postprocessing()
+    #eb.run_simulation()
     timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     if timestamp is not None:
         print(f"Latest runtime: {timestamp}")
         eb.set_latest_runtime(timestamp)
-    eb.update_database()
+    #eb.update_database()
     
 
     eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))

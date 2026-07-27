@@ -85,7 +85,6 @@ class ChargingStations():
                     chargeInTransit="false",
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
-                    energyStorageCap="500",
                     coordinates= self._get_stop_coordinates(bus_stop)
             )
 
@@ -102,7 +101,6 @@ class ChargingStations():
                 power="150000",
                 efficiency="0.95",
                 chargeInTransit="false",
-                energyStorageCap="50000",
                 coordinates= "13.303440333503405,52.492583731258065"
             ),
         )
@@ -119,7 +117,6 @@ class ChargingStations():
                 power="150000",
                 efficiency="0.95",
                 chargeInTransit="false",
-                energyStorageCap="50000",
                 coordinates= "13.33776446744273,52.56058715781662"
             ),
         )

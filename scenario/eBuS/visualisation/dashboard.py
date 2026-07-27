@@ -3,6 +3,7 @@ import sys
 import altair as alt
 import streamlit as st
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Make eBuS/ importable regardless of how/where this script is launched from
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -23,15 +24,18 @@ class Dashboard:
     def __init__(self, db_path: Path):
         self.db_path = db_path
         self.conn = db_connector.get_connection(db_path)
+        load_dotenv()
         self.run_id: str | None = os.getenv("LATEST_TIMESTAMP")
 
         if self.run_id is None:
             raise RuntimeError("LATEST_TIMESTAMP is not set in the .env file.")
         self._build_surface()
-        BasicSimStats.basic_stats_table(self.run_id, self.db_path)
+        #BasicSimStats.basic_stats_table(self.run_id, self.db_path)
+        self._plot_ess()
         self._plot_consumed_energy_per_hour()
         self._plot_charged_generated_price_per_hour()
         self._plot_solar_value_vs_charging_cost()
+
 
 
     def _build_surface(self):
@@ -41,6 +45,38 @@ class Dashboard:
             "Select a sumo run",
             options=db_connector.list_runs(self.conn),
         )
+
+    def _plot_ess(self):
+        """
+        Plot the 
+        """
+        st.subheader("Energie Speicher der Ladestationen")
+
+        conn = db_connector.get_connection(self.db_path)
+        try:
+            df = conn.execute(
+                """
+                SELECT *
+                FROM energy_storage es
+                JOIN curtailed_pv cp
+                    ON es.run_timestamp = cp.run_timestamp
+                AND es.step_time = cp.step_time
+                JOIN unmet_demand ud
+                    ON es.run_timestamp = ud.run_timestamp
+                AND es.step_time = ud.step_time
+                WHERE es.run_timestamp = ?
+                """,
+                [self.run_id],  # Parameters
+            ).fetchdf()
+        finally:
+            conn.close()
+
+        if df.empty:
+            st.info("Keine Daten für diesen Plot verfügbar.")
+            return
+
+        st.line_chart(df, x="second", y="energy in Wh")
+    
 
     def _plot_consumed_energy_per_hour(self):
         """Plot 1: Kumulierter verbrauchter Strom pro Stunde.
