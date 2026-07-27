@@ -3,6 +3,7 @@ from lxml import etree
 import pandas as pd
 import requests
 import ast
+from math import floor
 
 class PVGISApiCall():
 
@@ -14,7 +15,7 @@ class PVGISApiCall():
         self.output = "best-ebus/scenario/eBuS/ext_data"
         pass
 
-    def v6(self, stations: Path, csv: bool = False):
+    def v6(self, stations: Path, csv: bool = True):
         root = etree.parse(stations).getroot()
         # Load station output
         # Liste für Ergebnisse initialisieren
@@ -23,6 +24,7 @@ class PVGISApiCall():
         for station in root.findall(".//chargingStation"):
             # Koordinaten extrahieren und in Float umwandeln
             coordinates = station.get("coordinates")
+            peak_power = self.calculate_kWp(station.get("area"))
             if coordinates:
                 lon_str, lat_str = coordinates.split(",")
                 latitude = float(lat_str.strip())
@@ -42,7 +44,7 @@ class PVGISApiCall():
                         #"surface_tilt": "45",
                         "frequency": "Minutely",
                         "timezone": "Europe/Berlin",
-                        "peak-power": 5, # in kWp
+                        "peak-power": peak_power, # in kWp
                     },
                     timeout=10  # Timeout für bessere Stabilität
                 )
@@ -60,6 +62,14 @@ class PVGISApiCall():
         print(f"/nVerarbeitung abgeschlossen. {len(results)} Stationen verarbeitet.")
         return df
 
+    def calculate_kWp(self, area) -> int:
+        power_per_panel = 500
+        area_per_panel = 2.4
+
+        nr_of_panels = floor(int(area) / area_per_panel)
+        peak_wattage = nr_of_panels * power_per_panel
+        return peak_wattage
+
     def optimize_csv(self):
         df = self.df
         # Convert the string into a Python dictionary
@@ -69,7 +79,7 @@ class PVGISApiCall():
         columns = [(i + 1) * 3600 for i in range(24)]
 
         power_df = pd.DataFrame(
-            df["solar_data"].apply(lambda x: x["Power ⌁"]).tolist(),
+            df["solar_data"].apply(lambda x: x["power"]).tolist(),
             columns=columns
         )
 
@@ -81,6 +91,30 @@ class PVGISApiCall():
         # Save
         result.to_csv(f"{self.output}/solar_power_v6.csv", index=False)
 
+
+@staticmethod
+def manual_csv_optimization():
+    df = pd.read_csv("best-ebus/scenario/eBuS/ext_data/pv_data.csv")
+    # Convert the string into a Python dictionary
+    df["solar_data"] = df["solar_data"].apply(ast.literal_eval)
+
+    # Extract the power list
+    columns = [(i + 1) * 3600 for i in range(24)]
+
+    power_df = pd.DataFrame(
+        df["solar_data"].apply(lambda x: x["power"]).tolist(),
+        columns=columns
+    )
+
+    # Combine with station_id (or keep other columns if desired)
+    result = pd.concat([df[["station_id"]], power_df], axis=1)
+
+    print(result.head())
+
+    # Save
+    result.to_csv("best-ebus/scenario/eBuS/ext_data/solar_power_v6.csv", index=False)
+
+
 if __name__ == "__main__":
-    pac = PVGISApiCall()
-    pac.optimize_csv()
+    #PVGISApiCall().optimize_csv()
+    manual_csv_optimization()
