@@ -5,6 +5,7 @@ scenario/sumo/output/
 scenario/sumo/berlin.net.xml
 scenario/sumo/berlin_bus.rou.xml
 scenario/sumo/berlin.rou.gz
+scenario/eBuS/database/ebus.db
 
 # Unchanging BeST Files
 scenario/sumo/berlin.sumocfg
@@ -22,3 +23,4 @@ scenario/sumo/electric/e_routes.rou.xml
 
 # Draw.io temporary files
 **.bkp
+

@@ -23,6 +23,7 @@
     <statistic-output value="statistics.xml"/>
     <battery-output value="battery.xml"/>
     <chargingstations-output value="chargingstations.xml"/>
+    <chargingstations-output.aggregated value="true"/> 
     <fcd-output value="fcdinfo.xml"/>
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
