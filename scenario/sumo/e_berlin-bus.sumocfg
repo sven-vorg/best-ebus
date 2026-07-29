@@ -5,7 +5,7 @@
     <route-files value="electric/e_routes.rou.xml, electric/e_vehicles.rou.xml"/>
     <additional-files value="berlin_bus_stops.add.xml, electric/e_type.add.xml, electric/e_depots.add.xml, electric/e_stations.add.xml"/>
   </input>
-  <output>
+  <!--<output>
     <output-prefix value="output/electric_bus_TIME_"/>
     <log value="console.log"/>
     <summary-output value="summary.xml"/>
@@ -14,6 +14,19 @@
     <chargingstations-output value="chargingstations.parquet"/>
     <tripinfo-output value="tripinfo.parquet"/>
     <tripinfo-output.write-unfinished value="true"/>
+    <stop-output value="stopinfo.parquet"/>
+  </output>-->
+  <output>
+    <output-prefix value="output/electric_bus_TIME_"/>
+    <log value="console.log"/>
+    <summary-output value="summary.xml"/>
+    <statistic-output value="statistics.xml"/>
+    <battery-output value="battery.xml"/>
+    <chargingstations-output value="chargingstations.xml"/>
+    <fcd-output value="fcdinfo.xml"/>
+    <tripinfo-output value="tripinfo.xml"/>
+    <tripinfo-output.write-unfinished value="true"/>
+    <stop-output value="stopinfo.xml"/>
   </output>
   <time>
     <begin value="0.0"/>
