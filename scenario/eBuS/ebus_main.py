@@ -164,7 +164,7 @@ if __name__ == "__main__":
     eb = EBusMain()
     #eb.run_heuristic_preprocessing()
     #eb.run_heuristic_postprocessing()
-    #eb.run_simulation()
+    eb.run_simulation()
     timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     if timestamp is not None:
         print(f"Latest runtime: {timestamp}")
@@ -172,5 +172,5 @@ if __name__ == "__main__":
     eb.update_database()
     
 
-    eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))
+    #eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))
     pass

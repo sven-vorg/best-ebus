@@ -79,24 +79,21 @@ class Dashboard:
     
 
     def _plot_consumed_energy_per_hour(self):
-        """Plot 1: Kumulierter verbrauchter Strom pro Stunde.
-
-        Summiert vehicle_energyConsumed aus 'battery' je Stunden-Bucket
-        (0-3600s, 3601-7200s, ...).
+        """Plot 1: Total Energy consumption per hour.
         """
-        st.subheader("Kumulierter verbrauchter Strom pro Stunde")
+        st.subheader("Plot 1: Total Energy consumption per hour.")
 
         conn = db_connector.get_connection(self.db_path)
         try:
             df = conn.execute(
                 """
                 SELECT
-                    CAST(FLOOR(CAST(timestep_time AS DOUBLE) / 3600) AS BIGINT) AS hour,
-                    SUM(vehicle_energyConsumed) AS energy_consumed_wh
+                    CAST(FLOOR(CAST(timestep_time AS DOUBLE) / 3600) AS BIGINT) AS Hour_of_Day,
+                    SUM(vehicle_energyConsumed) AS Energy_consumed_in_Wh
                 FROM battery
                 WHERE simulation_timestamp = ?
-                GROUP BY hour
-                ORDER BY hour
+                GROUP BY Hour_of_Day
+                ORDER BY Hour_of_Day
                 """,
                 [self.run_id],  # Parameters
             ).fetchdf()
@@ -107,7 +104,7 @@ class Dashboard:
             st.info("Keine Daten für diesen Plot verfügbar.")
             return
 
-        st.bar_chart(df, x="hour", y="energy_consumed_wh")
+        st.bar_chart(df, x="Hour_of_Day", y="Energy_consumed_in_Wh")
 
     def _plot_charged_generated_price_per_hour(self):
         """Plot 2: Geladene Energie, generierte Energie und Strompreis pro Stunde.
@@ -211,7 +208,7 @@ class Dashboard:
         )
 
         combined = alt.layer(energy_chart, price_chart).resolve_scale(y="independent")
-        st.altair_chart(combined, use_container_width=True)
+        st.altair_chart(combined, width=True)
 
     def _plot_solar_value_vs_charging_cost(self):
         """Plot 3: Wert der generierten Solarenergie vs. Kosten der Ladestationen, je Stunde.
