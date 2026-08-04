@@ -39,7 +39,7 @@ class EBusMain:
         stations_file: Path = SUMO_DIR / "berlin_bus_stops.add.xml"
         network_file: Path = SUMO_DIR / "berlin.net.xml"
 
-        selected_lines_file: Path = FILES_DIR / "depot_line_type.csv"
+        selected_lines_file: Path = FILES_DIR / "preprocessing_input/depot_line_type.csv"
         combined_routes: Path = FILES_DIR / "cicero_mueller_routes.rou.xml"
         trimmed_routes: Path = FILES_DIR / "cicero_mueller_routes_trimmed.rou.xml"
         termination_points: Path = FILES_DIR / "termination_points.txt"
@@ -64,8 +64,8 @@ class EBusMain:
     def run_heuristic_postprocessing(self):
         network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
         stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml").resolve()
-        routes_file: Path = (PROJECT_ROOT / "../eBuS/files/cicero_mueller_routes.rou.xml").resolve()
-        area_file: Path = (PROJECT_ROOT / "../eBuS/files/pv_area_estimation.csv").resolve()
+        routes_file: Path = (FILES_DIR / "cicero_mueller_routes.rou.xml").resolve()
+        area_file: Path = (FILES_DIR / "postprocessing_input/pv_area_estimation.csv").resolve()
 
         output_dir: Path = (PROJECT_ROOT / "../sumo/electric").resolve()
 
@@ -78,6 +78,8 @@ class EBusMain:
             (PROJECT_ROOT / "../eBuS/files/trips_cicerostrasse.txt").resolve(),
             (PROJECT_ROOT / "../eBuS/files/trips_muellerstrasse.txt").resolve(),
         ]
+
+        soc_percentage: int = 50
 
         merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/merged_routes.rou.xml").resolve()
         merged_routes_output: Path = (
@@ -95,6 +97,7 @@ class EBusMain:
             area_file,
             solution_files,
             trip_files,
+            soc_percentage,
             merged_routes,
             merged_routes_output,
             vehicles_output,
@@ -162,8 +165,8 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    #eb.run_heuristic_preprocessing()
-    #eb.run_heuristic_postprocessing()
+    eb.run_heuristic_preprocessing()
+    eb.run_heuristic_postprocessing()
     eb.run_simulation()
     timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     if timestamp is not None:

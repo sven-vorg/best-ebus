@@ -36,6 +36,7 @@ def parse_charging_events(xml_path):
 def parse_pv_data(csv_path):
     df = pd.read_csv(csv_path)
     df = df.set_index('station_id')
+    df = df.drop(columns=["peak_power"])
     df = df[sorted(df.columns, key=lambda c: int(c))]
     return {station_id: row.astype(float).tolist() for station_id, row in df.iterrows()}
 
@@ -129,8 +130,8 @@ if __name__ == "__main__":
     ess = EnergyStorageSystem(
         charging_stations=charging_stations,
         ess_capacity=500_000,   # Wh — replace with your real capacity per station or spec
-        pv_csv_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\ext_data\solar_power_v6.csv",
-        start_soc=0.0,
+        pv_csv_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\pv_estimation\data\solar_power_v6_scaled.csv",
+        start_soc=250_000,
     )
 
     ess.ess_df.to_csv(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\files\output\ess_output.csv", index=False)

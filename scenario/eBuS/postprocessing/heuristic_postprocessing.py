@@ -18,6 +18,7 @@ class HeuristicPostprocessing:
             area_path: Path,
             input_path: list[Path],
             input_dict: list[Path],
+            soc_percentage: int,
             merged_routes: Path,
             merged_routes_output: Path,
             vehicles_output: Path,
@@ -32,6 +33,7 @@ class HeuristicPostprocessing:
         self.merged_routes = merged_routes
         self.merged_routes_output = merged_routes_output
         self.vehicles_output = vehicles_output
+        self.soc_percentage = soc_percentage
 
     def main(self):
         # Create e_stations.add.xml containing stations designated as charging opportunitys
@@ -60,6 +62,7 @@ class HeuristicPostprocessing:
                 merged_routes_output=self.merged_routes_output,
                 vehicles_output=self.vehicles_output,
                 depot_id=depot,
+                soc_percentage=self.soc_percentage,
                 append = (i > 0) # Setting append true for all iterations after 0
             )
             rc.main()
@@ -89,7 +92,8 @@ if __name__ == "__main__":
         input_dict=input_dict,
         merged_routes=merged_routes,
         merged_routes_output=merged_routes_output,
-        vehicles_output=vehicles_output
+        vehicles_output=vehicles_output,
+        soc_percentage=50
     )
     hp.main()
 

@@ -50,6 +50,7 @@ class RouteConcatenation:
         merged_routes_output: Path,
         vehicles_output: Path,
         depot_id: str,
+        soc_percentage: int,
         append: bool,
     ) -> None:
         self.INPUT = input_path
@@ -57,6 +58,7 @@ class RouteConcatenation:
         self.ROUTES_OUTPUT = merged_routes_output
         self.VEHICLES_OUTPUT = vehicles_output
         self.DEPOT_ID = depot_id
+        self.SOC_PERCENTAGE = soc_percentage
 
         self._load_trip_dictionary(input_dict)
         self._load_route_lookups()
@@ -204,10 +206,13 @@ class RouteConcatenation:
             for stop in self.join_stops_by_route_id(trip_sequence):
                 etree.SubElement(route, "stop", **self._stop_attributes(stop))
 
+            # Determines SoC at sim start
+            max_battery_capacity = 525000
             if bus["bus_type_name"] == "EN":
                 type = "Ebusco2.2electric12m"
             elif bus["bus_type_name"] == "GN":
                 type = "SolarsisUrbino18electric12m"
+                max_battery_capacity = 528000
             else:
                 logger.warning(
                     "Unknown bus_type_name '%s' for bus %s; defaulting to Ebusco2.2electric12m",
@@ -215,7 +220,7 @@ class RouteConcatenation:
                 )
                 type = "Ebusco2.2electric12m"
 
-            etree.SubElement(
+            vehicle = etree.SubElement(
                 vehicles_root,
                 "vehicle",
                 id=f"{self.DEPOT_ID}_{bus['bus_id']}",
@@ -224,6 +229,12 @@ class RouteConcatenation:
                 depart="0",  
                 #depart=str(self.trip_to_depart[trip_sequence[0]]),
                 color="1,0,0",
+            )
+            etree.SubElement(
+                vehicle,
+                "param",
+                key="device.battery.chargeLevel",
+                value=str((max_battery_capacity/100) * self.SOC_PERCENTAGE),
             )
 
         # Trip-local "until" timestamps reset at each original trip boundary;
@@ -419,5 +430,6 @@ if __name__ == "__main__":
     routes_output_path = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output_path = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
     depot_id = "cicerostrasse"
-    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path, depot_id=depot_id)
+    soc_percentage = 50
+    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path, depot_id=depot_id, soc_percentage = soc_percentage, append=False)
     rc.main()

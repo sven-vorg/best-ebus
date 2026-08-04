@@ -1,9 +1,9 @@
+from math import floor
 from pathlib import Path
+
 from lxml import etree
 import pandas as pd
 import requests
-import ast
-from math import floor
 
 class PVGISApiCall:
 
@@ -56,11 +56,27 @@ class PVGISApiCall:
                 )
                 print(response.url)
                 #print(response.status_code)
-                print(response.text)
+         
                 # Ergebnis als Dictionary speichern
+                response.raise_for_status()
+
+                raw_data = response.json()
+                print(raw_data)
+
+                # PVGIS returns hourly production normalized per installed kWp.
+                # Workaround: scale by installed capacity and convert W/Wh -> kW/kWh
+                # (numerically equivalent for 1-hour timesteps).
+                scaled_data = {
+                    **raw_data,
+                #   "power": [(p * peak_power) / 1000 for p in raw_data["power"]],
+                    "power": [(p * peak_power) for p in raw_data["power"]],
+                }
+
                 results.append({
                     "station_id": station.get("id"),
-                    "solar_data": response.text,
+                    "peak_power": peak_power,
+                    "raw_solar_data": raw_data,
+                    "scaled_solar_data": scaled_data,
                 })
         df = pd.DataFrame(results)
         if csv:
@@ -77,48 +93,39 @@ class PVGISApiCall:
         return peak_wattage
 
     def optimize_csv(self, answer_df: pd.DataFrame):
-        # Convert the string into a Python dictionary
-        answer_df["solar_data"] = answer_df["solar_data"].apply(ast.literal_eval)
-
-        # Extract the power list
         columns = [(i + 1) * 3600 for i in range(24)]
 
-        power_df = pd.DataFrame(
-            answer_df["solar_data"].apply(lambda x: x["power"]).tolist(),
-            columns=columns
+        raw_power_df = pd.DataFrame(
+            answer_df["raw_solar_data"].apply(lambda x: x["power"]).tolist(),
+            columns=columns,
         )
 
-        # Combine with station_id (or keep other columns if desired)
-        result = pd.concat([answer_df[["station_id"]], power_df], axis=1)
+        scaled_power_df = pd.DataFrame(
+            answer_df["scaled_solar_data"].apply(lambda x: x["power"]).tolist(),
+            columns=columns,
+        )
 
-        print(result.head())
+        raw_result = pd.concat(
+            [answer_df[["station_id", "peak_power"]], raw_power_df],
+            axis=1,
+        )
 
-        # Save
-        result.to_csv(f"{self.output_path}/solar_power_v6.csv", index=False)
+        scaled_result = pd.concat(
+            [answer_df[["station_id", "peak_power"]], scaled_power_df],
+            axis=1,
+        )
 
+        raw_result.to_csv(
+            f"{self.output_path}/solar_power_v6_raw.csv",
+            index=False,
+        )
 
-@staticmethod
-def manual_csv_optimization():
-    df = pd.read_csv("best-ebus/scenario/eBuS/ext_data/pv_data.csv")
-    # Convert the string into a Python dictionary
-    df["solar_data"] = df["solar_data"].apply(ast.literal_eval)
-
-    # Extract the power list
-    columns = [(i + 1) * 3600 for i in range(24)]
-
-    power_df = pd.DataFrame(
-        df["solar_data"].apply(lambda x: x["power"]).tolist(),
-        columns=columns
-    )
-
-    # Combine with station_id (or keep other columns if desired)
-    result = pd.concat([df[["station_id"]], power_df], axis=1)
-
-    print(result.head())
-
-    # Save
-    result.to_csv("best-ebus/scenario/eBuS/ext_data/solar_power_v6.csv", index=False)
-
+        scaled_result.to_csv(
+            f"{self.output_path}/solar_power_v6_scaled.csv",
+            index=False,
+        )
 
 if __name__ == "__main__":
-    PVGISApiCall(stations_path = "best-ebus/scenario/sumo/electric/e_stations.add.xml", output_path = "best-ebus/scenario/eBuS/pv_estimation").main()
+    stations_path: Path = Path("best-ebus/scenario/sumo/electric/e_stations.add.xml")
+    output_path: Path = Path("best-ebus/scenario/eBuS/pv_estimation/data")
+    PVGISApiCall(stations_path = stations_path, output_path = output_path).main()

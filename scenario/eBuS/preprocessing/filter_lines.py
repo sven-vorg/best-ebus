@@ -195,7 +195,7 @@ if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
 
     routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    selected_lines_file = (HERE / "../files/depot_line_type.csv").resolve()
+    selected_lines_file = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
     output_dir = (HERE / "../files").resolve()
     fl = FilterLines(routes_file, selected_lines_file, output_dir)
     fl.main()
