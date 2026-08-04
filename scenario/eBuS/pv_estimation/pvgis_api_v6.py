@@ -17,10 +17,10 @@ class PVGISApiCall:
 
     def main(self):
         answer_df = self.v6(self.stations_path)
-        #self.optimize_csv(answer_df)
+        self.optimize_csv(answer_df)
 
 
-    def v6(self, stations: Path, csv: bool = False) -> pd.DataFrame:
+    def v6(self, stations: Path, csv: bool = True) -> pd.DataFrame:
         root = etree.parse(stations).getroot()
         # Load station output
         # Liste für Ergebnisse initialisieren
@@ -43,19 +43,19 @@ class PVGISApiCall:
                         "latitude": latitude,
                         "longitude": longitude,
                         "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
-                        "start_time": "2024-07-10 00:00:00",
-                        "end_time": "2024-07-10 23:59:59",
+                        "start_time": "2024-06-22 00:00:00",
+                        "end_time": "2024-06-22 23:59:59",
                         "surface_position_optimisation_mode": "Orientation & Tilt",
                         #"surface_orientation": "180",
                         #"surface_tilt": "45",
-                        "frequency": "Minutely",
+                        "frequency": "Hourly",
                         "timezone": "Europe/Berlin",
-                        "peak-power": peak_power, # in kWp
+                        "peak_power": peak_power, # in kWp
                     },
-                    timeout=10  # Timeout für bessere Stabilität
+                    timeout=60  # Timeout für bessere Stabilität
                 )
                 print(response.url)
-                print(response.status_code)
+                #print(response.status_code)
                 print(response.text)
                 # Ergebnis als Dictionary speichern
                 results.append({
@@ -64,7 +64,7 @@ class PVGISApiCall:
                 })
         df = pd.DataFrame(results)
         if csv:
-            df.to_csv("best-ebus/scenario/eBuS/ext_data/pv_data.csv")
+            df.to_csv(f"{self.output_path}/raw_pv_data.csv", index=False)
         print(f"/nVerarbeitung abgeschlossen. {len(results)} Stationen verarbeitet.")
         return df
 
@@ -94,7 +94,7 @@ class PVGISApiCall:
         print(result.head())
 
         # Save
-        result.to_csv(f"{self.output}/solar_power_v6.csv", index=False)
+        result.to_csv(f"{self.output_path}/solar_power_v6.csv", index=False)
 
 
 @staticmethod
@@ -121,5 +121,4 @@ def manual_csv_optimization():
 
 
 if __name__ == "__main__":
-    PVGISApiCall(stations_path = "best-ebus/scenario/sumo/electric/e_stations.add.xml", output_path = "best-ebus/scenario/eBuS/ext_data").main()
-    #manual_csv_optimization()
+    PVGISApiCall(stations_path = "best-ebus/scenario/sumo/electric/e_stations.add.xml", output_path = "best-ebus/scenario/eBuS/pv_estimation").main()
