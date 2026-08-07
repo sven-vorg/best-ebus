@@ -14,6 +14,7 @@ def plot_combined(csv_path="ess_output.csv", save_path="ess_combined_plot.png"):
     """
     df = pd.read_csv(csv_path)
     df = df.round(6)
+    
     # Multiply PV generation by 1000
     df["pv_generated"] = df["pv_generated"] * 1000
     df["hour"] = df["timestep_min"] / 60  # nicer x-axis than raw minutes

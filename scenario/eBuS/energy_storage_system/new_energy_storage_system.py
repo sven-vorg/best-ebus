@@ -124,7 +124,7 @@ class EnergyStorageSystem:
 
 if __name__ == "__main__":
     charging_stations = parse_charging_events(
-        r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\electric_bus_2026-07-30-10-53-35_chargingstations.xml"
+        r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\ebus_2026-08-05-12-31-02_chargingstations.xml"
     )
 
     ess = EnergyStorageSystem(

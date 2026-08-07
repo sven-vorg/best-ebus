@@ -86,11 +86,13 @@ class ChargingStations():
                     startPos=bus_stop.get("startPos"),
                     endPos=bus_stop.get("endPos"),
                     power="150000",
+                    totalPower="150000",
                     efficiency="0.95",
                     chargeInTransit="false",
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
                     coordinates= self._get_stop_coordinates(bus_stop),
+                    chargeDelay="21",
                     area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
 
