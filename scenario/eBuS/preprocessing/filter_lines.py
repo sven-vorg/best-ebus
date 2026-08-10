@@ -6,23 +6,25 @@ from lxml import etree
 from pathlib import Path
 import math
 
-class FilterLines():
+class FilterLines:
 
     def __init__(
         self,
         routes_file: Path,
         selected_lines_file: Path,
+        bus_stops_file: Path,
         output_dir: Path,
     ):
-        self.routes_file = routes_file
-        self.selected_lines_file = selected_lines_file
-        self.output_dir = output_dir
+        self.routes_tree = etree.parse(routes_file)
+        self.routes_root = self.routes_tree.getroot()
 
-        self.selected_lines = pd.read_csv(self.selected_lines_file)
+        self.selected_lines = pd.read_csv(selected_lines_file)
         self.lines = set(self.selected_lines["line"])
 
-        self.routes_tree = etree.parse(self.routes_file)
-        self.routes_root = self.routes_tree.getroot()
+        self.bus_stops_tree = etree.parse(bus_stops_file)
+        self.bus_stops_root = self.bus_stops_tree.getroot()
+
+        self.output_dir = output_dir
 
         self.route_calculations = pd.DataFrame()
 
@@ -139,6 +141,15 @@ class FilterLines():
         df["trip_begin"] = df["flow_begin"] + df["repetition"] * df["period"]
         df["trip_end"] = df["trip_begin"] + df["duration"]
 
+        # Add additonal information "Name" and "Coordinates" of first and last bus stop
+        stop_name_dict = self.stop_name_dict()
+        df["START_STOP_NAME"] = df["start_stop_id"].map(stop_name_dict)
+        df["END_STOP_NAME"] = df["end_stop_id"].map(stop_name_dict)
+
+        stop_coord_dict = self.stop_coord_dict()
+        df["START_STOP_COORDINATES"] = df["start_stop_id"].map(stop_coord_dict)
+        df["END_STOP_COORDINATES"] = df["end_stop_id"].map(stop_coord_dict)
+
         # Rename columns
         df = df.rename(columns={
             "route": "ORIGINAL_TRIP_ID",
@@ -147,6 +158,8 @@ class FilterLines():
             "start_stop_id": "START_STOP_ID",
             "end_stop_id": "END_STOP_ID",
         })
+
+
 
         # Remove unneeded columns
         df = df.drop(columns=[
@@ -190,12 +203,29 @@ class FilterLines():
         h, m, s = map(int, t.split(":"))
         return h * 3600 + m * 60 + s
 
+    # Parse additional information
+    def stop_name_dict(self):
+        bus_stop_names = {
+            stop.get("id"): stop.get("name")
+            for stop in self.bus_stops_root.findall("busStop")
+        }
+        return bus_stop_names
+
+    def stop_coord_dict(self):
+        bus_stop_coords = {
+            stop.get("id"): stop.get("coordinates")
+            for stop in self.bus_stops_root.findall("busStop")
+        }
+        return bus_stop_coords
+
+
 if __name__ == "__main__":
     
     HERE = Path(__file__).resolve().parent
 
     routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
     selected_lines_file = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
+    bus_stops_file = (HERE /  "../../sumo/berlin_bus_stops.add.xml").resolve()
     output_dir = (HERE / "../files").resolve()
-    fl = FilterLines(routes_file, selected_lines_file, output_dir)
+    fl = FilterLines(routes_file, selected_lines_file, bus_stops_file, output_dir)
     fl.main()

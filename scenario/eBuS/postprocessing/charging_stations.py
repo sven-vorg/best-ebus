@@ -4,7 +4,6 @@ import pandas as pd
 import sumolib
 from pathlib import Path
 import json
-from sumolib.geomhelper import positionAtShapeOffset
 import datetime
 
 class ChargingStations():
@@ -45,23 +44,6 @@ class ChargingStations():
             charging_locations.add(station_decision["station_id"])
         return charging_locations
 
-    def _get_stop_coordinates(self, stop):
-        lane_id = stop.get("lane")
-        pos = float(stop.get("pos", 0))
-
-        lane = self.net.getLane(lane_id)
-        shape = lane.getShape()
-
-        # position along the lane's shape -> network x,y
-        x, y = positionAtShapeOffset(shape, pos)
-
-        # network x,y -> lon/lat (WGS84)
-        lon, lat = self.net.convertXY2LonLat(x, y)
-
-        return f"{lon:.6f},{lat:.6f}"
-
-    def _add_depots(self, root):
-        pass
 
     def main(self):
 
@@ -91,7 +73,7 @@ class ChargingStations():
                     chargeInTransit="false",
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
-                    coordinates= self._get_stop_coordinates(bus_stop),
+                    coordinates= bus_stop.get("coordinates"),
                     chargeDelay="21",
                     area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
@@ -152,6 +134,6 @@ if __name__ == "__main__":
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
-    area_path = Path(HERE / "../files/pv_area_estimation.csv").resolve()
-    cs = ChargingStations(net, station_root, route_root, output_path)
+    area_path = Path(HERE / "../files//postprocessing_input/pv_area_estimation.csv").resolve()
+    cs = ChargingStations(net, station_root, route_root, output_path, area_path)
     cs.main()
