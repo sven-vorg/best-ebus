@@ -123,7 +123,7 @@ class FilterLines:
         merged.to_csv("best-ebus/scenario/eBuS/files/merged_routes.csv", index=False)
 
 
-    def routes_to_trips(self, create_csv: bool = True) -> dict:
+    def routes_to_trips(self, create_csv: bool = True):
         """
         Creates mutliple csv / dict{df} of the desired format for each depot in the input: 
         TRIP_ID;ORIGINAL_TRIP_ID;START_STOP_ID;END_STOP_ID;START_TIMESTAMP;END_TIMESTAMP
@@ -178,17 +178,7 @@ class FilterLines:
         ])
 
         df.reset_index(drop=True, inplace=True)
-
-        depot_dict = {}
-        # Split by depot
-        for depot, depot_df in df.groupby("depot"):
-            depot_df.drop(columns="depot")
-            depot_df.insert(0, "TRIP_ID", range(1, len(depot_df) + 1))
-            if create_csv:
-                depot_df.to_csv(f"{self.output_dir}/trips_{depot}.txt", index=False, sep=";")
-            depot_dict[f"{depot}"] = depot_df
-
-        return depot_dict
+        df.to_csv(f"{self.output_dir}/trips_best.txt", index=False, sep=";")
 
     def main(self):
         self._remove_routes()

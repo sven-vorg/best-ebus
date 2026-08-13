@@ -69,15 +69,9 @@ class EBusMain:
 
         output_dir: Path = (PROJECT_ROOT / "../sumo/electric").resolve()
 
-        solution_files: list[Path] = [
-            (PROJECT_ROOT / "../eBuS/files/solution_cicerostrasse.json").resolve(),
-            (PROJECT_ROOT / "../eBuS/files/solution_muellerstrasse.json").resolve(),
-        ]
+        solution_file = (PROJECT_ROOT / "../eBuS/files/solution.json").resolve()
 
-        trip_files: list[Path] = [
-            (PROJECT_ROOT / "../eBuS/files/trips_cicerostrasse.txt").resolve(),
-            (PROJECT_ROOT / "../eBuS/files/trips_muellerstrasse.txt").resolve(),
-        ]
+        trip_file = (PROJECT_ROOT / "../eBuS/files/trips_vbb.txt").resolve()
 
         soc_percentage: int = 50
 
@@ -95,8 +89,8 @@ class EBusMain:
             routes_file,
             output_dir,
             area_file,
-            solution_files,
-            trip_files,
+            solution_file,
+            trip_file,
             soc_percentage,
             merged_routes,
             merged_routes_output,
@@ -165,9 +159,9 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    #eb.run_heuristic_preprocessing()
-    #eb.run_heuristic_postprocessing()
-    eb.run_simulation()
+    eb.run_heuristic_preprocessing()
+    eb.run_heuristic_postprocessing()
+    #eb.run_simulation()
     #timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     #if timestamp is not None:
     #    print(f"Latest runtime: {timestamp}")

@@ -59,6 +59,8 @@ class ChargingStations():
 
         for bus_stop in self.STATION_ROOT.findall("busStop"):
             if bus_stop.get("id") in charging_stop_ids:
+                param = bus_stop.find("param[@key='coordinates']")
+                coordinates = param.get("value") if param is not None else None
                 etree.SubElement(
                     additional,
                     "chargingStation",
@@ -73,11 +75,11 @@ class ChargingStations():
                     chargeInTransit="false",
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
-                    coordinates= bus_stop.get("coordinates"),
                     chargeDelay="21",
+                    coordinates= coordinates,
                     area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
-
+        
         # Insert charging stations at the beginning of the <additional> element
         additional.insert(
             0,

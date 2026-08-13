@@ -32,7 +32,13 @@ class CoordinateCalculator:
             x, y = positionAtShapeOffset(shape, pos)
             lon, lat = self.net.convertXY2LonLat(x, y)
 
-            stop.set("coordinates", f"{lon:.6f},{lat:.6f}")
+            # remove any existing "coordinates" param to avoid duplicates
+            for existing_param in stop.findall("param[@key='coordinates']"):
+                stop.remove(existing_param)
+
+            param = etree.SubElement(stop, "param")
+            param.set("key", "coordinates")
+            param.set("value", f"{lon:.6f},{lat:.6f}")
 
         return self.bus_stops_tree
 
@@ -45,9 +51,11 @@ class CoordinateCalculator:
             encoding="UTF-8",
         )
 
+
 if __name__ == "__main__":
     net_file_path = "best-ebus/scenario/sumo/berlin.net.xml"
     bus_stops_file_path = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml"
     coordinate_calculator = CoordinateCalculator(net_file_path, bus_stops_file_path)
     coordinate_calculator.add_coordinates_to_bus_stops()
+    #coordinate_calculator.remove_coordinates_from_bus_stops()
     coordinate_calculator.save()

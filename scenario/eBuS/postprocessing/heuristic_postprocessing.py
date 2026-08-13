@@ -16,8 +16,8 @@ class HeuristicPostprocessing:
             route_root: Path,
             output_path: Path,
             area_path: Path,
-            input_path: list[Path],
-            input_dict: list[Path],
+            input_path: Path,
+            input_dict: Path,
             soc_percentage: int,
             merged_routes: Path,
             merged_routes_output: Path,
@@ -45,28 +45,21 @@ class HeuristicPostprocessing:
             area_path=self.area_path
         )
         cs.main()
-
+        logger.info("Step 1/2 completed: Charging station generation.")
         # Work in Progress
         # pv for stations
 
-        for i, depot_file in enumerate(self.input_path):
-            logger.info(
-                "Running RouteConcatenation for Depot: '%s'",
-                self.input_dict[i]
-            )
-            depot = Path(depot_file).stem.removeprefix("solution_")
-            rc = RouteConcatenation(
-                input_path=self.input_path[i],
-                input_dict=self.input_dict[i],
-                merged_routes=self.merged_routes,
-                merged_routes_output=self.merged_routes_output,
-                vehicles_output=self.vehicles_output,
-                depot_id=depot,
-                soc_percentage=self.soc_percentage,
-                append = (i > 0) # Setting append true for all iterations after 0
-            )
-            rc.main()
-
+        rc = RouteConcatenation(
+            input_path=self.input_path,
+            input_dict=self.input_dict,
+            merged_routes=self.merged_routes,
+            merged_routes_output=self.merged_routes_output,
+            vehicles_output=self.vehicles_output,
+            soc_percentage=self.soc_percentage
+        )
+        rc.main()
+        logger.info("Step 2/2 completed: Route concatenation.")
+        
 if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
     
@@ -76,8 +69,8 @@ if __name__ == "__main__":
     output_path = Path(HERE / "../../sumo/electric/").resolve()
     area_path = Path(HERE / "../files/pv_area_estimation.csv").resolve()
 
-    input_path = [Path(HERE / "../files/solution_cicerostrasse.json").resolve(), Path(HERE / "../files/solution_muellerstrasse.json").resolve()]
-    input_dict = [Path(HERE / "../files/trips_cicerostrasse.txt").resolve(),Path(HERE / "../files/trips_muellerstrasse.txt").resolve()]
+    input_path = Path(HERE / "../files/solution.json").resolve()
+    input_dict = Path(HERE / "../files/trips_vbb.txt").resolve()
     merged_routes = Path(HERE / "../files/merged_routes.rou.xml").resolve()
     merged_routes_output = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()

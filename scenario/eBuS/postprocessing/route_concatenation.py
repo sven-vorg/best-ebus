@@ -49,15 +49,12 @@ class RouteConcatenation:
         merged_routes: Path,
         merged_routes_output: Path,
         vehicles_output: Path,
-        depot_id: str,
         soc_percentage: int,
-        append: bool,
     ) -> None:
         self.INPUT = input_path
         self.ROUTES = merged_routes
         self.ROUTES_OUTPUT = merged_routes_output
         self.VEHICLES_OUTPUT = vehicles_output
-        self.DEPOT_ID = depot_id
         self.SOC_PERCENTAGE = soc_percentage
 
         self._load_trip_dictionary(input_dict)
@@ -67,7 +64,6 @@ class RouteConcatenation:
         # join_stops_by_route_id), since those read per-trip stops out of
         # self.trip_stops, which this call populates.
         self.adapt_duration_attributes()
-        self.append = append
 
     # ------------------------------------------------------------------
     # Setup helpers
@@ -193,25 +189,41 @@ class RouteConcatenation:
         etree.SubElement(vehicles_root, "vType", id="bus", vClass="bus")
 
         for bus in solution["bus_assignments"]:
+
             trip_sequence = bus["trip_sequence"]
-            route_id = f"{self.DEPOT_ID}_{bus['bus_id']}_route"
+            depots = {
+                1: "bs_cicerostrasse",
+                2: "bs_muellerstrasse"
+            }
+            
+            #trip_sequence = bus["trip_sequence"]
+            #depots = {
+            #    1: "taz_depot_muellerstrasse",
+            #    2: "taz_depot_cicerostrasse"
+            #}
+
+            start_depot = depots[bus["start_depot"]]
+            end_depot = depots[bus["end_depot"]]
+            route_id = f"{start_depot}_{bus['bus_id']}_route"
 
             route = etree.SubElement(
                 routes_root,
                 "route",
                 id=route_id,
-                edges=self.join_edges_by_route_id(trip_sequence),
+                edges=self.join_edges_by_route_id(trip_sequence, start_depot=start_depot, end_depot=end_depot),
             )
-            print(route.get("route_id"))
-            for stop in self.join_stops_by_route_id(trip_sequence):
+            for stop in self.join_stops_by_route_id(trip_sequence, start_depot=start_depot, end_depot=end_depot):
                 etree.SubElement(route, "stop", **self._stop_attributes(stop))
 
             # Determines SoC at sim start
             max_battery_capacity = 525000
-            if bus["bus_type_name"] == "EN":
+            if bus["bus_type_name"] == "Ebusco_12_525":
                 type = "Ebusco2.2electric12m"
-            elif bus["bus_type_name"] == "GN":
-                type = "SolarsisUrbino18electric12m"
+            elif bus["bus_type_name"] == "Solaris_12_300":
+                type = "SolarsisUrbino12electric"
+                max_battery_capacity = 528000
+            elif bus["bus_type_name"] == "Solaris_18_528":
+                type = "SolarsisUrbino18electric"
                 max_battery_capacity = 528000
             else:
                 logger.warning(
@@ -223,7 +235,7 @@ class RouteConcatenation:
             vehicle = etree.SubElement(
                 vehicles_root,
                 "vehicle",
-                id=f"{self.DEPOT_ID}_{bus['bus_id']}",
+                id=f"{start_depot}_{bus['bus_id']}",
                 type=type,
                 route=route_id,
                 depart="0",  
@@ -244,60 +256,28 @@ class RouteConcatenation:
         # Sort vehicles by depart time before writing.
         self._sort_vehicles_by_depart(vehicles_root)
 
-        self._write_routes(routes_root, self.ROUTES_OUTPUT, self.append)
-        self._write_vehicles(vehicles_root, self.VEHICLES_OUTPUT, self.append)
+        self._write_routes(routes_root, self.ROUTES_OUTPUT)
+        logger.info("Wrote %s", self.ROUTES_OUTPUT)
+        self._write_vehicles(vehicles_root, self.VEHICLES_OUTPUT)
+        logger.info("Wrote %s", self.VEHICLES_OUTPUT)
 
-    def _write_vehicles(self, root: etree.Element, path: Path, append: bool) -> None:
+    def _write_vehicles(self, root: etree.Element, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
+        etree.ElementTree(root).write(
+            str(path),
+            encoding="UTF-8",
+            xml_declaration=True,
+            pretty_print=True,
+        )
 
-        if append and path.exists():
-            tree = etree.parse(str(path))
-            existing_root = tree.getroot()
-
-            # Append all children from the new root
-            for child in root:
-                if child.tag == "vehicle":
-                    existing_root.append(child)
-            self._sort_vehicles_by_depart(existing_root)
-            etree.indent(tree, space="    ")
-            tree.write(
-                str(path),
-                encoding="UTF-8",
-                xml_declaration=True,
-                pretty_print=True,
-            )
-        else:
-            etree.ElementTree(root).write(
-                str(path),
-                encoding="UTF-8",
-                xml_declaration=True,
-                pretty_print=True,
-            )
-
-    def _write_routes(self, root: etree.Element, path:Path, append: bool) -> None:
+    def _write_routes(self, root: etree.Element, path:Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-
-        if append and path.exists():
-            tree = etree.parse(str(path))
-            existing_root = tree.getroot()
-
-            # Append all children from the new root
-            for child in root:
-                existing_root.append(child)
-            etree.indent(tree, space="    ")
-            tree.write(
-                str(path),
-                encoding="UTF-8",
-                xml_declaration=True,
-                pretty_print=True,
-            )
-        else:
-            etree.ElementTree(root).write(
-                str(path),
-                encoding="UTF-8",
-                xml_declaration=True,
-                pretty_print=True,
-            )
+        etree.ElementTree(root).write(
+            str(path),
+            encoding="UTF-8",
+            xml_declaration=True,
+            pretty_print=True,
+        )
 
     # ------------------------------------------------------------------
     # Internal helpers
@@ -313,7 +293,7 @@ class RouteConcatenation:
         for vehicle in vehicles:
             routes.append(vehicle)
 
-    def join_edges_by_route_id(self, trip_ids: list) -> str:
+    def join_edges_by_route_id(self, trip_ids: list, start_depot: str, end_depot: str) -> str:
         """
         Build one continuous edge string for a bus by chaining:
             depot -> first trip's start        (deadhead)
@@ -323,17 +303,17 @@ class RouteConcatenation:
 
         Consecutive duplicate edges are then collapsed.
         """
-        depart_station = f"bs_{self.DEPOT_ID}"
+        depart_station = start_depot
         edges = []
         for trip_id in trip_ids:
             edges.append(self.route_lookup[f"{depart_station}_{self.trip_to_start[trip_id]}"]["edges"])
             original_trip_id = self.trip_to_original[trip_id]
             edges.append(self.route_lookup[original_trip_id]["edges"])
             depart_station = self.trip_to_end[trip_id]
-        edges.append(self.route_lookup[f"{depart_station}_bs_{self.DEPOT_ID}"]["edges"])
+        edges.append(self.route_lookup[f"{depart_station}_{end_depot}"]["edges"])
         return self._remove_consecutive_duplicates(" ".join(edges))
 
-    def join_stops_by_route_id(self, trip_ids: list) -> list[dict]:
+    def join_stops_by_route_id(self, trip_ids: list, start_depot: str, end_depot: str) -> list[dict]:
         """
         Collect the ordered passenger stops for a bus's full trip sequence.
 
@@ -349,7 +329,7 @@ class RouteConcatenation:
         """
         stops: list[dict] = []
         stops.append({
-            "busStop": f"bs_{self.DEPOT_ID}",
+            "busStop": start_depot,
             "parking": "true",
             "duration": str(self.trip_to_depart[trip_ids[0]]),
             "until": str(self.trip_to_depart[trip_ids[0]]),
@@ -357,7 +337,7 @@ class RouteConcatenation:
         for trip_id in trip_ids:
             stops.extend(dict(stop) for stop in self.trip_stops[trip_id])
         stops.append({
-            "busStop": f"bs_{self.DEPOT_ID}",
+            "busStop": end_depot,
             "parking": "true",
             "duration": "0",
             "until": "84600",
@@ -424,12 +404,11 @@ class RouteConcatenation:
 if __name__ == "__main__":
 
     HERE = Path(__file__).resolve().parent
-    input_path = Path(HERE / "../files/solution_cicerostrasse.json").resolve()
-    input_dict = Path(HERE / "../files/trips_cicerostrasse.txt").resolve()
+    input_path = Path(HERE / "../files/solution.json").resolve()
+    input_dict = Path(HERE / "../files/trips_vbb.txt").resolve()
     routes_path = Path(HERE / "../files/merged_routes.rou.xml").resolve()
     routes_output_path = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output_path = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
-    depot_id = "cicerostrasse"
     soc_percentage = 50
-    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path, depot_id=depot_id, soc_percentage = soc_percentage, append=False)
+    rc = RouteConcatenation(input_path, input_dict, routes_path, routes_output_path, vehicles_output_path, soc_percentage = soc_percentage, append=False)
     rc.main()

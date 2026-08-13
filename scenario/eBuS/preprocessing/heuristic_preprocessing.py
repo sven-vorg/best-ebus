@@ -38,7 +38,7 @@ class HeuristicPreprocessing:
 
     def main(self):
 
-        fl = FilterLines(self.routes_file, self.selected_lines_file, self.output_dir)
+        fl = FilterLines(self.routes_file, self.selected_lines_file, self.stations_file, self.output_dir)
         fl.main()
 
         tp = TerminationPoints(self.combined_routes, self.depots, self.output_dir)
