@@ -5,6 +5,10 @@ import sumolib
 from pathlib import Path
 import json
 import datetime
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 class ChargingStations():
 
@@ -14,42 +18,35 @@ class ChargingStations():
             station_root: Path,
             route_root: Path,
             output_path: Path,
-            area_path: Path
+            area_path: Path,
+            solution_path: Path
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
         self.ROUTE_ROOT = etree.parse(route_root).getroot()
         self.OUTPUT_PATH = output_path
         self.AREA_LOOKUP = self.area_lookup(pd.read_csv(area_path, sep=";"))
+        self.SOLUTION = solution_path
 
     def area_lookup(self, area_df: pd.DataFrame):
         return area_df.set_index("chargingStation_id")["free_area"].to_dict()
 
     def charging_stations_from_solution(self):
         # Parse JSON File
-        solution_cicerostrasse = "./best-ebus/scenario/eBuS/files/solution_cicerostrasse.json"
-
-        solution_muellerstrasse = "./best-ebus/scenario/eBuS/files/solution_muellerstrasse.json"
-
-        return (
-            self.get_station_decisions(solution_muellerstrasse) 
-            | self.get_station_decisions(solution_cicerostrasse)
-        )
-
-    def get_station_decisions(self, path) -> set[str]:
         charging_locations = set()
-        with open(path, "r") as file:
+        with open(self.SOLUTION, "r") as file:
             data = json.load(file)
-        for station_decision in data["station_decisions"]:
-            charging_locations.add(station_decision["station_id"])
+            for station_decision in data["station_decisions"]:
+                charging_locations.add(station_decision["station_id"])
         return charging_locations
+
 
 
     def main(self):
 
         # Store unique final stop IDs
         charging_stop_ids = self.charging_stations_from_solution()
-        print(f"Found {len(charging_stop_ids)} stops to create charging stations at.")
+        logger.info("Found %s stops to create charging stations at.", len(charging_stop_ids))
 
         # Create the root element
         additional = etree.Element(
@@ -76,7 +73,7 @@ class ChargingStations():
                     friendlyPos="true",
                     parkingLength=bus_stop.get("parkingLength"),
                     chargeDelay="21",
-                    coordinates= coordinates,
+                    coordinates= str(coordinates),
                     area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
         
@@ -137,5 +134,6 @@ if __name__ == "__main__":
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
     area_path = Path(HERE / "../files//postprocessing_input/pv_area_estimation.csv").resolve()
-    cs = ChargingStations(net, station_root, route_root, output_path, area_path)
+    solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
+    cs = ChargingStations(net, station_root, route_root, output_path, area_path, solution_path)
     cs.main()
