@@ -62,11 +62,11 @@ class BuildVehicles:
     def _determine_soc(self, bus_type: str, bus_id: str) -> str:
         """ Determines SoC at sim start """
         if bus_type == "Ebusco_12_525":
-            return str(525000 * self.SOC_PERCENTAGE)
+            return str(525000/100 * self.SOC_PERCENTAGE)
         elif bus_type == "Solaris_12_300":
-            return str(300000 * self.SOC_PERCENTAGE)
+            return str(300000/100 * self.SOC_PERCENTAGE)
         elif bus_type == "Solaris_18_528":
-            return str(700000 * self.SOC_PERCENTAGE)
+            return str(700000/100 * self.SOC_PERCENTAGE)
         else:
             logger.warning(
                 "Unknown bus_type_name '%s' for bus %s; defaulting to 525.000 Wh battery capacity", bus_type, bus_id)

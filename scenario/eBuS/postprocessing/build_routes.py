@@ -159,13 +159,13 @@ class BuildRoutes:
                 (start_depot, self.trip_to_start[trip_ids[0]])
             ]
         )
+
         stops.append({
             "busStop": start_depot,
             "parking": "true",
             "duration": str(departure_time),
             "until": str(departure_time),
         })
-
 
         for trip_id in trip_ids:
             original_trip_id = self.trip_to_original[trip_id]
@@ -176,7 +176,9 @@ class BuildRoutes:
                     "parking": str(stop["parking"]),
                     "duration": str(stop["duration"]),
                     "until": str(stop["until"] + start_timestamp),
+                    "tripId": str(trip_id),
                 })
+
 
         # Set arrival at depot
         stops.append({
@@ -185,6 +187,18 @@ class BuildRoutes:
             "duration": "0",
             "until": "104400",
         })
+
+        deduped = []
+        for s in stops:
+            if deduped and deduped[-1]["busStop"] == s["busStop"]:
+                # gleiche ID direkt vorher -> nur den mit höherem until behalten
+                if float(s["until"]) < float(deduped[-1]["until"]):
+                    deduped[-1] = s
+                # sonst: s verwerfen (niedrigerer until)
+            else:
+                deduped.append(s)
+
+        stops = deduped
         
         return stops
 

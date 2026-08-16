@@ -3,7 +3,6 @@ import logging
 from pathlib import Path
 
 from .charging_stations import ChargingStations
-from .route_concatenation import RouteConcatenation
 from .build_vehicles import BuildVehicles
 from .build_routes import BuildRoutes
 
@@ -25,6 +24,7 @@ class HeuristicPostprocessing:
             merged_routes: Path,
             merged_routes_output: Path,
             vehicles_output: Path,
+            terminationpoints_path: Path
             ):
         self.net = net
         self.station_root = station_root
@@ -38,6 +38,7 @@ class HeuristicPostprocessing:
         self.merged_routes_output = merged_routes_output
         self.vehicles_output = vehicles_output
         self.soc_percentage = soc_percentage
+        self.terminationpoints_path = terminationpoints_path
 
     def main(self):
         # Create e_stations.add.xml containing stations designated as charging opportunitys
@@ -47,7 +48,8 @@ class HeuristicPostprocessing:
             route_root=self.route_root,
             output_path=self.output_path,
             area_path=self.area_path,
-            solution_path=self.input_path
+            solution_path=self.input_path,
+            terminationpoints_path= self.terminationpoints_path
         )
         cs.main()
         logger.info("Step 1/2 completed: Charging station generation.")
@@ -78,6 +80,7 @@ if __name__ == "__main__":
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
     area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
+    terminationpoints_path = Path(HERE / "../files/postprocessing_input/termination_points.txt").resolve()
 
     input_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
     input_dict = Path(HERE / "../files/postprocessing_input/trips_vbb.txt").resolve()
@@ -98,7 +101,8 @@ if __name__ == "__main__":
         merged_routes=merged_routes,
         merged_routes_output=merged_routes_output,
         vehicles_output=vehicles_output,
-        soc_percentage=50
+        soc_percentage=50,
+        terminationpoints_path= terminationpoints_path
     )
     hp.main()
 

@@ -42,7 +42,7 @@ class EBusMain:
         selected_lines_file: Path = FILES_DIR / "preprocessing_input/depot_line_type.csv"
         combined_routes: Path = FILES_DIR / "cicero_mueller_routes.rou.xml"
         trimmed_routes: Path = FILES_DIR / "cicero_mueller_routes_trimmed.rou.xml"
-        termination_points: Path = FILES_DIR / "termination_points.txt"
+        termination_points: Path = FILES_DIR / "preprocessing_input/termination_points.txt"
 
         depots: tuple[str,str] = ("cicerostrasse", "muellerstrasse")
         
@@ -67,6 +67,7 @@ class EBusMain:
         routes_file: Path = (FILES_DIR / "cicero_mueller_routes.rou.xml").resolve()
         area_file: Path = (FILES_DIR / "postprocessing_input/pv_area_estimation.csv").resolve()
         deadhead_file: Path = (FILES_DIR / "postprocessing_input/deadhead_times.txt").resolve()
+        terminationpoints_file: Path = (FILES_DIR / "postprocessing_input/termination_points.txt").resolve()
 
         output_dir: Path = (PROJECT_ROOT / "../sumo/electric").resolve()
 
@@ -97,6 +98,7 @@ class EBusMain:
             merged_routes,
             merged_routes_output,
             vehicles_output,
+            terminationpoints_file
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
@@ -161,7 +163,7 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    #eb.run_heuristic_preprocessing()
+    eb.run_heuristic_preprocessing()
     eb.run_heuristic_postprocessing()
     eb.run_simulation()
     #timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
