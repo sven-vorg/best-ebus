@@ -18,20 +18,20 @@
   </output>-->
   <output>
     <output-prefix value="output/electric_bus_TIME_"/>
-    <log value="console.log"/>
+    <!--<log value="console.log"/>
     <summary-output value="summary.xml"/>
     <statistic-output value="statistics.xml"/>
-    <battery-output value="battery.xml"/>
+    <battery-output value="battery.xml"/>-->
     <chargingstations-output value="chargingstations.xml"/>
-    <chargingstations-output.aggregated value="true"/> 
+    <!--<chargingstations-output.aggregated value="true"/> 
     <fcd-output value="fcdinfo.xml"/>
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
-    <stop-output value="stopinfo.xml"/>
+    <stop-output value="stopinfo.xml"/> -->
   </output>
   <time>
     <begin value="0.0"/>
-    <end value="86400.0"/>
+    <end value="104400.0"/>
   </time>
   <processing>
     <route-steps value="200"/>
@@ -41,8 +41,13 @@
     <time-to-teleport.highways value="0"/>
     <eager-insert value="false"/>
   </processing>
+  <report>
+    <verbose value="true"/>
+    <log.timestamps value="true"/>
+  </report>
   <random_number>
     <random value="false"/>
     <seed value="251920"/>
+    <step-log.period value="100"/>
   </random_number>
 </configuration>

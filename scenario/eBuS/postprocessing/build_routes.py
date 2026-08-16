@@ -199,8 +199,35 @@ class BuildRoutes:
                 deduped.append(s)
 
         stops = deduped
+
+        # WORKAROUND FOR SHORT TRIP TIMINGS
+        stops = self._enforce_monotonic_until(stops, buffer=1.0)
         
         return stops
+
+    # WORKAROUND
+    def _enforce_monotonic_until(self, stops: list[dict], buffer: float = 1.0) -> list[dict]:
+        """
+        Stellt sicher, dass 'until'-Werte über die Liste hinweg nicht sinken.
+        Sinkt ein Wert gegenüber dem vorherigen, wird ein Buffer aufaddiert
+        und als Offset auf diesen und alle folgenden Stops angewendet.
+        """
+        offset = 0.0
+        prev_until = None
+
+        for s in stops:
+            until_val = float(s["until"]) + offset
+
+            if prev_until is not None and until_val < prev_until:
+                correction = (prev_until - until_val) + buffer
+                offset += correction
+                until_val += correction
+
+            s["until"] = str(until_val)
+            prev_until = until_val
+
+        return stops
+
 
     @staticmethod
     def _remove_consecutive_duplicates(edge_string: str) -> str:

@@ -163,8 +163,8 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    eb.run_heuristic_preprocessing()
-    eb.run_heuristic_postprocessing()
+    #eb.run_heuristic_preprocessing()
+    #eb.run_heuristic_postprocessing()
     eb.run_simulation()
     #timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     #if timestamp is not None:
