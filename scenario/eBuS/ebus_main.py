@@ -46,7 +46,7 @@ class EBusMain:
 
         depots: tuple[str,str] = ("cicerostrasse", "muellerstrasse")
         
-        output_dir: Path = FILES_DIR
+        output_dir: Path = FILES_DIR / "postprocessing_input"
 
         HeuristicPreprocessing(
             routes_file,
@@ -66,12 +66,13 @@ class EBusMain:
         stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml").resolve()
         routes_file: Path = (FILES_DIR / "cicero_mueller_routes.rou.xml").resolve()
         area_file: Path = (FILES_DIR / "postprocessing_input/pv_area_estimation.csv").resolve()
+        deadhead_file: Path = (FILES_DIR / "postprocessing_input/deadhead_times.txt").resolve()
 
         output_dir: Path = (PROJECT_ROOT / "../sumo/electric").resolve()
 
-        solution_file = (PROJECT_ROOT / "../eBuS/files/solution.json").resolve()
+        solution_file = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/solution.json").resolve()
 
-        trip_file = (PROJECT_ROOT / "../eBuS/files/trips_vbb.txt").resolve()
+        trip_file = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/trips_vbb.txt").resolve()
 
         soc_percentage: int = 50
 
@@ -91,6 +92,7 @@ class EBusMain:
             area_file,
             solution_file,
             trip_file,
+            deadhead_file,
             soc_percentage,
             merged_routes,
             merged_routes_output,
@@ -159,9 +161,9 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
 
     eb = EBusMain()
-    eb.run_heuristic_preprocessing()
+    #eb.run_heuristic_preprocessing()
     eb.run_heuristic_postprocessing()
-    #eb.run_simulation()
+    eb.run_simulation()
     #timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
     #if timestamp is not None:
     #    print(f"Latest runtime: {timestamp}")

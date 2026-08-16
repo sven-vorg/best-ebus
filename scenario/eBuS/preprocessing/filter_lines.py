@@ -216,6 +216,6 @@ if __name__ == "__main__":
     routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
     selected_lines_file = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
     bus_stops_file = (HERE /  "../../sumo/berlin_bus_stops.add.xml").resolve()
-    output_dir = (HERE / "../files").resolve()
+    output_dir = (HERE / "../postprocessing_inputs/files").resolve()
     fl = FilterLines(routes_file, selected_lines_file, bus_stops_file, output_dir)
     fl.main()

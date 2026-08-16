@@ -48,7 +48,7 @@ if __name__ == "__main__":
     
     routes: Path = (HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
-    output: Path = (HERE / "../files").resolve()
+    output: Path = (HERE / "../postprocessing_inputs/files").resolve()
     tp = TerminationPoints(routes, depots, output)
     tp.main()
 

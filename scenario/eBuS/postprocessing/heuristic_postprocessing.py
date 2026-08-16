@@ -4,6 +4,8 @@ from pathlib import Path
 
 from .charging_stations import ChargingStations
 from .route_concatenation import RouteConcatenation
+from .build_vehicles import BuildVehicles
+from .build_routes import BuildRoutes
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -18,6 +20,7 @@ class HeuristicPostprocessing:
             area_path: Path,
             input_path: Path,
             input_dict: Path,
+            deadhead_path:Path,
             soc_percentage: int,
             merged_routes: Path,
             merged_routes_output: Path,
@@ -30,6 +33,7 @@ class HeuristicPostprocessing:
         self.area_path = area_path
         self.input_path = input_path
         self.input_dict = input_dict
+        self.deadhead_path = deadhead_path
         self.merged_routes = merged_routes
         self.merged_routes_output = merged_routes_output
         self.vehicles_output = vehicles_output
@@ -42,23 +46,29 @@ class HeuristicPostprocessing:
             station_root=self.station_root,
             route_root=self.route_root,
             output_path=self.output_path,
-            area_path=self.area_path
+            area_path=self.area_path,
+            solution_path=self.input_path
         )
         cs.main()
         logger.info("Step 1/2 completed: Charging station generation.")
         # Work in Progress
         # pv for stations
 
-        rc = RouteConcatenation(
-            input_path=self.input_path,
-            input_dict=self.input_dict,
-            merged_routes=self.merged_routes,
-            merged_routes_output=self.merged_routes_output,
+        bv = BuildVehicles(
+            solution_path=self.input_path,
             vehicles_output=self.vehicles_output,
             soc_percentage=self.soc_percentage
         )
-        rc.main()
-        logger.info("Step 2/2 completed: Route concatenation.")
+        bv.main()
+
+        br = BuildRoutes(
+            solution_path=self.input_path,
+            tripp_dict=self.input_dict,
+            deadhead_path=self.deadhead_path,
+            merged_routes=self.merged_routes,
+            e_routes_output=self.merged_routes_output
+        )
+        br.main()
         
 if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
@@ -67,10 +77,11 @@ if __name__ == "__main__":
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
-    area_path = Path(HERE / "../files/pv_area_estimation.csv").resolve()
+    area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
 
-    input_path = Path(HERE / "../files/solution.json").resolve()
-    input_dict = Path(HERE / "../files/trips_vbb.txt").resolve()
+    input_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
+    input_dict = Path(HERE / "../files/postprocessing_input/trips_vbb.txt").resolve()
+    deadhead_path = Path(HERE / "../files/postprocessing_input/deadhead_times.txt").resolve()
     merged_routes = Path(HERE / "../files/merged_routes.rou.xml").resolve()
     merged_routes_output = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
@@ -83,6 +94,7 @@ if __name__ == "__main__":
         area_path=area_path,
         input_path=input_path,
         input_dict=input_dict,
+        deadhead_path=deadhead_path,
         merged_routes=merged_routes,
         merged_routes_output=merged_routes_output,
         vehicles_output=vehicles_output,

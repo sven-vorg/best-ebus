@@ -13,6 +13,7 @@ from .filter_lines import FilterLines
 from .cut_lines import CutLines
 from .deadhead_calculator import DeadheadCalculator
 from .termination_points import TerminationPoints
+from .coordinate_calculator import CoordinateCalculator
 
 class HeuristicPreprocessing:
     def __init__(
@@ -38,6 +39,10 @@ class HeuristicPreprocessing:
 
     def main(self):
 
+        cc = CoordinateCalculator(self.network_file, self.stations_file)
+        cc.add_coordinates_to_bus_stops()
+        cc.save()
+    
         fl = FilterLines(self.routes_file, self.selected_lines_file, self.stations_file, self.output_dir)
         fl.main()
 
@@ -70,7 +75,7 @@ if __name__ == "__main__":
 
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     
-    output_dir: Path = (HERE / "../files").resolve()
+    output_dir: Path = (HERE / "../postprocessing_input/files").resolve()
 
     hp = HeuristicPreprocessing(
         routes_file, 

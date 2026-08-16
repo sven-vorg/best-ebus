@@ -1,8 +1,12 @@
 # Imports
 import lxml.etree as etree
 import sumolib
+import logging
 import pandas as pd
 from pathlib import Path
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
 
 class DeadheadCalculator():
 
@@ -46,75 +50,15 @@ class DeadheadCalculator():
         return stations
 
     def _write_deadhead_time(self, time_rows):
-        for depot in self.depots:
-            rows = []
-
-            for row in time_rows:
-                row = row.copy()
-
-                if depot in str(row["FromStopID"]):
-                    row["FromStopID"] = "1"
-                if depot in str(row["ToStopID"]):
-                    row["ToStopID"] = "1"
-
-                rows.append(row)
-
-            pd.DataFrame(rows).to_csv(
-                f"{self.output}/deadhead_time_{depot}.txt",
-                sep=";",
-                index=False
-            )
-            print(f"Written deadhead_time_{depot}.txt")
-
-    # deprecated, going back to trimmed routes
-    def calculate_edge_deadheads(self):
-        print("Starting Network Deadhead Calculations")
-        time_rows = []
-        routes = []
-        for route in self.routes_root.findall("route"):
-            parts = route.get("edges").split(" ")
-            from_edge = self.net.getEdge(parts[0])
-            to_edge = self.net.getEdge(parts[-1])
-            stops = route.findall("stop")
-            from_stop = stops[0].get("busStop")
-            to_stop = stops[-1].get("busStop")
-            edges, cost = self.net.getFastestPath(from_edge, to_edge)
-            edge_ids = [edge.getID() for edge in edges]
-            time_rows.append({
-                    "FromStopID": from_stop,
-                    "ToStopID": to_stop,
-                    "RunTime": round(cost),
-                })
-            routes.append({
-                    "FromStopID": from_stop,
-                    "ToStopID": to_stop,
-                    "Edges": " ".join(edge_ids),
-                })
-             
-        print("Completed Network Deadhead Calculations")
-
-        self._write_deadhead_time(time_rows)
-        for route in routes:
-            etree.SubElement(
-                self.routes_root,
-                "route",
-                id=f"{route['FromStopID']}_{route['ToStopID']}",
-                color="0,153,153",
-                edges=route["Edges"],
-            )
-
-        etree.indent(self.routes_root, space="    ")
-        tree = etree.ElementTree(self.routes_root)
-        tree.write(
-            f"{self.output}/merged_routes.rou.xml",
-            encoding="utf-8",
-            xml_declaration=True,
-            pretty_print=True,
+        pd.DataFrame(time_rows).to_csv(
+            f"{self.output}/deadhead_times.txt",
+            sep=";",
+            index=False
         )
-        print(f"Written {self.output} to disk")
+        logger.info("Written deadhead_times.txt")
 
     def calculate_station_deadheads(self):
-        print("Starting Network Deadhead Calculations")
+        logger.info("Starting Network Deadhead Calculations")
         time_rows = []
         routes = []
 
@@ -141,7 +85,7 @@ class DeadheadCalculator():
                     "Edges": " ".join(edge_ids),
                 })
         
-        print("Completed Network Deadhead Calculations")
+        logger.info("Completed Network Deadhead Calculations")
 
         self._write_deadhead_time(time_rows)
 
@@ -162,7 +106,7 @@ class DeadheadCalculator():
             xml_declaration=True,
             pretty_print=True,
         )
-        print(f"Written {self.output} to disk")
+        logger.info("Written %s to disk", self.output)
 
 if __name__ == "__main__":
     
@@ -171,7 +115,7 @@ if __name__ == "__main__":
     network: Path = (HERE / "../../sumo/berlin.net.xml").resolve()
     stations: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     routes: Path = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    termination_points: Path = (HERE / "../files/termination_points.txt").resolve()
+    termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     output: Path = (HERE / "../files").resolve()
     dc = DeadheadCalculator(network, stations, routes, termination_points, depots, output)
