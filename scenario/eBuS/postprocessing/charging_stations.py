@@ -19,7 +19,8 @@ class ChargingStations():
             route_root: Path,
             output_path: Path,
             area_path: Path,
-            solution_path: Path
+            solution_path: Path,
+            terminationpoints_path: Path
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
@@ -27,6 +28,7 @@ class ChargingStations():
         self.OUTPUT_PATH = output_path
         self.AREA_LOOKUP = self.area_lookup(pd.read_csv(area_path, sep=";"))
         self.SOLUTION = solution_path
+        self.TERMINATIONPOINTS = terminationpoints_path
 
     def area_lookup(self, area_df: pd.DataFrame):
         return area_df.set_index("chargingStation_id")["free_area"].to_dict()
@@ -38,7 +40,12 @@ class ChargingStations():
             data = json.load(file)
             for station_decision in data["station_decisions"]:
                 charging_locations.add(station_decision["station_id"])
-        return charging_locations
+
+        # Off by one? 
+        with open(self.TERMINATIONPOINTS) as index_file:
+            values = [line.strip() for line in index_file]
+        result = [values[i] for i in charging_locations]
+        return result
 
 
 
@@ -133,7 +140,8 @@ if __name__ == "__main__":
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
-    area_path = Path(HERE / "../files//postprocessing_input/pv_area_estimation.csv").resolve()
+    area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
     solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
+    terminationpoints_path = Path(HERE / "../files/postprocessing_input/termination_points.txt").resolve()
     cs = ChargingStations(net, station_root, route_root, output_path, area_path, solution_path)
     cs.main()
