@@ -14,22 +14,21 @@
             decel="1.0" 
             sigma="0.0" 
             emissionClass="Energy/unknown" 
-            mass="12850"> 
+            mass="1285"> 
         <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
-        <param key="device.battery.capacity" value="525000"/>
-        <param key="maximumPower" value="150000"/>    
+        <param key="device.battery.capacity" value="52500"/> 
         <param key="frontSurfaceArea" value="8.211"/>      
         <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
         <param key="rotatingMass" value="40"/>                      <!-- Unknown -->
         <param key="radialDragCoefficient" value="0.1"/>            <!-- Unknown -->
         <param key="rollDragCoefficient" value="0.01"/>             <!-- Unknown -->
-        <param key="constantPowerIntake" value="100"/>              <!-- Unknown -->
+        <param key="constantPowerIntake" value="10"/>              <!-- Unknown -->
         <param key="propulsionEfficiency" value=".98"/>             <!-- Unknown -->
         <param key="recuperationEfficiency" value=".96"/>           <!-- Unknown -->
         <param key="stoppingThreshold" value="0.1"/>                <!-- Unknown -->             
-        <param key="device.battery.maximumChargeRate" value="150000"/>   
+        <param key="device.battery.maximumChargeRate" value="15000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
-        <param key="device.battery.chargeCurveTable" value="150000 150000 120000"/>                  Unknown -->  
+        <param key="device.battery.chargeCurveTable" value="15000 15000 12000"/>                  Unknown -->  
     </vType>
 
     <!-- Solaris Urbino 18 electric -->
@@ -48,22 +47,21 @@
             decel="1.0" 
             sigma="0.0" 
             emissionClass="Energy/unknown" 
-            mass="30000"> 
+            mass="3000"> 
         <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
-        <param key="device.battery.capacity" value="700000"/>
-        <param key="maximumPower" value="240_000"/>    
+        <param key="device.battery.capacity" value="70000"/>   
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
         <param key="rotatingMass" value="40"/>                      <!-- Unknown -->
         <param key="radialDragCoefficient" value="0.1"/>            <!-- Unknown -->
         <param key="rollDragCoefficient" value="0.01"/>             <!-- Unknown -->
-        <param key="constantPowerIntake" value="100"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
+        <param key="constantPowerIntake" value="10"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
         <param key="propulsionEfficiency" value=".98"/>             <!-- Unknown -->
         <param key="recuperationEfficiency" value=".96"/>           <!-- Unknown -->
         <param key="stoppingThreshold" value="0.1"/>                <!-- Unknown -->             
-        <param key="device.battery.maximumChargeRate" value="250000"/>   
+        <param key="device.battery.maximumChargeRate" value="25000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
-        <param key="device.battery.chargeCurveTable" value="250000 250000 200000"/>                  Unknown -->  
+        <param key="device.battery.chargeCurveTable" value="25000 25000 20000"/>                  Unknown -->  
     </vType>
 
     <vType id="SolarsisUrbino12electric"
@@ -77,21 +75,20 @@
             decel="1.0" 
             sigma="0.0" 
             emissionClass="Energy/unknown" 
-            mass="30000"> 
+            mass="3000"> 
         <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
-        <param key="device.battery.capacity" value="300000"/>
-        <param key="maximumPower" value="240000"/>    
+        <param key="device.battery.capacity" value="30000"/>   
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
         <param key="rotatingMass" value="40"/>                      <!-- Unknown -->
         <param key="radialDragCoefficient" value="0.1"/>            <!-- Unknown -->
         <param key="rollDragCoefficient" value="0.01"/>             <!-- Unknown -->
-        <param key="constantPowerIntake" value="100"/>              <!-- Unknown -->
+        <param key="constantPowerIntake" value="10"/>              <!-- Unknown -->
         <param key="propulsionEfficiency" value=".98"/>             <!-- Unknown -->
         <param key="recuperationEfficiency" value=".96"/>           <!-- Unknown -->
         <param key="stoppingThreshold" value="0.1"/>                <!-- Unknown -->             
-        <param key="device.battery.maximumChargeRate" value="260000"/>   
+        <param key="device.battery.maximumChargeRate" value="26000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
-        <param key="device.battery.chargeCurveTable" value="260000 260000 208000"/>
+        <param key="device.battery.chargeCurveTable" value="26000 26000 20800"/>
     </vType>
 </additional>

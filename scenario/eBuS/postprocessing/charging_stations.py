@@ -20,7 +20,7 @@ class ChargingStations():
             output_path: Path,
             area_path: Path,
             solution_path: Path,
-            terminationpoints_path: Path
+            station_id_path: Path
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
@@ -28,24 +28,35 @@ class ChargingStations():
         self.OUTPUT_PATH = output_path
         self.AREA_LOOKUP = self.area_lookup(pd.read_csv(area_path, sep=";"))
         self.SOLUTION = solution_path
-        self.TERMINATIONPOINTS = terminationpoints_path
+        self.station_id_mapping = self.station_id_lookup(station_id_path)
+
+    def station_id_lookup(self, terminationpoints_path: str) -> dict:
+        """
+        Loads the termination points file and returns a dict mapping
+        short station IDs (as strings, e.g. "1", "16") to their long
+        canonical IDs (e.g. "agg_10045_25_11089_9_12475_23").
+        """
+        with open(terminationpoints_path, "r") as file:
+            data = json.load(file)
+        return data["stops"]
 
     def area_lookup(self, area_df: pd.DataFrame):
         return area_df.set_index("chargingStation_id")["free_area"].to_dict()
 
     def charging_stations_from_solution(self):
-        # Parse JSON File
         charging_locations = set()
         with open(self.SOLUTION, "r") as file:
             data = json.load(file)
             for station_decision in data["station_decisions"]:
-                charging_locations.add(station_decision["station_id"])
-
-        # Off by one? 
-        with open(self.TERMINATIONPOINTS) as index_file:
-            values = [line.strip() for line in index_file]
-        result = [values[i] for i in charging_locations]
-        return result
+                short_id = str(station_decision["station_id"])
+                long_id = self.station_id_mapping.get(short_id)
+                if long_id is None:
+                    raise KeyError(
+                        f"station_id '{short_id}' not found in station_id_mapping "
+                        f"(loaded from termination points file)"
+                    )
+                charging_locations.add(long_id)
+        return charging_locations
 
 
 
@@ -89,7 +100,7 @@ class ChargingStations():
             0,
             etree.Element(
                 "chargingStation",
-                id="cd_Cicerostrasse_01",
+                id="cd_cicerostrasse_01",
                 name="Depot Cicerostraße",
                 lane="E1.51_0",
                 startPos="0",
@@ -98,7 +109,7 @@ class ChargingStations():
                 efficiency="0.95",
                 chargeInTransit="false",
                 coordinates= "13.303440333503405,52.492583731258065",
-                area= str(self.AREA_LOOKUP.get("cd_Cicerostrasse_01"))
+                area= str(self.AREA_LOOKUP.get("cd_cicerostrasse_01"))
             ),
         )
 
@@ -106,7 +117,7 @@ class ChargingStations():
             0,
             etree.Element(
                 "chargingStation",
-                id="cd_Muellerstrasse_01",
+                id="cd_muellerstrasse_01",
                 name="Depot Müllerstraße",
                 lane="-E19_0",
                 startPos="0",
@@ -115,7 +126,7 @@ class ChargingStations():
                 efficiency="0.95",
                 chargeInTransit="false",
                 coordinates= "13.33776446744273,52.56058715781662",
-                area= str(self.AREA_LOOKUP.get("cd_Muellerstrasse_01"))
+                area= str(self.AREA_LOOKUP.get("cd_muellerstrasse_01"))
             ),
         )
 
@@ -142,6 +153,6 @@ if __name__ == "__main__":
     output_path = Path(HERE / "../../sumo/electric/").resolve()
     area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
     solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
-    terminationpoints_path = Path(HERE / "../files/postprocessing_input/termination_points.txt").resolve()
-    cs = ChargingStations(net, station_root, route_root, output_path, area_path, solution_path)
+    station_id_path = Path(HERE / "../files/postprocessing_input/station_id_mapping.txt").resolve()
+    cs = ChargingStations(net, station_root, route_root, output_path, area_path, solution_path, station_id_path)
     cs.main()

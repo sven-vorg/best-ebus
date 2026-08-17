@@ -185,7 +185,7 @@ class BuildRoutes:
             "busStop": end_depot,
             "parking": "true",
             "duration": "0",
-            "until": "104400",
+            "until": "104380",
         })
 
         deduped = []
