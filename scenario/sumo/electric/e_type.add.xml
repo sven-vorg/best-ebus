@@ -77,7 +77,7 @@
             decel="1.0" 
             sigma="0.0" 
             emissionClass="Energy/unknown" 
-            mass="30000"> 
+            mass="12850"> 
         <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
         <param key="device.battery.capacity" value="300000"/>
         <param key="maximumPower" value="240000"/>    
