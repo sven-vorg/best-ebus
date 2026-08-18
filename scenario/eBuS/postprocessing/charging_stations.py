@@ -85,6 +85,7 @@ class ChargingStations():
                     startPos=bus_stop.get("startPos"),
                     endPos=bus_stop.get("endPos"),
                     power="150000",
+                    # BUG 3221225477 
                     totalPower="150000",
                     efficiency="0.95",
                     chargeInTransit="false",
