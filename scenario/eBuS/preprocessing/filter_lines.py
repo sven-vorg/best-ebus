@@ -186,7 +186,7 @@ class FilterLines:
         self.extract_flow_information()
         self.routes_to_trips(True)
         self.write_xml_to_file()
-        self.write_merged_csv_to_file()
+        #self.write_merged_csv_to_file()
 
     # Helper functions
     def parse_time(self, t):

@@ -16,9 +16,14 @@ from pathlib import Path
 import dotenv
 import logging
 
-from database.db_ebus import DBeBuS
+from analysis.output_files import OutputFiles
+
+from energy_storage_system.charging_station import ChargingStation
+from energy_storage_system.energy_storage_system import EnergyStorageSystem
 from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
+from tools.betterAggregateBattery import aggregate
+
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -27,8 +32,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 SCENARIO_ROOT = PROJECT_ROOT.parent
 
 SUMO_DIR = SCENARIO_ROOT / "sumo"
+SUMO_OUTPUT_DIR = SUMO_DIR / "output"
 EBUS_DIR = SCENARIO_ROOT / "eBuS"
 FILES_DIR = EBUS_DIR / "files"
+PV_CSV_PATH = EBUS_DIR / "pv_estimation/data/solar_power_v6_scaled.csv"
 
 class EBusMain:
     def __init__(self) -> None:
@@ -75,7 +82,7 @@ class EBusMain:
 
         trip_file = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/trips_vbb.txt").resolve()
 
-        soc_percentage: int = 50
+        soc_percentage: int = 100
 
         merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/merged_routes.rou.xml").resolve()
         merged_routes_output: Path = (
@@ -101,11 +108,6 @@ class EBusMain:
             station_id_path
         ).main()
         logger.info("Heuristic Postprocessing completed")
-
-    def update_database(self) -> None:
-        """Update the DuckDB database with the latest simulation output."""
-        DBeBuS()._update_db()
-
 
     def get_latest_runtime(self, path, *paths) -> str | None:
         """Returns the name of the latest (most recent) file 
@@ -145,6 +147,41 @@ class EBusMain:
     def main(self):
         pass
 
+    def run_aggreate_battery(self):
+        """
+        Aggregate the battery data from the latest SUMO battery output
+        and write the result back as XML.
+        """
+        files = OutputFiles(SUMO_OUTPUT_DIR)
+        battery_file = files.get_file("battery")
+        output_file = files.output_dir / battery_file.name.replace(
+            "_battery.xml", "_battery_aggregated.xml"
+        )
+        interval = 60  # seconds
+
+        aggregate(battery_file, output_file, interval)
+        logger.info(f"Aggregated battery data written to {output_file}")
+
+    def run_energy_storage_system(self):
+        """
+        Build the energy storage system profile from the latest SUMO
+        chargingstations output and write the result back as XML.
+        """
+        files = OutputFiles(SUMO_OUTPUT_DIR)
+        chargingstations_file = files.get_file("chargingstations")
+        output_file = files.output_dir / chargingstations_file.name.replace(
+            "_chargingstations.xml", "_ess.xml"
+        )
+
+        EnergyStorageSystem(
+            charging_stations=ChargingStation.from_xml(chargingstations_file),
+            ess_capacity=500_000,  # Wh — replace with real capacity per station or spec
+            pv_csv_path=PV_CSV_PATH,
+            output_path=output_file,
+            start_soc=250_000,
+        ).main()
+        logger.info(f"ESS output written to {output_file}")
+
     def run_simulation(self):
         """
         Execute the SUMO simulation using the electric bus configuration.
@@ -161,16 +198,10 @@ if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
 
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
-
     eb = EBusMain()
     eb.run_heuristic_preprocessing()
     eb.run_heuristic_postprocessing()
     eb.run_simulation()
-    #timestamp = eb.get_latest_runtime(SUMO_OUTPUT_PATH, "*")
-    #if timestamp is not None:
-    #    print(f"Latest runtime: {timestamp}")
-    #    eb.set_latest_runtime(timestamp)
-    #eb.update_database()
+    eb.run_energy_storage_system()
+    eb.run_aggreate_battery()
     
-
-    #eb.produce_dashboard(db_path=Path(HERE /"database/ebus.db"))

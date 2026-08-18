@@ -10,7 +10,8 @@ import xml.etree.ElementTree as ET
 from collections import defaultdict
 
 
-ATTRS = (
+# Accumulator attributes: summed across every timestep in the interval.
+SUM_ATTRS = (
     "energyConsumed",
     "totalEnergyConsumed",
     "totalEnergyRegenerated",
@@ -19,9 +20,24 @@ ATTRS = (
     "timeStopped",
 )
 
+# State attributes: not additive, so we keep the last value seen in the interval.
+LAST_NUMERIC_ATTRS = (
+    "actualBatteryCapacity",
+    "maximumBatteryCapacity",
+    "speed",
+    "acceleration",
+    "x",
+    "y",
+    "posOnLane",
+)
+LAST_STRING_ATTRS = ("lane",)
+
 
 def new_vehicle():
-    d = {a: 0.0 for a in ATTRS}
+    d = {a: 0.0 for a in SUM_ATTRS}
+    d.update({a: 0.0 for a in LAST_NUMERIC_ATTRS})
+    d.update({a: "" for a in LAST_STRING_ATTRS})
+    d["chargingStationId"] = "NULL"
     d["aggregateNumber"] = 0
     return d
 
@@ -53,9 +69,18 @@ def write_interval(outfile, time_value, data):
             f'energyConsumed="{values["energyConsumed"]:.6f}" '
             f'totalEnergyConsumed="{values["totalEnergyConsumed"]:.6f}" '
             f'totalEnergyRegenerated="{values["totalEnergyRegenerated"]:.6f}" '
+            f'actualBatteryCapacity="{values["actualBatteryCapacity"]:.2f}" '
+            f'maximumBatteryCapacity="{values["maximumBatteryCapacity"]:.2f}" '
+            f'chargingStationId="{values["chargingStationId"]}" '
             f'energyCharged="{values["energyChargedInTransit"] + values["energyChargedStopped"]:.6f}" '
             f'energyChargedInTransit="{values["energyChargedInTransit"]:.6f}" '
             f'energyChargedStopped="{values["energyChargedStopped"]:.6f}" '
+            f'speed="{values["speed"]:.2f}" '
+            f'acceleration="{values["acceleration"]:.2f}" '
+            f'x="{values["x"]:.2f}" '
+            f'y="{values["y"]:.2f}" '
+            f'lane="{values["lane"]}" '
+            f'posOnLane="{values["posOnLane"]:.2f}" '
             f'timeStopped="{values["timeStopped"]:.6f}" '
             f'aggregateNumber="{values["aggregateNumber"]}"/>\n'
         )
@@ -112,8 +137,18 @@ def aggregate(input_file, output_file, interval):
 
                 stats = vehicles[vehicle.attrib["id"]]
 
-                for attr in ATTRS:
+                for attr in SUM_ATTRS:
                     stats[attr] += float(vehicle.attrib[attr])
+
+                for attr in LAST_NUMERIC_ATTRS:
+                    stats[attr] = float(vehicle.attrib[attr])
+
+                for attr in LAST_STRING_ATTRS:
+                    stats[attr] = vehicle.attrib[attr]
+
+                charging_station_id = vehicle.attrib["chargingStationId"]
+                if charging_station_id != "NULL":
+                    stats["chargingStationId"] = charging_station_id
 
                 stats["aggregateNumber"] += 1
 

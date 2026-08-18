@@ -1,6 +1,6 @@
 ﻿chargingStation_chargeInTransit;chargingStation_coordinates;chargingStation_efficiency;chargingStation_endPos;chargingStation_id;chargingStation_lane;chargingStation_name;chargingStation_power;chargingStation_startPos;free_area
-FALSCH;13.303440333503405,52.492583731258065;95;27524;cd_Cicerostrasse_01;E1.51_0;Depot Cicerostraße;150000;0;26400
-FALSCH;13.33776446744273,52.56058715781662;95;51064;cd_Muellerstrasse_01;-E19_0;Depot Müllerstraße;150000;0;30190
+FALSCH;13.303440333503405,52.492583731258065;95;27524;cd_cicerostrasse_01;E1.51_0;Depot Cicerostraße;150000;0;26400
+FALSCH;13.33776446744273,52.56058715781662;95;51064;cd_muellerstrasse_01;-E19_0;Depot Müllerstraße;150000;0;30190
 FALSCH;13.339324,52.526360;95;6706;cs_10498_0;461910873#1_0;U Turmstr. (Berlin)_Charger;150000;5406;120
 FALSCH;13.123653,52.428382;95;674;cs_10661_32;-259536422_0;Pfaueninsel (Berlin)_Charger;150000;0;0
 FALSCH;13.123557,52.428404;95;1300;cs_10663_0;-259536415_0;Pfaueninsel (Berlin)_Charger;150000;0;0
@@ -95,3 +95,4 @@ FALSCH;13.369049,52.526519;95;1300;cs_agg_9863_0_9863_1;111251392_0;S+U Berlin H
 FALSCH;13.270448,52.549261;95;11630;cs_agg_9863_50_11969_8;-333626093_0;Mäckeritzwiesen (Berlin)_Charger;150000;8830;150
 FALSCH;13.210365,52.606234;95;8086;cs_agg_9897_0_9973_34_9889_51_9963_0;24735700_0;Berlin, Alt-Heiligensee_Charger;150000;3886;120
 FALSCH;13.288166,52.631997;95;2629;cs_agg_9908_53_9922_0;231262268#0_0;S Frohnau (Berlin)_Charger;150000;0;0
+FALSCH;13.347716,52.575736;95;49.74;cs_agg_9828_20_11060_9_11065_0_11957_27;4594894#4_0;U Paracelsus-Bad (Berlin)_Charger;150000;7.74;180

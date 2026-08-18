@@ -1,37 +1,12 @@
+from pathlib import Path
+
 import pandas as pd
-from lxml import etree
+
+from energy_storage_system.charging_station import ChargingStation
 
 MINUTES_PER_HOUR = 60
 TOTAL_MINUTES = 1440  # 1 day
 
-class ChargingEvent:
-    __slots__ = ('vehicle', 'total_energy', 'begin_sec', 'end_sec', 'energy_per_minute')
-    def __init__(self, vehicle, total_energy, begin_sec, end_sec):
-        self.vehicle = vehicle
-        self.total_energy = total_energy   # Wh
-        self.begin_sec = begin_sec
-        self.end_sec = end_sec
-        self.energy_per_minute = 0.0
-
-class ChargingStation:
-    def __init__(self, station_id):
-        self.id = station_id
-        self.charging_events = []
-
-def parse_charging_events(xml_path):
-    tree = etree.parse(xml_path)
-    root = tree.getroot()
-    stations = {}
-    for elem in root.iter('chargingEvent'):
-        sid = elem.get('chargingStationId')
-        ev = ChargingEvent(
-            vehicle=elem.get('vehicle'),
-            total_energy=float(elem.get('totalEnergyChargedIntoVehicle')),
-            begin_sec=float(elem.get('chargingBegin')),
-            end_sec=float(elem.get('chargingEnd')),
-        )
-        stations.setdefault(sid, ChargingStation(sid)).charging_events.append(ev)
-    return [stations[sid] for sid in sorted(stations)]
 
 def parse_pv_data(csv_path):
     df = pd.read_csv(csv_path)
@@ -41,13 +16,24 @@ def parse_pv_data(csv_path):
     return {station_id: row.astype(float).tolist() for station_id, row in df.iterrows()}
 
 class EnergyStorageSystem:
-    def __init__(self, charging_stations, ess_capacity, pv_csv_path, start_soc=0.0):
+    def __init__(self, charging_stations, ess_capacity, pv_csv_path, output_path=None, start_soc=0.0):
         self.charging_stations = charging_stations
         self.ess_capacity = ess_capacity
-        self.pv_data = parse_pv_data(pv_csv_path)
+        self.pv_csv_path = pv_csv_path
+        self.output_path = output_path
         self.start_soc = start_soc
+        self.pv_data = None
+        self.ess_df = None
+
+    def main(self):
+        """Run the full ESS pipeline: load PV data, derive load/PV profiles,
+        simulate the battery, and write the result to XML if an output_path was given."""
+        self.pv_data = parse_pv_data(self.pv_csv_path)
         self.energy_per_timestep(self.charging_stations)
-        self.ess_df = self.calculate_ess(charging_stations, ess_capacity, start_soc)
+        self.ess_df = self.calculate_ess(self.charging_stations, self.ess_capacity, self.start_soc)
+        if self.output_path is not None:
+            self.write_xml(self.output_path)
+        return self.ess_df
 
     def energy_per_timestep(self, charging_stations):
         for station in charging_stations:
@@ -121,17 +107,42 @@ class EnergyStorageSystem:
                 })
         return pd.DataFrame(rows)
 
+    def write_xml(self, output_path):
+        """Write ess_df out as a SUMO-style timestep/station XML file."""
+        df = self.ess_df.sort_values(["timestep_min", "station_id"])
+
+        with open(Path(output_path), "w", encoding="utf8") as f:
+            f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+            f.write("<ess-export>\n")
+
+            for timestep_min, group in df.groupby("timestep_min"):
+                f.write(f'    <timestep time="{timestep_min * 60:.2f}">\n')
+
+                for row in group.itertuples():
+                    f.write(
+                        f'        <station '
+                        f'id="{row.station_id}" '
+                        f'pvGenerated="{row.pv_generated:.6f}" '
+                        f'energyCharged="{row.energy_charged:.6f}" '
+                        f'essSoc="{row.ess_soc:.6f}" '
+                        f'gridEnergyDrawn="{row.grid_energy_drawn:.6f}" '
+                        f'pvCurtailed="{row.pv_curtailed:.6f}"/>\n'
+                    )
+
+                f.write("    </timestep>\n")
+
+            f.write("</ess-export>\n")
+
 
 if __name__ == "__main__":
-    charging_stations = parse_charging_events(
-        r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\ebus_2026-08-13-18-26-28_chargingstations.xml"
+    charging_stations = ChargingStation.from_xml(
+        r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\electric_bus_2026-08-17-19-10-35_chargingstations.xml"
     )
 
-    ess = EnergyStorageSystem(
+    EnergyStorageSystem(
         charging_stations=charging_stations,
         ess_capacity=500_000,   # Wh — replace with your real capacity per station or spec
         pv_csv_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\pv_estimation\data\solar_power_v6_scaled.csv",
+        output_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\electric_bus_2026-08-17-19-10-35_ess.xml",
         start_soc=250_000,
-    )
-
-    ess.ess_df.to_csv(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\files\output\ess_output.csv", index=False)
+    ).main()

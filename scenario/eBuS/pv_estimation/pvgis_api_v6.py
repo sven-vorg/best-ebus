@@ -17,16 +17,28 @@ class PVGISApiCall:
 
     def main(self):
         answer_df = self.v6(self.stations_path)
+        if answer_df.empty:
+            print("Keine neuen Stationen gefunden, nichts anzuhängen.")
+            return
         self.optimize_csv(answer_df)
 
+    def get_existing_station_ids(self) -> set:
+        raw_path = Path(self.output_path) / "raw_pv_data.csv"
+        if not raw_path.exists():
+            return set()
+        existing_df = pd.read_csv(raw_path, usecols=["station_id"])
+        return set(existing_df["station_id"])
 
     def v6(self, stations: Path, csv: bool = True) -> pd.DataFrame:
         root = etree.parse(stations).getroot()
+        existing_station_ids = self.get_existing_station_ids()
         # Load station output
         # Liste für Ergebnisse initialisieren
         results = []
         # Alle chargingStation Elemente durchlaufen
         for station in root.findall(".//chargingStation"):
+            if station.get("id") in existing_station_ids:
+                continue
             # Koordinaten extrahieren und in Float umwandeln
             coordinates = station.get("coordinates")
             peak_power = self.calculate_kWp(station.get("area"))
@@ -79,9 +91,10 @@ class PVGISApiCall:
                     "scaled_solar_data": scaled_data,
                 })
         df = pd.DataFrame(results)
-        if csv:
-            df.to_csv(f"{self.output_path}/raw_pv_data.csv", index=False)
-        print(f"/nVerarbeitung abgeschlossen. {len(results)} Stationen verarbeitet.")
+        if csv and not df.empty:
+            raw_path = Path(self.output_path) / "raw_pv_data.csv"
+            df.to_csv(raw_path, mode="a", header=not raw_path.exists(), index=False)
+        print(f"\nVerarbeitung abgeschlossen. {len(results)} neue Stationen verarbeitet.")
         return df
 
     def calculate_kWp(self, area) -> int:
@@ -115,13 +128,20 @@ class PVGISApiCall:
             axis=1,
         )
 
+        raw_out_path = Path(self.output_path) / "solar_power_v6_raw.csv"
+        scaled_out_path = Path(self.output_path) / "solar_power_v6_scaled.csv"
+
         raw_result.to_csv(
-            f"{self.output_path}/solar_power_v6_raw.csv",
+            raw_out_path,
+            mode="a",
+            header=not raw_out_path.exists(),
             index=False,
         )
 
         scaled_result.to_csv(
-            f"{self.output_path}/solar_power_v6_scaled.csv",
+            scaled_out_path,
+            mode="a",
+            header=not scaled_out_path.exists(),
             index=False,
         )
 
