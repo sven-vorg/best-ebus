@@ -1,5 +1,4 @@
 from __future__ import annotations
-#!/usr/bin/env python
 __author__ = "Sven Vorgheim"
 __license__ = "GPL v2 or later (In accoardance to SUMO)"
 __maintainer__ = "Sven Vorgheim"
@@ -13,7 +12,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import dotenv
 import logging
 
 from analysis.output_files import OutputFiles
@@ -108,23 +106,6 @@ class EBusMain:
             station_id_path
         ).main()
         logger.info("Heuristic Postprocessing completed")
-
-    def get_latest_runtime(self, path, *paths) -> str | None:
-        """Returns the name of the latest (most recent) file 
-        of the joined path(s)"""
-        fullpath = os.path.join(path, *paths)
-        list_of_files = glob.glob(fullpath)  # You may use iglob in Python3
-        if not list_of_files:
-            print("No files found.")           # I prefer using the negation
-            return None                     # because it behaves like a shortcut
-        latest_file = max(list_of_files, key=os.path.getctime)
-        _, filename = os.path.split(latest_file)
-        time = filename.split("_")[2]
-        return time
-
-    def set_latest_runtime(self, timestamp: str):
-        dotenv.set_key(dotenv.find_dotenv(),"latest_timestamp", timestamp)
-        print("Timestamp latest runtime set.")
 
     def produce_dashboard(self, db_path: Path):
         print(PROJECT_ROOT)

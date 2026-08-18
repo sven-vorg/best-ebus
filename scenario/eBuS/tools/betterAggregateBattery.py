@@ -1,8 +1,6 @@
 # AI-generated file
 # Generated on 2026-07-29
 
-#!/usr/bin/env python3
-
 import argparse
 import os
 import time
