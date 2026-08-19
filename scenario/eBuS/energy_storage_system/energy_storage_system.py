@@ -5,7 +5,8 @@ import pandas as pd
 from energy_storage_system.charging_station import ChargingStation
 
 MINUTES_PER_HOUR = 60
-TOTAL_MINUTES = 1440  # 1 day
+TOTAL_MINUTES = 1740  # 1 day
+# Set to 1740 for entire sim run
 
 
 def parse_pv_data(csv_path):
@@ -15,25 +16,55 @@ def parse_pv_data(csv_path):
     df = df[sorted(df.columns, key=lambda c: int(c))]
     return {station_id: row.astype(float).tolist() for station_id, row in df.iterrows()}
 
+
+def parse_peak_power(csv_path):
+    df = pd.read_csv(csv_path, usecols=["station_id", "peak_power"])
+    df = df.set_index('station_id')
+    return df["peak_power"].astype(float).to_dict()
+
 class EnergyStorageSystem:
-    def __init__(self, charging_stations, ess_capacity, pv_csv_path, output_path=None, start_soc=0.0):
+    def __init__(self, charging_stations, pv_csv_path, ess_factor=None, ess_capacity=None,
+                 output_path=None, start_soc=0.0):
+        """ess_factor sizes each station's ESS as ess_factor * (that station's PV peak power).
+        Pass ess_capacity instead to statically set the same capacity for every station,
+        bypassing the factor-based calculation.
+        start_soc is a fraction (0.0-1.0) of each station's own capacity, not an absolute
+        energy value, so every station starts at the same relative charge level."""
         self.charging_stations = charging_stations
+        self.ess_factor = ess_factor
         self.ess_capacity = ess_capacity
         self.pv_csv_path = pv_csv_path
         self.output_path = output_path
         self.start_soc = start_soc
         self.pv_data = None
+        self.peak_power = None
         self.ess_df = None
 
     def main(self):
         """Run the full ESS pipeline: load PV data, derive load/PV profiles,
         simulate the battery, and write the result to XML if an output_path was given."""
         self.pv_data = parse_pv_data(self.pv_csv_path)
+        self.peak_power = parse_peak_power(self.pv_csv_path)
         self.energy_per_timestep(self.charging_stations)
-        self.ess_df = self.calculate_ess(self.charging_stations, self.ess_capacity, self.start_soc)
+        ess_capacities = self.calculate_ess_capacities(
+            self.charging_stations, self.ess_factor, self.ess_capacity
+        )
+        self.ess_df = self.calculate_ess(self.charging_stations, ess_capacities, self.start_soc)
         if self.output_path is not None:
             self.write_xml(self.output_path)
         return self.ess_df
+
+    def calculate_ess_capacities(self, charging_stations, ess_factor=None, ess_capacity=None):
+        """Return {station_id: capacity}. If ess_capacity is given, every station gets that
+        static capacity. Otherwise each station's capacity is ess_factor * its PV peak power."""
+        if ess_capacity is not None:
+            return {station.id: ess_capacity for station in charging_stations}
+        if ess_factor is None:
+            raise ValueError("Either ess_factor or ess_capacity must be provided.")
+        return {
+            station.id: self.peak_power[station.id] * ess_factor
+            for station in charging_stations
+        }
 
     def energy_per_timestep(self, charging_stations):
         for station in charging_stations:
@@ -71,21 +102,22 @@ class EnergyStorageSystem:
             pv[t] = pv_hourly / MINUTES_PER_HOUR
         return pv
 
-    def calculate_ess(self, charging_stations, ess_capacity, start_soc=0.0, total_minutes=TOTAL_MINUTES):
+    def calculate_ess(self, charging_stations, ess_capacities, start_soc=0.0, total_minutes=TOTAL_MINUTES):
         rows = []
         for station in charging_stations:
             load = self.build_load_profile(station, total_minutes)
             pv = self.build_pv_profile(station, total_minutes)
-            soc = start_soc
+            capacity = ess_capacities[station.id]
+            soc = start_soc * capacity
             for t in range(total_minutes):
                 net = pv[t] - load[t]
                 grid_draw = 0.0
                 curtailed_pv = 0.0
                 if net >= 0:
                     new_soc = soc + net
-                    if new_soc > ess_capacity:
-                        curtailed_pv = new_soc - ess_capacity
-                        soc = ess_capacity
+                    if new_soc > capacity:
+                        curtailed_pv = new_soc - capacity
+                        soc = capacity
                     else:
                         soc = new_soc
                 else:
@@ -141,8 +173,9 @@ if __name__ == "__main__":
 
     EnergyStorageSystem(
         charging_stations=charging_stations,
-        ess_capacity=500_000,   # Wh — replace with your real capacity per station or spec
+        ess_factor=1.0,   # each station's ESS = ess_factor * that station's total PV yield (Wh)
+        # ess_capacity=500_000,   # or set a static capacity (Wh) for every station instead
         pv_csv_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\pv_estimation\data\solar_power_v6_scaled.csv",
         output_path=r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output\electric_bus_2026-08-17-19-10-35_ess.xml",
-        start_soc=250_000,
+        start_soc=0.5,   # fraction (0.0-1.0) of each station's own ESS capacity
     ).main()

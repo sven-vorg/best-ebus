@@ -137,10 +137,11 @@ class EBusMain:
 
         EnergyStorageSystem(
             charging_stations=ChargingStation.from_xml(chargingstations_file),
-            ess_capacity=500000,  # Wh — replace with real capacity per station or spec
+            ess_factor=2.0,  # each station's ESS = ess_factor * that station's total PV yield (Wh)
+            # ess_capacity=500000,  # or set a static capacity (Wh) for every station instead
             pv_csv_path=PV_CSV_PATH,
             output_path=output_file,
-            start_soc=250000,
+            start_soc=0.5,  # fraction (0.0-1.0) of each station's own ESS capacity
         ).main()
         logger.info(f"ESS output written to {output_file}")
 
@@ -176,9 +177,9 @@ if __name__ == "__main__":
     eb = EBusMain()
     #eb.run_heuristic_preprocessing()
     #eb.run_heuristic_postprocessing()
-    eb.run_simulation()
-    eb.run_aggreate_battery()
-    eb.run_pvgis_api_call()
+    #eb.run_simulation()
+    #eb.run_aggreate_battery()
+    #eb.run_pvgis_api_call()
     eb.run_energy_storage_system()
 
     
