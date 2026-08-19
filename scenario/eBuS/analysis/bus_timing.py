@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 class BusTiming:
 
+    EXCLUDED_STOPS = {'bs_cicerostrasse', 'bs_muellerstrasse'}
+
     def __init__(self, stops_path):
         self.stops = self.parse_stops(stops_path)
 
@@ -18,10 +20,15 @@ class BusTiming:
         stops = []
 
         for elem in root.iter('stopinfo'):
+            bus_stop = elem.get('busStop')
+
+            if bus_stop in self.EXCLUDED_STOPS:
+                continue
+
             stops.append({
                 'stop_id': elem.get('id'),
                 'vehicle': elem.get('type'),
-                'bus_stop': elem.get('busStop'),
+                'bus_stop': bus_stop,
                 'lane': elem.get('lane'),
                 'pos': float(elem.get('pos')),
                 'started_sec': float(elem.get('started')),
@@ -177,7 +184,7 @@ class BusTiming:
             plt.plot(
                 data['times'],
                 data['delays'],
-                marker='o',
+                #marker='o',
                 linewidth=1.2,
                 markersize=3,
                 label=f"Bus {bus_id}"
@@ -188,11 +195,6 @@ class BusTiming:
         plt.title("Bus delay over time")
 
         plt.grid(True, alpha=0.3)
-        plt.legend(
-            title="Bus ID",
-            bbox_to_anchor=(1.02, 1),
-            loc="upper left"
-        )
 
         plt.tight_layout()
 
@@ -204,18 +206,10 @@ class BusTiming:
 
 if __name__ == "__main__":
 
-    stops_path_I = (
-        r"best-ebus\scenario\sumo\output"
-        r"\electric_bus_2026-08-17-19-10-35_stopinfo.xml"
-    )
-
     stops_path_II = (
         r"best-ebus\scenario\sumo\output"
-        r"\80percent_soc_electric_bus_2026-08-18-12-41-20_stopinfo.xml"
+        r"\80percent_soc_electric_bus_2026-08-18-18-33-24_stopinfo.xml"
     )
 
-    delay_I = BusTiming(stops_path_I)
-    delay_I.plot_aggregated_delays(interval=60)
-
-    delay_II = BusTiming(stops_path_II)
-    delay_II.plot_aggregated_delays(interval=60)
+    delay_II = BusTiming(stops_path=stops_path_II)
+    delay_II.plot_delay_per_bus()
