@@ -1,1206 +1,1206 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <vehicle id="1001" type="SolarsisUrbino12electric" route="1001_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1002" type="SolarsisUrbino12electric" route="1002_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1003" type="SolarsisUrbino12electric" route="1003_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1004" type="SolarsisUrbino12electric" route="1004_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1005" type="SolarsisUrbino12electric" route="1005_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1006" type="SolarsisUrbino12electric" route="1006_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1007" type="SolarsisUrbino12electric" route="1007_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1008" type="SolarsisUrbino12electric" route="1008_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1009" type="SolarsisUrbino12electric" route="1009_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1010" type="SolarsisUrbino12electric" route="1010_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1011" type="SolarsisUrbino12electric" route="1011_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1012" type="SolarsisUrbino12electric" route="1012_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1013" type="SolarsisUrbino12electric" route="1013_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="1014" type="SolarsisUrbino12electric" route="1014_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="240000.0"/>
-  </vehicle>
-  <vehicle id="2001" type="Ebusco2.2electric12m" route="2001_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2002" type="Ebusco2.2electric12m" route="2002_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2003" type="Ebusco2.2electric12m" route="2003_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2004" type="Ebusco2.2electric12m" route="2004_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2005" type="Ebusco2.2electric12m" route="2005_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2006" type="Ebusco2.2electric12m" route="2006_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2007" type="Ebusco2.2electric12m" route="2007_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2008" type="Ebusco2.2electric12m" route="2008_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2009" type="Ebusco2.2electric12m" route="2009_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2010" type="Ebusco2.2electric12m" route="2010_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2011" type="Ebusco2.2electric12m" route="2011_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2012" type="Ebusco2.2electric12m" route="2012_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2013" type="Ebusco2.2electric12m" route="2013_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2014" type="Ebusco2.2electric12m" route="2014_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2015" type="Ebusco2.2electric12m" route="2015_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2016" type="Ebusco2.2electric12m" route="2016_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2017" type="Ebusco2.2electric12m" route="2017_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2018" type="Ebusco2.2electric12m" route="2018_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2019" type="Ebusco2.2electric12m" route="2019_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2020" type="Ebusco2.2electric12m" route="2020_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2021" type="Ebusco2.2electric12m" route="2021_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2022" type="Ebusco2.2electric12m" route="2022_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2023" type="Ebusco2.2electric12m" route="2023_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2024" type="Ebusco2.2electric12m" route="2024_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2025" type="Ebusco2.2electric12m" route="2025_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2026" type="Ebusco2.2electric12m" route="2026_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2027" type="Ebusco2.2electric12m" route="2027_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2028" type="Ebusco2.2electric12m" route="2028_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2029" type="Ebusco2.2electric12m" route="2029_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2030" type="Ebusco2.2electric12m" route="2030_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2031" type="Ebusco2.2electric12m" route="2031_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2032" type="Ebusco2.2electric12m" route="2032_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2033" type="Ebusco2.2electric12m" route="2033_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2034" type="Ebusco2.2electric12m" route="2034_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2035" type="Ebusco2.2electric12m" route="2035_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2036" type="Ebusco2.2electric12m" route="2036_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2037" type="Ebusco2.2electric12m" route="2037_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2038" type="Ebusco2.2electric12m" route="2038_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2039" type="Ebusco2.2electric12m" route="2039_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2040" type="Ebusco2.2electric12m" route="2040_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2041" type="Ebusco2.2electric12m" route="2041_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2042" type="Ebusco2.2electric12m" route="2042_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2043" type="Ebusco2.2electric12m" route="2043_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2044" type="Ebusco2.2electric12m" route="2044_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2045" type="Ebusco2.2electric12m" route="2045_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2046" type="Ebusco2.2electric12m" route="2046_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2047" type="Ebusco2.2electric12m" route="2047_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2048" type="Ebusco2.2electric12m" route="2048_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2049" type="Ebusco2.2electric12m" route="2049_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2050" type="Ebusco2.2electric12m" route="2050_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2051" type="Ebusco2.2electric12m" route="2051_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2052" type="Ebusco2.2electric12m" route="2052_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2053" type="Ebusco2.2electric12m" route="2053_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2054" type="Ebusco2.2electric12m" route="2054_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2055" type="Ebusco2.2electric12m" route="2055_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2056" type="Ebusco2.2electric12m" route="2056_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2057" type="Ebusco2.2electric12m" route="2057_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2058" type="Ebusco2.2electric12m" route="2058_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2059" type="Ebusco2.2electric12m" route="2059_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2060" type="Ebusco2.2electric12m" route="2060_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2061" type="Ebusco2.2electric12m" route="2061_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2062" type="Ebusco2.2electric12m" route="2062_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2063" type="Ebusco2.2electric12m" route="2063_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2064" type="Ebusco2.2electric12m" route="2064_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2065" type="Ebusco2.2electric12m" route="2065_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2066" type="Ebusco2.2electric12m" route="2066_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="2067" type="Ebusco2.2electric12m" route="2067_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="420000.0"/>
-  </vehicle>
-  <vehicle id="3001" type="SolarsisUrbino18electric" route="3001_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3002" type="SolarsisUrbino18electric" route="3002_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3003" type="SolarsisUrbino18electric" route="3003_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3004" type="SolarsisUrbino18electric" route="3004_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3005" type="SolarsisUrbino18electric" route="3005_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3006" type="SolarsisUrbino18electric" route="3006_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3007" type="SolarsisUrbino18electric" route="3007_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3008" type="SolarsisUrbino18electric" route="3008_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3009" type="SolarsisUrbino18electric" route="3009_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3010" type="SolarsisUrbino18electric" route="3010_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3011" type="SolarsisUrbino18electric" route="3011_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3012" type="SolarsisUrbino18electric" route="3012_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3013" type="SolarsisUrbino18electric" route="3013_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3014" type="SolarsisUrbino18electric" route="3014_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3015" type="SolarsisUrbino18electric" route="3015_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3016" type="SolarsisUrbino18electric" route="3016_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3017" type="SolarsisUrbino18electric" route="3017_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3018" type="SolarsisUrbino18electric" route="3018_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3019" type="SolarsisUrbino18electric" route="3019_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3020" type="SolarsisUrbino18electric" route="3020_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3021" type="SolarsisUrbino18electric" route="3021_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3022" type="SolarsisUrbino18electric" route="3022_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3023" type="SolarsisUrbino18electric" route="3023_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3024" type="SolarsisUrbino18electric" route="3024_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3025" type="SolarsisUrbino18electric" route="3025_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3026" type="SolarsisUrbino18electric" route="3026_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3027" type="SolarsisUrbino18electric" route="3027_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3028" type="SolarsisUrbino18electric" route="3028_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3029" type="SolarsisUrbino18electric" route="3029_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3030" type="SolarsisUrbino18electric" route="3030_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3031" type="SolarsisUrbino18electric" route="3031_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3032" type="SolarsisUrbino18electric" route="3032_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3033" type="SolarsisUrbino18electric" route="3033_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3034" type="SolarsisUrbino18electric" route="3034_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3035" type="SolarsisUrbino18electric" route="3035_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3036" type="SolarsisUrbino18electric" route="3036_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3037" type="SolarsisUrbino18electric" route="3037_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3038" type="SolarsisUrbino18electric" route="3038_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3039" type="SolarsisUrbino18electric" route="3039_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3040" type="SolarsisUrbino18electric" route="3040_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3041" type="SolarsisUrbino18electric" route="3041_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3042" type="SolarsisUrbino18electric" route="3042_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3043" type="SolarsisUrbino18electric" route="3043_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3044" type="SolarsisUrbino18electric" route="3044_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3045" type="SolarsisUrbino18electric" route="3045_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3046" type="SolarsisUrbino18electric" route="3046_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3047" type="SolarsisUrbino18electric" route="3047_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3048" type="SolarsisUrbino18electric" route="3048_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3049" type="SolarsisUrbino18electric" route="3049_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3050" type="SolarsisUrbino18electric" route="3050_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3051" type="SolarsisUrbino18electric" route="3051_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3052" type="SolarsisUrbino18electric" route="3052_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3053" type="SolarsisUrbino18electric" route="3053_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3054" type="SolarsisUrbino18electric" route="3054_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3055" type="SolarsisUrbino18electric" route="3055_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3056" type="SolarsisUrbino18electric" route="3056_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3057" type="SolarsisUrbino18electric" route="3057_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3058" type="SolarsisUrbino18electric" route="3058_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3059" type="SolarsisUrbino18electric" route="3059_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3060" type="SolarsisUrbino18electric" route="3060_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3061" type="SolarsisUrbino18electric" route="3061_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3062" type="SolarsisUrbino18electric" route="3062_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3063" type="SolarsisUrbino18electric" route="3063_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3064" type="SolarsisUrbino18electric" route="3064_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3065" type="SolarsisUrbino18electric" route="3065_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3066" type="SolarsisUrbino18electric" route="3066_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3067" type="SolarsisUrbino18electric" route="3067_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3068" type="SolarsisUrbino18electric" route="3068_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3069" type="SolarsisUrbino18electric" route="3069_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3070" type="SolarsisUrbino18electric" route="3070_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3071" type="SolarsisUrbino18electric" route="3071_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3072" type="SolarsisUrbino18electric" route="3072_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3073" type="SolarsisUrbino18electric" route="3073_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3074" type="SolarsisUrbino18electric" route="3074_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3075" type="SolarsisUrbino18electric" route="3075_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3076" type="SolarsisUrbino18electric" route="3076_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3077" type="SolarsisUrbino18electric" route="3077_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3078" type="SolarsisUrbino18electric" route="3078_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3079" type="SolarsisUrbino18electric" route="3079_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3080" type="SolarsisUrbino18electric" route="3080_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3081" type="SolarsisUrbino18electric" route="3081_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3082" type="SolarsisUrbino18electric" route="3082_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3083" type="SolarsisUrbino18electric" route="3083_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3084" type="SolarsisUrbino18electric" route="3084_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3085" type="SolarsisUrbino18electric" route="3085_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3086" type="SolarsisUrbino18electric" route="3086_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3087" type="SolarsisUrbino18electric" route="3087_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3088" type="SolarsisUrbino18electric" route="3088_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3089" type="SolarsisUrbino18electric" route="3089_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3090" type="SolarsisUrbino18electric" route="3090_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3091" type="SolarsisUrbino18electric" route="3091_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3092" type="SolarsisUrbino18electric" route="3092_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3093" type="SolarsisUrbino18electric" route="3093_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3094" type="SolarsisUrbino18electric" route="3094_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3095" type="SolarsisUrbino18electric" route="3095_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3096" type="SolarsisUrbino18electric" route="3096_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3097" type="SolarsisUrbino18electric" route="3097_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3098" type="SolarsisUrbino18electric" route="3098_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3099" type="SolarsisUrbino18electric" route="3099_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3100" type="SolarsisUrbino18electric" route="3100_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3101" type="SolarsisUrbino18electric" route="3101_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3102" type="SolarsisUrbino18electric" route="3102_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3103" type="SolarsisUrbino18electric" route="3103_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3104" type="SolarsisUrbino18electric" route="3104_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3105" type="SolarsisUrbino18electric" route="3105_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="300000.0"/>
   </vehicle>
   <vehicle id="3106" type="SolarsisUrbino18electric" route="3106_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3107" type="SolarsisUrbino18electric" route="3107_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3108" type="SolarsisUrbino18electric" route="3108_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3109" type="SolarsisUrbino18electric" route="3109_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3110" type="SolarsisUrbino18electric" route="3110_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3111" type="SolarsisUrbino18electric" route="3111_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3112" type="SolarsisUrbino18electric" route="3112_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3113" type="SolarsisUrbino18electric" route="3113_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3114" type="SolarsisUrbino18electric" route="3114_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3115" type="SolarsisUrbino18electric" route="3115_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3116" type="SolarsisUrbino18electric" route="3116_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3117" type="SolarsisUrbino18electric" route="3117_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3118" type="SolarsisUrbino18electric" route="3118_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3119" type="SolarsisUrbino18electric" route="3119_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3120" type="SolarsisUrbino18electric" route="3120_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3121" type="SolarsisUrbino18electric" route="3121_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3122" type="SolarsisUrbino18electric" route="3122_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3123" type="SolarsisUrbino18electric" route="3123_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3124" type="SolarsisUrbino18electric" route="3124_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3125" type="SolarsisUrbino18electric" route="3125_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3126" type="SolarsisUrbino18electric" route="3126_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3127" type="SolarsisUrbino18electric" route="3127_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3128" type="SolarsisUrbino18electric" route="3128_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3129" type="SolarsisUrbino18electric" route="3129_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3130" type="SolarsisUrbino18electric" route="3130_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3131" type="SolarsisUrbino18electric" route="3131_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3132" type="SolarsisUrbino18electric" route="3132_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3133" type="SolarsisUrbino18electric" route="3133_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3134" type="SolarsisUrbino18electric" route="3134_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3135" type="SolarsisUrbino18electric" route="3135_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3136" type="SolarsisUrbino18electric" route="3136_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3137" type="SolarsisUrbino18electric" route="3137_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3138" type="SolarsisUrbino18electric" route="3138_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3139" type="SolarsisUrbino18electric" route="3139_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3140" type="SolarsisUrbino18electric" route="3140_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3141" type="SolarsisUrbino18electric" route="3141_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
-  </vehicle>
-  <vehicle id="3142" type="SolarsisUrbino18electric" route="3142_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3143" type="SolarsisUrbino18electric" route="3143_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3144" type="SolarsisUrbino18electric" route="3144_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3145" type="SolarsisUrbino18electric" route="3145_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3146" type="SolarsisUrbino18electric" route="3146_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3147" type="SolarsisUrbino18electric" route="3147_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3148" type="SolarsisUrbino18electric" route="3148_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3149" type="SolarsisUrbino18electric" route="3149_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3150" type="SolarsisUrbino18electric" route="3150_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3151" type="SolarsisUrbino18electric" route="3151_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3152" type="SolarsisUrbino18electric" route="3152_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3153" type="SolarsisUrbino18electric" route="3153_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3154" type="SolarsisUrbino18electric" route="3154_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3155" type="SolarsisUrbino18electric" route="3155_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3156" type="SolarsisUrbino18electric" route="3156_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3157" type="SolarsisUrbino18electric" route="3157_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3158" type="SolarsisUrbino18electric" route="3158_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3159" type="SolarsisUrbino18electric" route="3159_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3160" type="SolarsisUrbino18electric" route="3160_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3161" type="SolarsisUrbino18electric" route="3161_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3162" type="SolarsisUrbino18electric" route="3162_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3163" type="SolarsisUrbino18electric" route="3163_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3164" type="SolarsisUrbino18electric" route="3164_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3165" type="SolarsisUrbino18electric" route="3165_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3166" type="SolarsisUrbino18electric" route="3166_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3167" type="SolarsisUrbino18electric" route="3167_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3168" type="SolarsisUrbino18electric" route="3168_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3169" type="SolarsisUrbino18electric" route="3169_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3170" type="SolarsisUrbino18electric" route="3170_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3171" type="SolarsisUrbino18electric" route="3171_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3172" type="SolarsisUrbino18electric" route="3172_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3173" type="SolarsisUrbino18electric" route="3173_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3174" type="SolarsisUrbino18electric" route="3174_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3175" type="SolarsisUrbino18electric" route="3175_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3176" type="SolarsisUrbino18electric" route="3176_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3177" type="SolarsisUrbino18electric" route="3177_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3178" type="SolarsisUrbino18electric" route="3178_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3179" type="SolarsisUrbino18electric" route="3179_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3180" type="SolarsisUrbino18electric" route="3180_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3181" type="SolarsisUrbino18electric" route="3181_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3182" type="SolarsisUrbino18electric" route="3182_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3183" type="SolarsisUrbino18electric" route="3183_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3184" type="SolarsisUrbino18electric" route="3184_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3185" type="SolarsisUrbino18electric" route="3185_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3186" type="SolarsisUrbino18electric" route="3186_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3187" type="SolarsisUrbino18electric" route="3187_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3188" type="SolarsisUrbino18electric" route="3188_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3189" type="SolarsisUrbino18electric" route="3189_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3190" type="SolarsisUrbino18electric" route="3190_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3191" type="SolarsisUrbino18electric" route="3191_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3192" type="SolarsisUrbino18electric" route="3192_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3193" type="SolarsisUrbino18electric" route="3193_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3194" type="SolarsisUrbino18electric" route="3194_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3195" type="SolarsisUrbino18electric" route="3195_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3196" type="SolarsisUrbino18electric" route="3196_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3197" type="SolarsisUrbino18electric" route="3197_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3198" type="SolarsisUrbino18electric" route="3198_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3199" type="SolarsisUrbino18electric" route="3199_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3200" type="SolarsisUrbino18electric" route="3200_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3201" type="SolarsisUrbino18electric" route="3201_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3202" type="SolarsisUrbino18electric" route="3202_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3203" type="SolarsisUrbino18electric" route="3203_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3204" type="SolarsisUrbino18electric" route="3204_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3205" type="SolarsisUrbino18electric" route="3205_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3206" type="SolarsisUrbino18electric" route="3206_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3207" type="SolarsisUrbino18electric" route="3207_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3208" type="SolarsisUrbino18electric" route="3208_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3209" type="SolarsisUrbino18electric" route="3209_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3210" type="SolarsisUrbino18electric" route="3210_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3211" type="SolarsisUrbino18electric" route="3211_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3212" type="SolarsisUrbino18electric" route="3212_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3213" type="SolarsisUrbino18electric" route="3213_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3214" type="SolarsisUrbino18electric" route="3214_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3215" type="SolarsisUrbino18electric" route="3215_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3216" type="SolarsisUrbino18electric" route="3216_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3217" type="SolarsisUrbino18electric" route="3217_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3218" type="SolarsisUrbino18electric" route="3218_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3219" type="SolarsisUrbino18electric" route="3219_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3220" type="SolarsisUrbino18electric" route="3220_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3221" type="SolarsisUrbino18electric" route="3221_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3222" type="SolarsisUrbino18electric" route="3222_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3223" type="SolarsisUrbino18electric" route="3223_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3224" type="SolarsisUrbino18electric" route="3224_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3225" type="SolarsisUrbino18electric" route="3225_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3226" type="SolarsisUrbino18electric" route="3226_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3227" type="SolarsisUrbino18electric" route="3227_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3228" type="SolarsisUrbino18electric" route="3228_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3229" type="SolarsisUrbino18electric" route="3229_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3230" type="SolarsisUrbino18electric" route="3230_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3231" type="SolarsisUrbino18electric" route="3231_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3232" type="SolarsisUrbino18electric" route="3232_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3233" type="SolarsisUrbino18electric" route="3233_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3234" type="SolarsisUrbino18electric" route="3234_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3235" type="SolarsisUrbino18electric" route="3235_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3236" type="SolarsisUrbino18electric" route="3236_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3237" type="SolarsisUrbino18electric" route="3237_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3238" type="SolarsisUrbino18electric" route="3238_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3239" type="SolarsisUrbino18electric" route="3239_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3240" type="SolarsisUrbino18electric" route="3240_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3241" type="SolarsisUrbino18electric" route="3241_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3242" type="SolarsisUrbino18electric" route="3242_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3243" type="SolarsisUrbino18electric" route="3243_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3244" type="SolarsisUrbino18electric" route="3244_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3245" type="SolarsisUrbino18electric" route="3245_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3246" type="SolarsisUrbino18electric" route="3246_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3247" type="SolarsisUrbino18electric" route="3247_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3248" type="SolarsisUrbino18electric" route="3248_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3249" type="SolarsisUrbino18electric" route="3249_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3250" type="SolarsisUrbino18electric" route="3250_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3251" type="SolarsisUrbino18electric" route="3251_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3252" type="SolarsisUrbino18electric" route="3252_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3253" type="SolarsisUrbino18electric" route="3253_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3254" type="SolarsisUrbino18electric" route="3254_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3255" type="SolarsisUrbino18electric" route="3255_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3256" type="SolarsisUrbino18electric" route="3256_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3257" type="SolarsisUrbino18electric" route="3257_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3258" type="SolarsisUrbino18electric" route="3258_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3259" type="SolarsisUrbino18electric" route="3259_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3260" type="SolarsisUrbino18electric" route="3260_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3261" type="SolarsisUrbino18electric" route="3261_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3262" type="SolarsisUrbino18electric" route="3262_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3263" type="SolarsisUrbino18electric" route="3263_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3264" type="SolarsisUrbino18electric" route="3264_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3265" type="SolarsisUrbino18electric" route="3265_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3266" type="SolarsisUrbino18electric" route="3266_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3267" type="SolarsisUrbino18electric" route="3267_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3268" type="SolarsisUrbino18electric" route="3268_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3269" type="SolarsisUrbino18electric" route="3269_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3270" type="SolarsisUrbino18electric" route="3270_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3271" type="SolarsisUrbino18electric" route="3271_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3272" type="SolarsisUrbino18electric" route="3272_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3273" type="SolarsisUrbino18electric" route="3273_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3274" type="SolarsisUrbino18electric" route="3274_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3275" type="SolarsisUrbino18electric" route="3275_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3276" type="SolarsisUrbino18electric" route="3276_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3277" type="SolarsisUrbino18electric" route="3277_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3278" type="SolarsisUrbino18electric" route="3278_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3279" type="SolarsisUrbino18electric" route="3279_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3280" type="SolarsisUrbino18electric" route="3280_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3281" type="SolarsisUrbino18electric" route="3281_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3282" type="SolarsisUrbino18electric" route="3282_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3283" type="SolarsisUrbino18electric" route="3283_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3284" type="SolarsisUrbino18electric" route="3284_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3285" type="SolarsisUrbino18electric" route="3285_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3286" type="SolarsisUrbino18electric" route="3286_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3287" type="SolarsisUrbino18electric" route="3287_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3288" type="SolarsisUrbino18electric" route="3288_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3289" type="SolarsisUrbino18electric" route="3289_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3290" type="SolarsisUrbino18electric" route="3290_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3291" type="SolarsisUrbino18electric" route="3291_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3292" type="SolarsisUrbino18electric" route="3292_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3293" type="SolarsisUrbino18electric" route="3293_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3294" type="SolarsisUrbino18electric" route="3294_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3295" type="SolarsisUrbino18electric" route="3295_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3296" type="SolarsisUrbino18electric" route="3296_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3297" type="SolarsisUrbino18electric" route="3297_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3298" type="SolarsisUrbino18electric" route="3298_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3299" type="SolarsisUrbino18electric" route="3299_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3300" type="SolarsisUrbino18electric" route="3300_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3301" type="SolarsisUrbino18electric" route="3301_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3302" type="SolarsisUrbino18electric" route="3302_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3303" type="SolarsisUrbino18electric" route="3303_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3304" type="SolarsisUrbino18electric" route="3304_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3305" type="SolarsisUrbino18electric" route="3305_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3306" type="SolarsisUrbino18electric" route="3306_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3307" type="SolarsisUrbino18electric" route="3307_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3308" type="SolarsisUrbino18electric" route="3308_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3309" type="SolarsisUrbino18electric" route="3309_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3310" type="SolarsisUrbino18electric" route="3310_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3311" type="SolarsisUrbino18electric" route="3311_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3312" type="SolarsisUrbino18electric" route="3312_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3313" type="SolarsisUrbino18electric" route="3313_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3314" type="SolarsisUrbino18electric" route="3314_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3315" type="SolarsisUrbino18electric" route="3315_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3316" type="SolarsisUrbino18electric" route="3316_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3317" type="SolarsisUrbino18electric" route="3317_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3318" type="SolarsisUrbino18electric" route="3318_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3319" type="SolarsisUrbino18electric" route="3319_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
   </vehicle>
   <vehicle id="3320" type="SolarsisUrbino18electric" route="3320_route" depart="0" color="1,0,0">
-    <param key="device.battery.chargeLevel" value="560000.0"/>
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3113" type="SolarsisUrbino18electric" route="3113_route" depart="282" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3131" type="SolarsisUrbino18electric" route="3131_route" depart="326" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3060" type="SolarsisUrbino18electric" route="3060_route" depart="402" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3053" type="SolarsisUrbino18electric" route="3053_route" depart="527" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3056" type="SolarsisUrbino18electric" route="3056_route" depart="578" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3042" type="SolarsisUrbino18electric" route="3042_route" depart="878" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3094" type="SolarsisUrbino18electric" route="3094_route" depart="913" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3142" type="SolarsisUrbino18electric" route="3142_route" depart="1165" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3045" type="SolarsisUrbino18electric" route="3045_route" depart="1187" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3027" type="SolarsisUrbino18electric" route="3027_route" depart="1266" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3048" type="SolarsisUrbino18electric" route="3048_route" depart="1326" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3024" type="SolarsisUrbino18electric" route="3024_route" depart="1362" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3083" type="SolarsisUrbino18electric" route="3083_route" depart="1367" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3062" type="SolarsisUrbino18electric" route="3062_route" depart="1427" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3070" type="SolarsisUrbino18electric" route="3070_route" depart="1482" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3080" type="SolarsisUrbino18electric" route="3080_route" depart="1526" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3100" type="SolarsisUrbino18electric" route="3100_route" depart="1537" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3029" type="SolarsisUrbino18electric" route="3029_route" depart="1632" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3030" type="SolarsisUrbino18electric" route="3030_route" depart="1727" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3039" type="SolarsisUrbino18electric" route="3039_route" depart="1754" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3016" type="SolarsisUrbino18electric" route="3016_route" depart="1778" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3057" type="SolarsisUrbino18electric" route="3057_route" depart="1784" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3047" type="SolarsisUrbino18electric" route="3047_route" depart="1830" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3132" type="SolarsisUrbino18electric" route="3132_route" depart="1925" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3015" type="SolarsisUrbino18electric" route="3015_route" depart="1962" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3031" type="SolarsisUrbino18electric" route="3031_route" depart="1969" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3044" type="SolarsisUrbino18electric" route="3044_route" depart="1984" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3051" type="SolarsisUrbino18electric" route="3051_route" depart="1984" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3082" type="SolarsisUrbino18electric" route="3082_route" depart="1987" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3011" type="SolarsisUrbino18electric" route="3011_route" depart="2030" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3109" type="SolarsisUrbino18electric" route="3109_route" depart="2039" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3061" type="SolarsisUrbino18electric" route="3061_route" depart="2064" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3072" type="SolarsisUrbino18electric" route="3072_route" depart="2078" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3034" type="SolarsisUrbino18electric" route="3034_route" depart="2207" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3063" type="SolarsisUrbino18electric" route="3063_route" depart="2215" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3085" type="SolarsisUrbino18electric" route="3085_route" depart="2237" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3043" type="SolarsisUrbino18electric" route="3043_route" depart="2291" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3066" type="SolarsisUrbino18electric" route="3066_route" depart="2333" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3020" type="SolarsisUrbino18electric" route="3020_route" depart="2349" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3064" type="SolarsisUrbino18electric" route="3064_route" depart="2365" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3041" type="SolarsisUrbino18electric" route="3041_route" depart="2387" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3055" type="SolarsisUrbino18electric" route="3055_route" depart="2429" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3006" type="SolarsisUrbino18electric" route="3006_route" depart="2438" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3018" type="SolarsisUrbino18electric" route="3018_route" depart="2453" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3110" type="SolarsisUrbino18electric" route="3110_route" depart="2476" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3096" type="SolarsisUrbino18electric" route="3096_route" depart="2501" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3014" type="SolarsisUrbino18electric" route="3014_route" depart="2520" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3046" type="SolarsisUrbino18electric" route="3046_route" depart="2523" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3068" type="SolarsisUrbino18electric" route="3068_route" depart="2526" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2063" type="Ebusco2.2electric12m" route="2063_route" depart="2562" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3095" type="SolarsisUrbino18electric" route="3095_route" depart="2567" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3077" type="SolarsisUrbino18electric" route="3077_route" depart="2627" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3090" type="SolarsisUrbino18electric" route="3090_route" depart="2682" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3091" type="SolarsisUrbino18electric" route="3091_route" depart="2726" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3074" type="SolarsisUrbino18electric" route="3074_route" depart="2737" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3076" type="SolarsisUrbino18electric" route="3076_route" depart="2922" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3050" type="SolarsisUrbino18electric" route="3050_route" depart="2927" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3067" type="SolarsisUrbino18electric" route="3067_route" depart="2929" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3093" type="SolarsisUrbino18electric" route="3093_route" depart="2954" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2050" type="Ebusco2.2electric12m" route="2050_route" depart="2978" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3035" type="SolarsisUrbino18electric" route="3035_route" depart="2984" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3004" type="SolarsisUrbino18electric" route="3004_route" depart="3007" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2061" type="Ebusco2.2electric12m" route="2061_route" depart="3028" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2062" type="Ebusco2.2electric12m" route="2062_route" depart="3119" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3103" type="SolarsisUrbino18electric" route="3103_route" depart="3125" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3040" type="SolarsisUrbino18electric" route="3040_route" depart="3162" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2064" type="Ebusco2.2electric12m" route="2064_route" depart="3184" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3028" type="SolarsisUrbino18electric" route="3028_route" depart="3187" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3019" type="SolarsisUrbino18electric" route="3019_route" depart="3222" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2055" type="Ebusco2.2electric12m" route="2055_route" depart="3230" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3084" type="SolarsisUrbino18electric" route="3084_route" depart="3239" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3079" type="SolarsisUrbino18electric" route="3079_route" depart="3264" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3078" type="SolarsisUrbino18electric" route="3078_route" depart="3415" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2054" type="Ebusco2.2electric12m" route="2054_route" depart="3424" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3086" type="SolarsisUrbino18electric" route="3086_route" depart="3511" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3075" type="SolarsisUrbino18electric" route="3075_route" depart="3565" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3049" type="SolarsisUrbino18electric" route="3049_route" depart="3587" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3010" type="SolarsisUrbino18electric" route="3010_route" depart="3629" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3097" type="SolarsisUrbino18electric" route="3097_route" depart="3653" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2058" type="Ebusco2.2electric12m" route="2058_route" depart="3666" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3003" type="SolarsisUrbino18electric" route="3003_route" depart="3720" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3069" type="SolarsisUrbino18electric" route="3069_route" depart="3723" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3022" type="SolarsisUrbino18electric" route="3022_route" depart="3762" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3059" type="SolarsisUrbino18electric" route="3059_route" depart="3767" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3025" type="SolarsisUrbino18electric" route="3025_route" depart="3779" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3099" type="SolarsisUrbino18electric" route="3099_route" depart="3791" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2056" type="Ebusco2.2electric12m" route="2056_route" depart="3827" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3054" type="SolarsisUrbino18electric" route="3054_route" depart="3882" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2065" type="Ebusco2.2electric12m" route="2065_route" depart="3893" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3104" type="SolarsisUrbino18electric" route="3104_route" depart="3926" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2048" type="Ebusco2.2electric12m" route="2048_route" depart="4006" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3021" type="SolarsisUrbino18electric" route="3021_route" depart="4121" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3058" type="SolarsisUrbino18electric" route="3058_route" depart="4207" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3098" type="SolarsisUrbino18electric" route="3098_route" depart="4244" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3032" type="SolarsisUrbino18electric" route="3032_route" depart="4274" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2067" type="Ebusco2.2electric12m" route="2067_route" depart="4319" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3008" type="SolarsisUrbino18electric" route="3008_route" depart="4319" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3101" type="SolarsisUrbino18electric" route="3101_route" depart="4325" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2060" type="Ebusco2.2electric12m" route="2060_route" depart="4362" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3013" type="SolarsisUrbino18electric" route="3013_route" depart="4379" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3088" type="SolarsisUrbino18electric" route="3088_route" depart="4384" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3092" type="SolarsisUrbino18electric" route="3092_route" depart="4387" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3007" type="SolarsisUrbino18electric" route="3007_route" depart="4412" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3081" type="SolarsisUrbino18electric" route="3081_route" depart="4543" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3071" type="SolarsisUrbino18electric" route="3071_route" depart="4559" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3065" type="SolarsisUrbino18electric" route="3065_route" depart="4607" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3033" type="SolarsisUrbino18electric" route="3033_route" depart="4615" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2059" type="Ebusco2.2electric12m" route="2059_route" depart="4692" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3037" type="SolarsisUrbino18electric" route="3037_route" depart="4765" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3002" type="SolarsisUrbino18electric" route="3002_route" depart="4811" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3017" type="SolarsisUrbino18electric" route="3017_route" depart="4846" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3036" type="SolarsisUrbino18electric" route="3036_route" depart="4923" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3073" type="SolarsisUrbino18electric" route="3073_route" depart="5126" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2052" type="Ebusco2.2electric12m" route="2052_route" depart="5191" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3087" type="SolarsisUrbino18electric" route="3087_route" depart="5206" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3052" type="SolarsisUrbino18electric" route="3052_route" depart="5207" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3023" type="SolarsisUrbino18electric" route="3023_route" depart="5330" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2049" type="Ebusco2.2electric12m" route="2049_route" depart="5407" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3005" type="SolarsisUrbino18electric" route="3005_route" depart="5466" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3089" type="SolarsisUrbino18electric" route="3089_route" depart="5474" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3102" type="SolarsisUrbino18electric" route="3102_route" depart="5525" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2045" type="Ebusco2.2electric12m" route="2045_route" depart="5538" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3038" type="SolarsisUrbino18electric" route="3038_route" depart="5587" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3012" type="SolarsisUrbino18electric" route="3012_route" depart="5627" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2046" type="Ebusco2.2electric12m" route="2046_route" depart="5743" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2053" type="Ebusco2.2electric12m" route="2053_route" depart="5921" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3105" type="SolarsisUrbino18electric" route="3105_route" depart="5965" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3026" type="SolarsisUrbino18electric" route="3026_route" depart="6011" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="3009" type="SolarsisUrbino18electric" route="3009_route" depart="6326" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2066" type="Ebusco2.2electric12m" route="2066_route" depart="6493" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2057" type="Ebusco2.2electric12m" route="2057_route" depart="6784" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2051" type="Ebusco2.2electric12m" route="2051_route" depart="6887" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="3001" type="SolarsisUrbino18electric" route="3001_route" depart="7007" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="700000.0"/>
+  </vehicle>
+  <vehicle id="2043" type="Ebusco2.2electric12m" route="2043_route" depart="8113" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2047" type="Ebusco2.2electric12m" route="2047_route" depart="9913" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2044" type="Ebusco2.2electric12m" route="2044_route" depart="10384" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2011" type="Ebusco2.2electric12m" route="2011_route" depart="10483" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2029" type="Ebusco2.2electric12m" route="2029_route" depart="10487" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2033" type="Ebusco2.2electric12m" route="2033_route" depart="10607" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2014" type="Ebusco2.2electric12m" route="2014_route" depart="10866" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2021" type="Ebusco2.2electric12m" route="2021_route" depart="10931" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2012" type="Ebusco2.2electric12m" route="2012_route" depart="11297" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2016" type="Ebusco2.2electric12m" route="2016_route" depart="11321" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2018" type="Ebusco2.2electric12m" route="2018_route" depart="11442" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2035" type="Ebusco2.2electric12m" route="2035_route" depart="11444" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2017" type="Ebusco2.2electric12m" route="2017_route" depart="11612" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2020" type="Ebusco2.2electric12m" route="2020_route" depart="11617" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2001" type="Ebusco2.2electric12m" route="2001_route" depart="11713" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2031" type="Ebusco2.2electric12m" route="2031_route" depart="11892" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2010" type="Ebusco2.2electric12m" route="2010_route" depart="11893" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2025" type="Ebusco2.2electric12m" route="2025_route" depart="11999" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2019" type="Ebusco2.2electric12m" route="2019_route" depart="12184" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2024" type="Ebusco2.2electric12m" route="2024_route" depart="12221" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2008" type="Ebusco2.2electric12m" route="2008_route" depart="12247" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2036" type="Ebusco2.2electric12m" route="2036_route" depart="12283" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2037" type="Ebusco2.2electric12m" route="2037_route" depart="12287" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2004" type="Ebusco2.2electric12m" route="2004_route" depart="12391" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2039" type="Ebusco2.2electric12m" route="2039_route" depart="12407" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2038" type="Ebusco2.2electric12m" route="2038_route" depart="12419" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2034" type="Ebusco2.2electric12m" route="2034_route" depart="12649" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2005" type="Ebusco2.2electric12m" route="2005_route" depart="12666" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2041" type="Ebusco2.2electric12m" route="2041_route" depart="12731" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2026" type="Ebusco2.2electric12m" route="2026_route" depart="13121" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2015" type="Ebusco2.2electric12m" route="2015_route" depart="13242" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2009" type="Ebusco2.2electric12m" route="2009_route" depart="13244" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2022" type="Ebusco2.2electric12m" route="2022_route" depart="13387" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2040" type="Ebusco2.2electric12m" route="2040_route" depart="13412" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2023" type="Ebusco2.2electric12m" route="2023_route" depart="13513" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2002" type="Ebusco2.2electric12m" route="2002_route" depart="13799" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2042" type="Ebusco2.2electric12m" route="2042_route" depart="13984" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2032" type="Ebusco2.2electric12m" route="2032_route" depart="14021" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2028" type="Ebusco2.2electric12m" route="2028_route" depart="14047" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2027" type="Ebusco2.2electric12m" route="2027_route" depart="14083" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2013" type="Ebusco2.2electric12m" route="2013_route" depart="14087" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2006" type="Ebusco2.2electric12m" route="2006_route" depart="14191" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2003" type="Ebusco2.2electric12m" route="2003_route" depart="14466" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2030" type="Ebusco2.2electric12m" route="2030_route" depart="14531" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
+  </vehicle>
+  <vehicle id="2007" type="Ebusco2.2electric12m" route="2007_route" depart="15187" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="525000.0"/>
   </vehicle>
 </routes>

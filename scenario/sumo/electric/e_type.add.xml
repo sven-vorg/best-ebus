@@ -51,7 +51,7 @@
             mass="30000"> 
         <param key="has.battery.device" value="true"/>              <!-- Always true for electric buses -->
         <param key="device.battery.capacity" value="700000"/>
-        <param key="maximumPower" value="240_000"/>    
+        <param key="maximumPower" value="240000"/>    
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              <!-- Unknown -->
         <param key="rotatingMass" value="40"/>                      <!-- Unknown -->

@@ -59,7 +59,9 @@ class HeuristicPostprocessing:
         bv = BuildVehicles(
             solution_path=self.input_path,
             vehicles_output=self.vehicles_output,
-            soc_percentage=self.soc_percentage
+            soc_percentage=self.soc_percentage,
+            tripp_dict=self.input_dict,
+            deadhead_path=self.deadhead_path,
         )
         bv.main()
 

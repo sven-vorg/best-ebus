@@ -6,21 +6,20 @@ __email__ = "sven.vorgheim@fu-berlin.de"
 __status__ = "Prototype"
 __date__ = "02.07.2026"
 
-import glob
-import os
 import subprocess
-import sys
 from pathlib import Path
 
 import logging
 
 from analysis.output_files import OutputFiles
 
+from pv_estimation.pvgis_api_v6 import PVGISApiCall
 from energy_storage_system.charging_station import ChargingStation
 from energy_storage_system.energy_storage_system import EnergyStorageSystem
 from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 from tools.betterAggregateBattery import aggregate
+
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -107,24 +106,6 @@ class EBusMain:
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
-    def produce_dashboard(self, db_path: Path):
-        print(PROJECT_ROOT)
-        print((PROJECT_ROOT / "..").resolve())
-        dashboard_script = (PROJECT_ROOT / "../eBuS/visualisation/dashboard.py").resolve()
-
-        subprocess.run(
-            [
-                sys.executable,
-                "-m",
-                "streamlit",
-                "run",
-                str(dashboard_script),
-                "--",
-                str(db_path),
-            ],
-            cwd=(PROJECT_ROOT / "..").resolve(),  # scenario/
-        )
-
     def main(self):
         pass
 
@@ -156,12 +137,25 @@ class EBusMain:
 
         EnergyStorageSystem(
             charging_stations=ChargingStation.from_xml(chargingstations_file),
-            ess_capacity=500_000,  # Wh — replace with real capacity per station or spec
+            ess_capacity=500000,  # Wh — replace with real capacity per station or spec
             pv_csv_path=PV_CSV_PATH,
             output_path=output_file,
-            start_soc=250_000,
+            start_soc=250000,
         ).main()
         logger.info(f"ESS output written to {output_file}")
+
+    def run_pvgis_api_call(self):
+        """
+        Execute the PVGIS v6 API call
+        May result in a high number of calls at first run,
+        or after creating new charging stations. 
+        May be rate limited server side.
+        """
+        cs_path = (SUMO_DIR / "electric/e_stations.add.xml")
+        pv_out = (EBUS_DIR /"pv_estimation/data")
+        pvgis = PVGISApiCall(stations_path=cs_path,output_path=pv_out)
+        pvgis.main()
+
 
     def run_simulation(self):
         """
@@ -172,17 +166,19 @@ class EBusMain:
             "sumo",
             "-c", f"{str(config_path)}"
         ])
-        print("SUMO finished.")
-        print(result.returncode)
+        logger.info("SUMO finished.")
+        logger.info(result.returncode)
 
 if __name__ == "__main__":
     HERE = Path(__file__).resolve().parent
 
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
     eb = EBusMain()
-    eb.run_heuristic_preprocessing()
-    eb.run_heuristic_postprocessing()
+    #eb.run_heuristic_preprocessing()
+    #eb.run_heuristic_postprocessing()
     eb.run_simulation()
-    eb.run_energy_storage_system()
     eb.run_aggreate_battery()
+    eb.run_pvgis_api_call()
+    eb.run_energy_storage_system()
+
     
