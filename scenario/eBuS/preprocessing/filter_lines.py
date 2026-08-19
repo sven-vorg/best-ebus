@@ -115,14 +115,6 @@ class FilterLines:
             encoding="UTF-8",
         )
 
-    def write_merged_csv_to_file(self):
-        # Extract the line name from the route ID
-        self.route_calculations["line"] = self.route_calculations["route"].str.split("_").str[0]
-        # Join on the Line column
-        merged = self.route_calculations.merge(self.selected_lines, on="line", how="left")
-        merged.to_csv("best-ebus/scenario/eBuS/files/merged_routes.csv", index=False)
-
-
     def routes_to_trips(self, create_csv: bool = True):
         """
         Creates mutliple csv / dict{df} of the desired format for each depot in the input: 
@@ -159,8 +151,6 @@ class FilterLines:
             "end_stop_id": "END_STOP_ID",
         })
 
-
-
         # Remove unneeded columns
         df = df.drop(columns=[
             "nr_of_buses",
@@ -183,10 +173,10 @@ class FilterLines:
     def main(self):
         self._remove_routes()
         self._remove_flows()
+        self.write_xml_to_file()
         self.extract_flow_information()
         self.routes_to_trips(True)
-        self.write_xml_to_file()
-        #self.write_merged_csv_to_file()
+
 
     # Helper functions
     def parse_time(self, t):

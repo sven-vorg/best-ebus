@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 __author__ = "Sven Vorgheim"
 __license__ = "GPL v2 or later (In accoardance to SUMO)"
 __maintainer__ = "Sven Vorgheim"
