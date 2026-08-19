@@ -5,6 +5,11 @@ from lxml import etree
 import pandas as pd
 import requests
 
+import logging
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
+
 class PVGISApiCall:
 
     def __init__(
@@ -56,7 +61,7 @@ class PVGISApiCall:
                         "longitude": longitude,
                         "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
                         "start_time": "2024-06-22 00:00:00",
-                        "end_time": "2024-06-22 23:59:59",
+                        "end_time": "2024-06-23 04:59:59",
                         "surface_position_optimisation_mode": "Orientation & Tilt",
                         #"surface_orientation": "180",
                         #"surface_tilt": "45",
@@ -106,7 +111,7 @@ class PVGISApiCall:
         return peak_wattage
 
     def optimize_csv(self, answer_df: pd.DataFrame):
-        columns = [(i + 1) * 3600 for i in range(24)]
+        columns = [(i + 1) * 3600 for i in range(29)]
 
         raw_power_df = pd.DataFrame(
             answer_df["raw_solar_data"].apply(lambda x: x["power"]).tolist(),
