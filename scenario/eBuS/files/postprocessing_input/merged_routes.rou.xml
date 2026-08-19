@@ -5368,6 +5368,411 @@
         <stop busStop="agg_12788_0_12763_0_12771_36" duration="20.0" until="3200.0" parking="true"/>
         <!-- U Berliner Str. (Berlin) -->
     </route>
+    <flow id="M19_11467" type="bus" route="M19_11467" begin="00:07:00" end="23:47:00" period="660.0" line="M19">
+        <param key="name" value="M19: S Grunewald (Berlin) =&gt; U Mehringdamm (Berlin)"/>
+        <param key="short_name" value="M19"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="120_9828" type="bus" route="120_9828" begin="00:20:00" end="23:40:00" period="720.0" line="120">
+        <param key="name" value="120: Wilhelmsruher Damm (Berlin) =&gt; U Leopoldplatz (Berlin)"/>
+        <param key="short_name" value="120"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="220_10671" type="bus" route="220_10671" begin="00:20:00" end="23:40:00" period="1200.0" line="220">
+        <param key="name" value="220: Hainbuchenstr. (Berlin) =&gt; Berlin, An der Mühle"/>
+        <param key="short_name" value="220"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="247_10785" type="bus" route="247_10785" begin="00:20:00" end="23:40:00" period="600.0" line="247">
+        <param key="name" value="247: U Leopoldplatz (Berlin) =&gt; S Nordbahnhof/Gartenstr. (Berlin)"/>
+        <param key="short_name" value="247"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X83_12570" type="bus" route="X83_12570" begin="00:20:00" end="23:43:00" period="540.0" line="X83">
+        <param key="name" value="X83: Nahariyastr. (Berlin) =&gt; Königin-Luise-Str./Clayallee (Berlin)"/>
+        <param key="short_name" value="X83"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="124_9889" type="bus" route="124_9889" begin="00:21:00" end="23:41:00" period="600.0" line="124">
+        <param key="name" value="124: Berlin, Aubertstr. =&gt; Berlin, Alt-Heiligensee"/>
+        <param key="short_name" value="124"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="283_10959" type="bus" route="283_10959" begin="00:21:00" end="23:41:00" period="1200.0" line="283">
+        <param key="name" value="283: S Marienfelde (Berlin) =&gt; S+U Rathaus Steglitz (Berlin)"/>
+        <param key="short_name" value="283"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M43_12763" type="bus" route="M43_12763" begin="00:21:00" end="23:41:00" period="480.0" line="M43">
+        <param key="name" value="M43: U Berliner Str. (Berlin) =&gt; Berlin, Tunnelstr."/>
+        <param key="short_name" value="M43"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="110_9737" type="bus" route="110_9737" begin="00:22:00" end="23:42:00" period="1200.0" line="110">
+        <param key="name" value="110: U Oskar-Helene-Heim (Berlin) =&gt; Hertzallee (Berlin)"/>
+        <param key="short_name" value="110"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="122_9844" type="bus" route="122_9844" begin="00:22:00" end="23:42:00" period="300.0" line="122">
+        <param key="name" value="122: U Kurt-Schumacher-Platz (Berlin) =&gt; Titiseestr. (Berlin)"/>
+        <param key="short_name" value="122"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M29_11530" type="bus" route="M29_11530" begin="00:22:00" end="23:42:00" period="480.0" line="M29">
+        <param key="name" value="M29: Roseneck (Berlin) =&gt; U Hermannplatz/Urbanstr. (Berlin)"/>
+        <param key="short_name" value="M29"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="284_10965" type="bus" route="284_10965" begin="00:23:00" end="23:43:00" period="1200.0" line="284">
+        <param key="name" value="284: S+U Rathaus Steglitz (Berlin) =&gt; S Lichterfelde Süd (Berlin)"/>
+        <param key="short_name" value="284"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M46_11665" type="bus" route="M46_11665" begin="00:24:00" end="23:44:00" period="540.0" line="M46">
+        <param key="name" value="M46: U Britz-Süd (Berlin) =&gt; Hertzallee (Berlin)"/>
+        <param key="short_name" value="M46"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M46_11658" type="bus" route="M46_11658" begin="00:25:00" end="23:45:00" period="540.0" line="M46">
+        <param key="name" value="M46: Hertzallee (Berlin) =&gt; U Britz-Süd (Berlin)"/>
+        <param key="short_name" value="M46"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="220_10675" type="bus" route="220_10675" begin="00:26:00" end="23:46:00" period="1200.0" line="220">
+        <param key="name" value="220: Berlin, An der Mühle =&gt; Hainbuchenstr. (Berlin)"/>
+        <param key="short_name" value="220"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="245_10740" type="bus" route="245_10740" begin="00:26:00" end="23:46:00" period="420.0" line="245">
+        <param key="name" value="245: Hertzallee (Berlin) =&gt; Robert-Koch-Platz (Berlin)"/>
+        <param key="short_name" value="245"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M76_11759" type="bus" route="M76_11759" begin="00:27:00" end="23:44:00" period="600.0" line="M76">
+        <param key="name" value="M76: S Lichtenrade (Berlin) =&gt; U Walther-Schreiber-Platz (Berlin)"/>
+        <param key="short_name" value="M76"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="122_9852" type="bus" route="122_9852" begin="00:28:00" end="23:48:00" period="300.0" line="122">
+        <param key="name" value="122: Titiseestr. (Berlin) =&gt; U Kurt-Schumacher-Platz (Berlin)"/>
+        <param key="short_name" value="122"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M27_11523" type="bus" route="M27_11523" begin="00:28:00" end="23:40:00" period="360.0" line="M27">
+        <param key="name" value="M27: S+U Jungfernheide Bhf (Berlin) =&gt; Hadlichstr. (Berlin)"/>
+        <param key="short_name" value="M27"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="101_9646" type="bus" route="101_9646" begin="00:29:00" end="23:49:00" period="600.0" line="101">
+        <param key="name" value="101: Sachtlebenstr. (Berlin) =&gt; Berlin, Turmstr./Lübecker Str."/>
+        <param key="short_name" value="101"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M21_11514" type="bus" route="M21_11514" begin="00:29:00" end="23:42:00" period="600.0" line="M21">
+        <param key="name" value="M21: Wilhelmsruher Damm (Berlin) =&gt; Goerdelersteg (Berlin)"/>
+        <param key="short_name" value="M21"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="143_12751" type="bus" route="143_12751" begin="00:30:00" end="23:54:00" period="1200.0" line="143">
+        <param key="name" value="143: Planetarium (Berlin) =&gt; Brixplatz (Berlin)"/>
+        <param key="short_name" value="143"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M19_11475" type="bus" route="M19_11475" begin="00:31:00" end="23:54:00" period="600.0" line="M19">
+        <param key="name" value="M19: U Mehringdamm (Berlin) =&gt; S Grunewald (Berlin)"/>
+        <param key="short_name" value="M19"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M43_12771" type="bus" route="M43_12771" begin="00:31:00" end="23:47:00" period="360.0" line="M43">
+        <param key="name" value="M43: Berlin, Tunnelstr. =&gt; U Berliner Str. (Berlin)"/>
+        <param key="short_name" value="M43"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M21_11516" type="bus" route="M21_11516" begin="00:32:00" end="23:42:00" period="600.0" line="M21">
+        <param key="name" value="M21: Goerdelersteg (Berlin) =&gt; Wilhelmsruher Damm (Berlin)"/>
+        <param key="short_name" value="M21"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M48_11683" type="bus" route="M48_11683" begin="00:32:00" end="23:35:00" period="600.0" line="M48">
+        <param key="name" value="M48: U Mohrenstr. (Berlin) =&gt; Busseallee (Berlin)"/>
+        <param key="short_name" value="M48"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M76_11755" type="bus" route="M76_11755" begin="00:32:00" end="23:58:00" period="600.0" line="M76">
+        <param key="name" value="M76: U Walther-Schreiber-Platz (Berlin) =&gt; S Lichtenrade (Berlin)"/>
+        <param key="short_name" value="M76"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="285_10994" type="bus" route="285_10994" begin="00:33:00" end="23:53:00" period="600.0" line="285">
+        <param key="name" value="285: S+U Rathaus Steglitz (Berlin) =&gt; Waldfriedhof Dahlem (Berlin)"/>
+        <param key="short_name" value="285"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M82_11800" type="bus" route="M82_11800" begin="00:35:00" end="23:47:00" period="600.0" line="M82">
+        <param key="name" value="M82: S+U Rathaus Steglitz (Berlin) =&gt; Waldsassener Str. (Berlin)"/>
+        <param key="short_name" value="M82"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M82_11804" type="bus" route="M82_11804" begin="00:36:00" end="23:45:00" period="600.0" line="M82">
+        <param key="name" value="M82: Waldsassener Str. (Berlin) =&gt; S+U Rathaus Steglitz (Berlin)"/>
+        <param key="short_name" value="M82"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M48_11679" type="bus" route="M48_11679" begin="00:42:00" end="23:51:00" period="600.0" line="M48">
+        <param key="name" value="M48: Busseallee (Berlin) =&gt; U Mohrenstr. (Berlin)"/>
+        <param key="short_name" value="M48"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M11_11407" type="bus" route="M11_11407" begin="00:53:00" end="23:50:00" period="600.0" line="M11">
+        <param key="name" value="M11: S Schöneweide/Sterndamm (Berlin) =&gt; U Dahlem-Dorf (Berlin)"/>
+        <param key="short_name" value="M11"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M27_11518" type="bus" route="M27_11518" begin="00:53:00" end="23:57:00" period="360.0" line="M27">
+        <param key="name" value="M27: Hadlichstr. (Berlin) =&gt; S+U Jungfernheide Bhf (Berlin)"/>
+        <param key="short_name" value="M27"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="M29_11538" type="bus" route="M29_11538" begin="00:53:00" end="23:51:00" period="300.0" line="M29">
+        <param key="name" value="M29: U Hermannplatz/Urbanstr. (Berlin) =&gt; Roseneck (Berlin)"/>
+        <param key="short_name" value="M29"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="187_10498" type="bus" route="187_10498" begin="04:11:00" end="23:46:00" period="600.0" line="187">
+        <param key="name" value="187: U Turmstr. (Berlin) =&gt; Halbauer Weg (Berlin)"/>
+        <param key="short_name" value="187"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="101_9633" type="bus" route="101_9633" begin="04:12:00" end="23:50:00" period="600.0" line="101">
+        <param key="name" value="101: Berlin, Turmstr./Lübecker Str. =&gt; Sachtlebenstr. (Berlin)"/>
+        <param key="short_name" value="101"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="128_9931" type="bus" route="128_9931" begin="04:16:00" end="23:44:00" period="600.0" line="128">
+        <param key="name" value="128: U Osloer Str. (Berlin) =&gt; U Kurt-Schumacher-Platz (Berlin)"/>
+        <param key="short_name" value="128"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="115_9777" type="bus" route="115_9777" begin="04:17:00" end="23:55:00" period="600.0" line="115">
+        <param key="name" value="115: Mansfelder Str./Barstr. (Berlin) =&gt; Berlin, Neuruppiner Str."/>
+        <param key="short_name" value="115"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="124_9897" type="bus" route="124_9897" begin="04:18:00" end="23:58:00" period="720.0" line="124">
+        <param key="name" value="124: Berlin, Alt-Heiligensee =&gt; Berlin, Aubertstr."/>
+        <param key="short_name" value="124"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="125_9922" type="bus" route="125_9922" begin="04:18:00" end="23:54:00" period="1200.0" line="125">
+        <param key="name" value="125: S Frohnau (Berlin) =&gt; U Osloer Str. (Berlin)"/>
+        <param key="short_name" value="125"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="186_10481" type="bus" route="186_10481" begin="04:18:00" end="23:56:00" period="480.0" line="186">
+        <param key="name" value="186: S Grunewald (Berlin) =&gt; S Lichterfelde Süd (Berlin)"/>
+        <param key="short_name" value="186"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="125_9908" type="bus" route="125_9908" begin="04:20:00" end="23:57:00" period="660.0" line="125">
+        <param key="name" value="125: U Osloer Str. (Berlin) =&gt; S Frohnau (Berlin)"/>
+        <param key="short_name" value="125"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="285_10980" type="bus" route="285_10980" begin="04:21:00" end="23:41:00" period="660.0" line="285">
+        <param key="name" value="285: Waldfriedhof Dahlem (Berlin) =&gt; S+U Rathaus Steglitz (Berlin)"/>
+        <param key="short_name" value="285"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X11_12422" type="bus" route="X11_12422" begin="04:23:00" end="23:51:00" period="600.0" line="X11">
+        <param key="name" value="X11: U Krumme Lanke (Berlin) =&gt; S Schöneweide/Sterndamm (Berlin)"/>
+        <param key="short_name" value="X11"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X11_12434" type="bus" route="X11_12434" begin="04:23:00" end="23:56:00" period="1080.0" line="X11">
+        <param key="name" value="X11: S Schöneweide/Sterndamm (Berlin) =&gt; U Krumme Lanke (Berlin)"/>
+        <param key="short_name" value="X11"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="221_10683" type="bus" route="221_10683" begin="04:24:00" end="23:47:00" period="600.0" line="221">
+        <param key="name" value="221: Märkische Zeile (Berlin) =&gt; U Leopoldplatz (Berlin)"/>
+        <param key="short_name" value="221"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="123_9873" type="bus" route="123_9873" begin="04:25:00" end="23:45:00" period="540.0" line="123">
+        <param key="name" value="123: Mäckeritzwiesen (Berlin) =&gt; S+U Berlin Hauptbahnhof"/>
+        <param key="short_name" value="123"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="150_10120" type="bus" route="150_10120" begin="04:26:00" end="23:50:00" period="600.0" line="150">
+        <param key="name" value="150: S Buch (Berlin) [Am Sandhaus] =&gt; U Osloer Str. (Berlin)"/>
+        <param key="short_name" value="150"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="283_10956" type="bus" route="283_10956" begin="04:26:00" end="23:46:00" period="1200.0" line="283">
+        <param key="name" value="283: S+U Rathaus Steglitz (Berlin) =&gt; S Marienfelde (Berlin)"/>
+        <param key="short_name" value="283"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X83_12561" type="bus" route="X83_12561" begin="04:26:00" end="23:46:00" period="540.0" line="X83">
+        <param key="name" value="X83: Königin-Luise-Str./Clayallee (Berlin) =&gt; Nahariyastr. (Berlin)"/>
+        <param key="short_name" value="X83"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="128_9929" type="bus" route="128_9929" begin="04:27:00" end="23:57:00" period="600.0" line="128">
+        <param key="name" value="128: U Kurt-Schumacher-Platz (Berlin) =&gt; U Osloer Str. (Berlin)"/>
+        <param key="short_name" value="128"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="150_10115" type="bus" route="150_10115" begin="04:29:00" end="23:49:00" period="660.0" line="150">
+        <param key="name" value="150: U Osloer Str. (Berlin) =&gt; S Buch (Berlin) [Am Sandhaus]"/>
+        <param key="short_name" value="150"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="222_10705" type="bus" route="222_10705" begin="04:30:00" end="23:55:00" period="960.0" line="222">
+        <param key="name" value="222: Alt-Lübars (Berlin) =&gt; Tegelort (Berlin)"/>
+        <param key="short_name" value="222"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="249_10804" type="bus" route="249_10804" begin="04:30:00" end="23:50:00" period="600.0" line="249">
+        <param key="name" value="249: Hertzallee (Berlin) =&gt; Roseneck (Berlin)"/>
+        <param key="short_name" value="249"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="115_9773" type="bus" route="115_9773" begin="04:31:00" end="23:53:00" period="1140.0" line="115">
+        <param key="name" value="115: Berlin, Neuruppiner Str. =&gt; Mansfelder Str./Barstr. (Berlin)"/>
+        <param key="short_name" value="115"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="120_9836" type="bus" route="120_9836" begin="04:34:00" end="23:53:00" period="780.0" line="120">
+        <param key="name" value="120: U Leopoldplatz (Berlin) =&gt; Wilhelmsruher Damm (Berlin)"/>
+        <param key="short_name" value="120"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="249_10808" type="bus" route="249_10808" begin="04:35:00" end="23:57:00" period="600.0" line="249">
+        <param key="name" value="249: Roseneck (Berlin) =&gt; Hertzallee (Berlin)"/>
+        <param key="short_name" value="249"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="221_10691" type="bus" route="221_10691" begin="04:36:00" end="23:48:00" period="1020.0" line="221">
+        <param key="name" value="221: U Leopoldplatz (Berlin) =&gt; Märkische Zeile (Berlin)"/>
+        <param key="short_name" value="221"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="123_9863" type="bus" route="123_9863" begin="04:38:00" end="23:58:00" period="300.0" line="123">
+        <param key="name" value="123: S+U Berlin Hauptbahnhof =&gt; Mäckeritzwiesen (Berlin)"/>
+        <param key="short_name" value="123"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="186_10487" type="bus" route="186_10487" begin="04:38:00" end="23:59:00" period="600.0" line="186">
+        <param key="name" value="186: S Lichterfelde Süd (Berlin) =&gt; S Grunewald (Berlin)"/>
+        <param key="short_name" value="186"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="284_10970" type="bus" route="284_10970" begin="04:39:00" end="23:59:00" period="1200.0" line="284">
+        <param key="name" value="284: S Lichterfelde Süd (Berlin) =&gt; S+U Rathaus Steglitz (Berlin)"/>
+        <param key="short_name" value="284"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="222_10695" type="bus" route="222_10695" begin="04:47:00" end="23:46:00" period="600.0" line="222">
+        <param key="name" value="222: Tegelort (Berlin) =&gt; Alt-Lübars (Berlin)"/>
+        <param key="short_name" value="222"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="282_10948" type="bus" route="282_10948" begin="04:50:00" end="23:49:00" period="600.0" line="282">
+        <param key="name" value="282: Dillenburger Str. (Berlin) =&gt; Dardanellenweg (Berlin)"/>
+        <param key="short_name" value="282"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="247_10789" type="bus" route="247_10789" begin="05:05:00" end="23:55:00" period="1110.0" line="247">
+        <param key="name" value="247: S Nordbahnhof/Gartenstr. (Berlin) =&gt; U Leopoldplatz (Berlin)"/>
+        <param key="short_name" value="247"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="110_9735" type="bus" route="110_9735" begin="05:09:00" end="23:50:00" period="1200.0" line="110">
+        <param key="name" value="110: Hertzallee (Berlin) =&gt; U Oskar-Helene-Heim (Berlin)"/>
+        <param key="short_name" value="110"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X33_12472" type="bus" route="X33_12472" begin="05:17:00" end="22:57:00" period="600.0" line="X33">
+        <param key="name" value="X33: Berlin, Galenstr. =&gt; Wilhelmsruher Damm (Berlin)"/>
+        <param key="short_name" value="X33"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="109_9724" type="bus" route="109_9724" begin="05:20:00" end="23:54:00" period="600.0" line="109">
+        <param key="name" value="109: Hertzallee (Berlin) =&gt; Urban Tech Republic (Berlin)"/>
+        <param key="short_name" value="109"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="309_11037" type="bus" route="309_11037" begin="05:21:00" end="22:01:00" period="1200.0" line="309">
+        <param key="name" value="309: U Wilmersdorfer Str./S Charlottenburg (Berlin) =&gt; Schlosspark-Klinik (Berlin)"/>
+        <param key="short_name" value="309"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="X33_12475" type="bus" route="X33_12475" begin="05:22:00" end="22:02:00" period="600.0" line="X33">
+        <param key="name" value="X33: Wilhelmsruher Damm (Berlin) =&gt; Berlin, Galenstr."/>
+        <param key="short_name" value="X33"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="188_10538" type="bus" route="188_10538" begin="05:24:00" end="23:46:00" period="1200.0" line="188">
+        <param key="name" value="188: Berlin, Appenzeller Str. =&gt; S+U Rathaus Steglitz (Berlin)"/>
+        <param key="short_name" value="188"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="188_10537" type="bus" route="188_10537" begin="05:28:00" end="23:48:00" period="1200.0" line="188">
+        <param key="name" value="188: S+U Rathaus Steglitz (Berlin) =&gt; Berlin, Appenzeller Str."/>
+        <param key="short_name" value="188"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="109_9722" type="bus" route="109_9722" begin="05:31:00" end="23:56:00" period="720.0" line="109">
+        <param key="name" value="109: Urban Tech Republic (Berlin) =&gt; Hertzallee (Berlin)"/>
+        <param key="short_name" value="109"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="309_11039" type="bus" route="309_11039" begin="05:34:00" end="22:14:00" period="1200.0" line="309">
+        <param key="name" value="309: Schlosspark-Klinik (Berlin) =&gt; U Wilmersdorfer Str./S Charlottenburg (Berlin)"/>
+        <param key="short_name" value="309"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="322_11065" type="bus" route="322_11065" begin="05:50:00" end="19:23:00" period="1200.0" line="322">
+        <param key="name" value="322: U Paracelsus-Bad/Aroser Allee (Berlin) =&gt; Titiseestr. (Berlin)"/>
+        <param key="short_name" value="322"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="327_11082" type="bus" route="327_11082" begin="05:56:00" end="19:54:00" period="1200.0" line="327">
+        <param key="name" value="327: U Leopoldplatz (Berlin) =&gt; S Schönholz (Berlin)"/>
+        <param key="short_name" value="327"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="324_11077" type="bus" route="324_11077" begin="05:59:00" end="20:29:00" period="1800.0" line="324">
+        <param key="name" value="324: Berlin, Alt-Heiligensee =&gt; Berlin, Falkenplatz"/>
+        <param key="short_name" value="324"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="327_11085" type="bus" route="327_11085" begin="06:15:00" end="20:13:00" period="1200.0" line="327">
+        <param key="name" value="327: S Schönholz (Berlin) =&gt; U Leopoldplatz (Berlin)"/>
+        <param key="short_name" value="327"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="324_11079" type="bus" route="324_11079" begin="06:17:00" end="20:47:00" period="1800.0" line="324">
+        <param key="name" value="324: Berlin, Falkenplatz =&gt; Berlin, Alt-Heiligensee"/>
+        <param key="short_name" value="324"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="322_11067" type="bus" route="322_11067" begin="06:19:00" end="19:18:00" period="1200.0" line="322">
+        <param key="name" value="322: Titiseestr. (Berlin) =&gt; U Paracelsus-Bad/Aroser Allee (Berlin)"/>
+        <param key="short_name" value="322"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="218_10661" type="bus" route="218_10661" begin="09:12:00" end="17:10:00" period="7200.0" line="218">
+        <param key="name" value="218: S Messe Nord/ICC (Berlin) =&gt; Pfaueninsel (Berlin)"/>
+        <param key="short_name" value="218"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
+    <flow id="218_10663" type="bus" route="218_10663" begin="10:04:00" end="18:04:00" period="7200.0" line="218">
+        <param key="name" value="218: Pfaueninsel (Berlin) =&gt; S Messe Nord/ICC (Berlin)"/>
+        <param key="short_name" value="218"/>
+        <param key="completeness" value="1.00"/>
+    </flow>
     <route id="bs_muellerstrasse_bs_muellerstrasse" color="0,153,153" edges="-E19 E23 -E19"/>
     <route id="bs_muellerstrasse_bs_cicerostrasse" color="0,153,153" edges="-E19 -E18 -E17 160130963#2.105 160130963#3 441755602 283022995#0 18091945#1 283022985#0 81112065#1 283022990#0 283022987#1 485860824 485860822#0 447885583#1 447885582 114658391#0 114658391#1 114658391#2 40110825 183592527 24599308-AddedOnRampEdge 24599308 24599308-AddedOffRampEdge 4396831 28658009-AddedOnRampEdge 28658009 28658024 334018084 183596326 233763052 460608297-AddedOnRampEdge 460608297 4764111 460614422 233763051 4706699 233763053 429447289 429447291 334005611 334005608 462101683 462101683-AddedOffRampEdge 462108523 4706698 7580064 4490221 253772079 4389575 169762617 62076385 421287707#0 25204794#0 25204793 4446558#0 4446558#4 110680554#1 4372491#2 4372491#3 32878639#2 32878639#3 784891746#0 767466073#2 84793968#2 84793968#3 E0 E1 E1.51"/>
     <route id="bs_muellerstrasse_9735_25" color="0,153,153" edges="-E19 -E18 -E17 160130963#2.105 160130963#3 441755602 283022995#0 18091945#1 283022985#0 81112065#1 283022990#0 283022987#1 485860824 485860822#0 447885583#1 447885582 114658391#0 114658391#1 114658391#2 40110825 183592527 24599308-AddedOnRampEdge 24599308 24599308-AddedOffRampEdge 4396831 28658009-AddedOnRampEdge 28658009 28658024 334018084 183596326 233763052 460608297-AddedOnRampEdge 460608297 4764111 460614422 233763051 4706699 233763053 429447289 429447291 334005611 334005608 462101683 462101683-AddedOffRampEdge 462108523 4706698 7580064 4490221 253772079 4389575 169762617 62076385 421287707#0 4497133#0 -4396636#5 -4396636#2 379986569 47266666#0 532682871#1 47266668 47266662 137071143#0 137071143#1 4745687#0 25418573#1 318552360#0 318552360#1 318552356#0 25418576#1 25418576#2 4392636 34058754#0 34058754#1 34058754#2 34058754#3 34058754#5 34058754#6 34058754#7 29490502#1 29490501#0 29490501#1 341194704#1 718428117#1"/>

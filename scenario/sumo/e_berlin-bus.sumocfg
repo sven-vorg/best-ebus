@@ -17,7 +17,7 @@
     <stop-output value="stopinfo.parquet"/>
   </output>-->
   <output>
-    <output-prefix value="output/80percent_soc_electric_bus_TIME_"/>
+    <output-prefix value="output/electric_bus_TIME_"/>
     <summary-output value="summary.xml"/>
     <statistic-output value="statistics.xml"/>
     <battery-output value="battery.xml"/>
