@@ -81,7 +81,7 @@ class EBusMain:
 
         soc_percentage: int = 100
 
-        merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/merged_routes.rou.xml").resolve()
+        merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/merged_routes.rou.xml").resolve()
         merged_routes_output: Path = (
             PROJECT_ROOT / "../sumo/electric/e_routes.rou.xml"
         ).resolve()
@@ -200,11 +200,11 @@ if __name__ == "__main__":
     SUMO_OUTPUT_PATH: Path = Path(HERE.parent / "sumo/output/")
     PV_START_DATE: date = date(2024, 6, 22)
     eb = EBusMain()
-    #eb.run_heuristic_preprocessing()
+    eb.run_heuristic_preprocessing()
     eb.run_heuristic_postprocessing()
-    eb.run_simulation()
-    eb.run_aggreate_battery()
-    eb.run_pvgis_api_call(start_date=PV_START_DATE)
-    eb.run_energy_storage_system(start_date=PV_START_DATE)
+    #eb.run_simulation()
+    #eb.run_aggreate_battery()
+    #eb.run_pvgis_api_call(start_date=PV_START_DATE)
+    #eb.run_energy_storage_system(start_date=PV_START_DATE)
 
     

@@ -70,7 +70,7 @@ if __name__ == "__main__":
     selected_lines_file: Path = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
     combined_routes: Path = (HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     trimmed_routes: Path = (HERE / "../files/cicero_mueller_routes_trimmed.rou.xml").resolve()
-    termination_points: Path = (HERE / "../files/termination_points.txt").resolve()
+    termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
 
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     
