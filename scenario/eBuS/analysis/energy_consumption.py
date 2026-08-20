@@ -16,13 +16,16 @@ class EnergyConsumption:
         charging_events = []
 
         for elem in root.iter('chargingEvent'):
-            charging_events.append({
-                'station_id': elem.get('chargingStationId'),
-                'vehicle': elem.get('vehicle'),
-                'total_energy': float(elem.get('totalEnergyChargedIntoVehicle')),
-                'begin_sec': float(elem.get('chargingBegin')),
-                'end_sec': float(elem.get('chargingEnd')),
-            })
+            total_energy = float(elem.get('totalEnergyChargedIntoVehicle', 0))
+
+            if total_energy != 0:
+                charging_events.append({
+                    'station_id': elem.get('chargingStationId'),
+                    'vehicle': elem.get('vehicle'),
+                    'total_energy': total_energy,
+                    'begin_sec': float(elem.get('chargingBegin')),
+                    'end_sec': float(elem.get('chargingEnd')),
+                })
 
         charging_events.sort(key=lambda x: x['begin_sec'])
         return charging_events
@@ -42,7 +45,8 @@ class EnergyConsumption:
 
     def plot_charging_events(self, save_path=None):
         """
-        Scatter plot of charging events over time, colored by charging type.
+        Line plot of charging events, each drawn from chargingBegin to
+        chargingEnd, colored by charging type.
 
         Parameters
         ----------
@@ -56,31 +60,23 @@ class EnergyConsumption:
 
         depot_stations = ['cd_cicerostrasse_01', 'cd_muellerstrasse_01']
 
-        depot = {'times': [], 'energy': []}
-        opportunity = {'times': [], 'energy': []}
-
-        for event in self.charging_events:
-            target = depot if event['station_id'] in depot_stations else opportunity
-            target['times'].append(event['begin_sec'] / 3600)
-            target['energy'].append(event['total_energy'] / 1000)
-
         plt.figure(figsize=(12, 6))
 
-        plt.scatter(
-            opportunity['times'],
-            opportunity['energy'],
-            s=20,
-            alpha=0.7,
-            label="Opportunity charging"
-        )
+        colors = {"opportunity": "tab:blue", "depot": "tab:orange"}
+        labels = {"opportunity": "Opportunity charging", "depot": "Depot charging"}
+        plotted = {"opportunity": False, "depot": False}
 
-        plt.scatter(
-            depot['times'],
-            depot['energy'],
-            s=20,
-            alpha=0.7,
-            label="Depot charging"
-        )
+        for event in self.charging_events:
+            kind = "depot" if event['station_id'] in depot_stations else "opportunity"
+            energy = event['total_energy'] / 1000
+            plt.plot(
+                [event['begin_sec'] / 3600, event['end_sec'] / 3600],
+                [energy, energy],
+                color=colors[kind],
+                alpha=0.7,
+                label=labels[kind] if not plotted[kind] else None,
+            )
+            plotted[kind] = True
 
         plt.xlabel("Simulation time [h]")
         plt.ylabel("Energy charged [kWh]")

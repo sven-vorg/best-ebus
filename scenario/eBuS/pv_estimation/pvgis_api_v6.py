@@ -1,3 +1,4 @@
+from datetime import date, datetime, timedelta
 from math import floor
 from pathlib import Path
 
@@ -14,11 +15,23 @@ class PVGISApiCall:
 
     def __init__(
             self,
-            stations_path: Path ,
-            output_path: Path
+            stations_path: Path,
+            output_path: Path,
+            start_date: date | str,
             ):
         self.stations_path = stations_path
         self.output_path = output_path
+
+        if isinstance(start_date, str):
+            start_date = date.fromisoformat(start_date)
+        elif isinstance(start_date, datetime):
+            start_date = start_date.date()
+        self.start_date = start_date
+        end_date = start_date + timedelta(days=1)
+
+        self.start_time = f"{self.start_date} 00:00:00"
+        self.end_time = f"{end_date} 04:59:59"
+        self.file_prefix = f"{self.start_date}_"
 
     def main(self):
         answer_df = self.v6(self.stations_path)
@@ -28,7 +41,7 @@ class PVGISApiCall:
         self.optimize_csv(answer_df)
 
     def get_existing_station_ids(self) -> set:
-        raw_path = Path(self.output_path) / "raw_pv_data.csv"
+        raw_path = Path(self.output_path) / f"{self.file_prefix}raw_pv_data.csv"
         if not raw_path.exists():
             return set()
         existing_df = pd.read_csv(raw_path, usecols=["station_id"])
@@ -60,8 +73,8 @@ class PVGISApiCall:
                         "latitude": latitude,
                         "longitude": longitude,
                         "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
-                        "start_time": "2024-06-22 00:00:00",
-                        "end_time": "2024-06-23 04:59:59",
+                        "start_time": self.start_time,
+                        "end_time": self.end_time,
                         "surface_position_optimisation_mode": "Orientation & Tilt",
                         #"surface_orientation": "180",
                         #"surface_tilt": "45",
@@ -97,7 +110,7 @@ class PVGISApiCall:
                 })
         df = pd.DataFrame(results)
         if csv and not df.empty:
-            raw_path = Path(self.output_path) / "raw_pv_data.csv"
+            raw_path = Path(self.output_path) / f"{self.file_prefix}raw_pv_data.csv"
             df.to_csv(raw_path, mode="a", header=not raw_path.exists(), index=False)
         print(f"\nVerarbeitung abgeschlossen. {len(results)} neue Stationen verarbeitet.")
         return df
@@ -133,8 +146,8 @@ class PVGISApiCall:
             axis=1,
         )
 
-        raw_out_path = Path(self.output_path) / "solar_power_v6_raw.csv"
-        scaled_out_path = Path(self.output_path) / "solar_power_v6_scaled.csv"
+        raw_out_path = Path(self.output_path) / f"{self.file_prefix}solar_power_v6_raw.csv"
+        scaled_out_path = Path(self.output_path) / f"{self.file_prefix}solar_power_v6_scaled.csv"
 
         raw_result.to_csv(
             raw_out_path,
@@ -153,4 +166,5 @@ class PVGISApiCall:
 if __name__ == "__main__":
     stations_path: Path = Path("best-ebus/scenario/sumo/electric/e_stations.add.xml")
     output_path: Path = Path("best-ebus/scenario/eBuS/pv_estimation/data")
-    PVGISApiCall(stations_path = stations_path, output_path = output_path).main()
+    start_date: date = date(2024, 6, 22)
+    PVGISApiCall(stations_path=stations_path, output_path=output_path, start_date=start_date).main()
