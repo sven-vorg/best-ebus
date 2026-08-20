@@ -24,7 +24,9 @@ class HeuristicPostprocessing:
             merged_routes: Path,
             merged_routes_output: Path,
             vehicles_output: Path,
-            station_id_path: Path
+            station_id_path: Path,
+            chargingstation_power: int = 150000,
+            total_power_factor: float = 2,
             ):
         self.net = net
         self.station_root = station_root
@@ -39,6 +41,8 @@ class HeuristicPostprocessing:
         self.vehicles_output = vehicles_output
         self.soc_percentage = soc_percentage
         self.station_id_path = station_id_path
+        self.chargingstation_power = chargingstation_power
+        self.total_power_factor = total_power_factor
 
     def main(self):
         # Create e_stations.add.xml containing stations designated as charging opportunitys
@@ -49,7 +53,9 @@ class HeuristicPostprocessing:
             output_path=self.output_path,
             area_path=self.area_path,
             solution_path=self.input_path,
-            station_id_path=self.station_id_path
+            station_id_path=self.station_id_path,
+            power=self.chargingstation_power,
+            total_power_factor=self.total_power_factor,
         )
         cs.main()
         logger.info("Step 1/2 completed: Charging station generation.")
