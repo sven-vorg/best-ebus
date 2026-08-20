@@ -204,6 +204,104 @@ class BusTiming:
 
         plt.show()
 
+    def count_active_long_stops(self, interval=60, min_duration=20):
+        """
+        Count buses currently in a stop longer than `min_duration` seconds,
+        for each fixed time interval.
+
+        A stop is counted in every interval it overlaps, not just the one
+        it started in, so a bus dwelling across an interval boundary is
+        counted as active in both.
+
+        Parameters
+        ----------
+        interval : int or float
+            Length of each interval in seconds.
+        min_duration : int or float
+            Minimum stop duration (ended - started) to be counted.
+
+        Returns
+        -------
+        interval_times : numpy.ndarray
+            Start time of each interval.
+        counts : numpy.ndarray
+            Number of distinct buses with an active long stop in each interval.
+        """
+
+        long_stops = [
+            stop for stop in self.stops
+            if (stop['ended_sec'] - stop['started_sec']) > min_duration
+        ]
+
+        if not long_stops:
+            return np.array([]), np.array([])
+
+        max_time = max(stop['ended_sec'] for stop in long_stops)
+
+        bins = np.arange(
+            0,
+            np.ceil(max_time / interval) * interval + interval,
+            interval
+        )
+
+        interval_times = bins[:-1]
+        counts = np.zeros(len(interval_times), dtype=int)
+
+        for i, bin_start in enumerate(interval_times):
+            bin_end = bin_start + interval
+
+            active_ids = {
+                stop['stop_id'] for stop in long_stops
+                if stop['started_sec'] < bin_end and stop['ended_sec'] > bin_start
+            }
+
+            counts[i] = len(active_ids)
+
+        return interval_times, counts
+
+    def plot_active_long_stops(self, interval=60, min_duration=20, save_path=None):
+        """
+        Plot the number of buses in a stop longer than `min_duration`
+        seconds, per fixed time interval.
+
+        Parameters
+        ----------
+        interval : int or float
+            Length of each interval in seconds.
+        min_duration : int or float
+            Minimum stop duration (ended - started) to be counted.
+        save_path : str or Path, optional
+            If given, the figure is saved to this path.
+        """
+
+        times, counts = self.count_active_long_stops(interval, min_duration)
+
+        if len(times) == 0:
+            print("No stop data available.")
+            return
+
+        plt.figure(figsize=(12, 6))
+
+        plt.step(
+            times,
+            counts,
+            where='post',
+            linewidth=1.5
+        )
+
+        plt.xlabel("Simulation time [s]")
+        plt.ylabel(f"Buses in stop > {min_duration}s")
+        plt.title(f"Active long stops per {interval}-second interval")
+
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+        if save_path is not None:
+            Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+            plt.savefig(save_path, dpi=150)
+
+        plt.show()
+
 if __name__ == "__main__":
 
     stops_path_II = (
