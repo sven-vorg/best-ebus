@@ -8,36 +8,45 @@ This module coordinates the individual analysis modules:
     - output_files
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 
-from output_files import OutputFiles
-from bus_timing import BusTiming
-from energy_consumption import EnergyConsumption
-from vehicle_soc import VehicleSOC
-from ess_pv import ESSPV
-from chargingstation_map import ChargingStationMap
-from sumo_inbuilds import SumoInbuilds
+from analysis.output_files import OutputFiles
+from analysis.bus_timing import BusTiming
+from analysis.energy_consumption import EnergyConsumption
+from analysis.vehicle_soc import VehicleSOC
+from analysis.ess_pv import ESSPV
+from analysis.chargingstation_map import ChargingStationMap
+from analysis.sumo_inbuilds import SumoInbuilds
 
-def main():
+def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
     """Run the complete analysis pipeline."""
 
     print("Starting analysis...")
 
     # 0. Load output files
-    output_dir = r"best-ebus\scenario\sumo\output"
+    output_dir = Path(output_dir)
     files = OutputFiles(output_dir)
     # Dictionary of file types and paths
     file_dict = files.get_run_files()
 
     # Directory to save generated plots to
-    plots_dir = Path(output_dir) / "plots" / files.timestamp
+    plots_dir = output_dir / "plots" / files.timestamp
 
     # Load other files
-    e_bus_directory = Path(r"best-ebus\scenario\sumo\electric")
-    stops_path = r"best-ebus\scenario\sumo\berlin_bus_stops.add.xml"
+    e_bus_directory = output_dir.parent / "electric"
+    stops_path = output_dir.parent / "berlin_bus_stops.add.xml"
 
+    # 5. Plot ESS PV Interactions
+    esspv = ESSPV(file_dict["ess"], stations_path=e_bus_directory / "e_stations.add.xml")
+    esspv.plot_grid_power_by_station(top_n=5)
+    return
+    esspv.plot_pv_vs_charged(save_path=plots_dir / "pv_vs_charged.svg")
+    esspv.plot_grid_and_curtailment(save_path=plots_dir / "grid_and_curtailment.svg")
+    esspv.plot_ess_soc(save_path=plots_dir / "ess_soc.svg")
 
-
+    
 
     # 6. Create Heatmaps by plotting chargingstations map
     csm_e = ChargingStationMap(stations_path=e_bus_directory / "e_stations.add.xml", chargingstations_path=file_dict["chargingstations"])
@@ -77,11 +86,7 @@ def main():
     v_soc.plot_cumulative_soc(save_path=plots_dir / "cumulative_soc.svg")
     v_soc.calculate_trip_end_soc()
 
-    # 5. Plot ESS PV Interactions
-    esspv = ESSPV(file_dict["ess"])
-    esspv.plot_pv_vs_charged(save_path=plots_dir / "pv_vs_charged.svg")
-    esspv.plot_grid_and_curtailment(save_path=plots_dir / "grid_and_curtailment.svg")
-    esspv.plot_ess_soc(save_path=plots_dir / "ess_soc.svg")
+
 
     print("Analysis completed.")
 
