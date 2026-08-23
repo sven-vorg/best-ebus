@@ -8,6 +8,7 @@ __date__ = "02.07.2026"
 
 import os
 import subprocess
+import tomllib
 from datetime import date, datetime
 from pathlib import Path
 
@@ -35,6 +36,10 @@ EBUS_DIR = SCENARIO_ROOT / "eBuS"
 FILES_DIR = EBUS_DIR / "files"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 
+CONFIG_PATH = PROJECT_ROOT / "ebus_config.toml"
+with open(CONFIG_PATH, "rb") as f:
+    CONFIG = tomllib.load(f)
+
 class EBusMain:
     def __init__(self) -> None:
         """Create an eBuS controller."""
@@ -49,8 +54,8 @@ class EBusMain:
         trimmed_routes: Path = FILES_DIR / "cicero_mueller_routes_trimmed.rou.xml"
         termination_points: Path = FILES_DIR / "preprocessing_input/termination_points.txt"
 
-        depots: tuple[str,str] = ("cicerostrasse", "muellerstrasse")
-        
+        depots: tuple[str, ...] = tuple(CONFIG["heuristic_preprocessing"]["depots"])
+
         output_dir: Path = FILES_DIR / "postprocessing_input"
 
         HeuristicPreprocessing(
@@ -80,7 +85,8 @@ class EBusMain:
 
         trip_file = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/trips_vbb.txt").resolve()
 
-        soc_percentage: int = 100
+        cfg = CONFIG["heuristic_postprocessing"]
+        soc_percentage: int = cfg["soc_percentage"]
 
         merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/merged_routes.rou.xml").resolve()
         merged_routes_output: Path = (
@@ -90,12 +96,19 @@ class EBusMain:
             PROJECT_ROOT / "../sumo/electric/e_vehicles.rou.xml"
         ).resolve()
 
-        chargingstation_power: int = 400000 # Power that a single bus is charged at
-        # Factor for total power available at all charging stations. 
-        # Determines how fast multiple buses charge. 
-        # (Should someday be individualised) 
+        chargingstation_power: int = cfg["chargingstation_power"] # Power that a single bus is charged at
+        # Factor for total power available at all charging stations.
+        # Determines how fast multiple buses charge.
+        # (Should someday be individualised)
         # Untested for values <1
-        total_power_factor: float = 2 
+        total_power_factor: float = cfg["total_power_factor"]
+
+        # Seconds to pull eligible vehicles' departure earlier than their
+        # latest possible depot-exit time, so idle buses don't all spawn at once.
+        offset: int | None = cfg.get("offset")
+
+        # Seconds added to a bus's final depot arrival before it despawns.
+        despawn_offset: int = cfg.get("despawn_offset", 0)
 
         HeuristicPostprocessing(
             network_file,
@@ -113,17 +126,19 @@ class EBusMain:
             station_id_path,
             chargingstation_power=chargingstation_power,
             total_power_factor=total_power_factor,
+            offset=offset,
+            despawn_offset=despawn_offset,
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
     def main(self):
-        PV_START_DATE: date = date(2024, 6, 22)
-#        self.run_heuristic_preprocessing()
- #       self.run_heuristic_postprocessing()
-  #      self.run_simulation()
-   #     self.run_aggreate_battery()
-    #    self.run_pvgis_api_call(start_date=PV_START_DATE)
-     #   self.run_energy_storage_system(start_date=PV_START_DATE)
+        PV_START_DATE: date = CONFIG["main"]["pv_start_date"]
+        self.run_heuristic_preprocessing()
+        self.run_heuristic_postprocessing()
+        self.run_simulation()
+        self.run_aggreate_battery()
+        self.run_pvgis_api_call(start_date=PV_START_DATE)
+        self.run_energy_storage_system(start_date=PV_START_DATE)
         self.run_analysis()
 
     def run_aggreate_battery(self):
@@ -136,7 +151,7 @@ class EBusMain:
         output_file = files.output_dir / battery_file.name.replace(
             "_battery.xml", "_battery_aggregated.xml"
         )
-        interval = 60  # seconds of an aggregation step
+        interval = CONFIG["aggregate_battery"]["interval"]  # seconds of an aggregation step
 
         aggregate(battery_file, output_file, interval)
         logger.info(f"Aggregated battery data written to {output_file}")
@@ -154,16 +169,17 @@ class EBusMain:
         )
         pv_csv_path = PV_DATA_DIR / f"{start_date}_solar_power_v6_scaled.csv"
 
+        cfg = CONFIG["energy_storage_system"]
         EnergyStorageSystem(
             charging_stations=ChargingStation.from_xml(chargingstations_file),
-            ess_factor=4.0,  # each station's ESS = ess_factor * that station's Peak Power (kWh)
-            # ess_capacity=500000,  # or set a static capacity (Wh) for every station instead
+            ess_factor=cfg.get("ess_factor"),  # each station's ESS = ess_factor * that station's Peak Power (kWh)
+            ess_capacity=cfg.get("ess_capacity"),  # or set a static capacity (Wh) for every station instead
             pv_csv_path=pv_csv_path,
             output_path=output_file,
-            start_soc=5.0,  # fraction (0.0-1.0) of each station's own ESS capacity
-            pv_factor=2.0,  # scales the PV power generated by each station
-            # grid_charge_max_soc=0.5,  # always draw from grid below this fraction of SoC
-            # grid_charge_power=50.0,  # power (kW) drawn from grid while below grid_charge_max_soc
+            start_soc=cfg["start_soc"],  # fraction (0.0-1.0) of each station's own ESS capacity
+            pv_factor=cfg["pv_factor"],  # scales the PV power generated by each station
+            grid_charge_max_soc=cfg["grid_charge_max_soc"],  # always draw from grid below this fraction of SoC
+            grid_charge_power=cfg["grid_charge_power"],  # power (kW) drawn from grid while below grid_charge_max_soc
         ).main()
         logger.info(f"ESS output written to {output_file}")
 
