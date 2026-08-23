@@ -27,6 +27,8 @@ class HeuristicPostprocessing:
             station_id_path: Path,
             chargingstation_power: int = 150000,
             total_power_factor: float = 2,
+            offset: int | None = None,
+            despawn_offset: int = 0,
             ):
         self.net = net
         self.station_root = station_root
@@ -43,6 +45,8 @@ class HeuristicPostprocessing:
         self.station_id_path = station_id_path
         self.chargingstation_power = chargingstation_power
         self.total_power_factor = total_power_factor
+        self.offset = offset
+        self.despawn_offset = despawn_offset
 
     def main(self):
         # Create e_stations.add.xml containing stations designated as charging opportunitys
@@ -68,6 +72,7 @@ class HeuristicPostprocessing:
             soc_percentage=self.soc_percentage,
             tripp_dict=self.input_dict,
             deadhead_path=self.deadhead_path,
+            offset=self.offset,
         )
         bv.main()
 
@@ -76,7 +81,8 @@ class HeuristicPostprocessing:
             tripp_dict=self.input_dict,
             deadhead_path=self.deadhead_path,
             merged_routes=self.merged_routes,
-            e_routes_output=self.merged_routes_output
+            e_routes_output=self.merged_routes_output,
+            despawn_offset=self.despawn_offset,
         )
         br.main()
         

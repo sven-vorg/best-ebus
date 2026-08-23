@@ -21,11 +21,13 @@ class BuildRoutes:
         tripp_dict: Path,
         deadhead_path: Path,
         merged_routes: Path,
-        e_routes_output: Path
+        e_routes_output: Path,
+        despawn_offset: int = 0,
     ) -> None:
         self.SOLUTION = solution_path
         self.ROUTES = merged_routes
         self.ROUTES_OUTPUT = e_routes_output
+        self.DESPAWN_OFFSET = despawn_offset
 
 
         # Set available depots
@@ -119,7 +121,7 @@ class BuildRoutes:
             )
 
             stops = self.join_stops_by_route_id(trip_sequence, start_depot=start_depot, end_depot=end_depot)
-            for stop in self.join_stops_by_route_id(trip_sequence, start_depot=start_depot, end_depot=end_depot):
+            for stop in stops:
                 etree.SubElement(route, "stop", attrib=stop)
 
         self._write_xml(routes_root, self.ROUTES_OUTPUT)
@@ -179,13 +181,18 @@ class BuildRoutes:
                     "tripId": str(trip_id),
                 })
 
-
+        arrival_time = min(
+            self.trip_to_arrival[trip_ids[-1]]
+            + self.stations_to_time[(self.trip_to_end[trip_ids[-1]], end_depot)]
+            + self.DESPAWN_OFFSET, 
+            104400
+        )
         # Set arrival at depot
         stops.append({
             "busStop": end_depot,
             "parking": "true",
             "duration": "0",
-            "until": "104380",
+            "until": str(arrival_time),
         })
 
         deduped = []

@@ -23,10 +23,12 @@ class BuildVehicles:
         soc_percentage: int,
         tripp_dict: Path,
         deadhead_path: Path,
+        offset: int | None = None,
     ):
         self.SOLUTION_PATH = solution_path
         self.VEHICLES_OUTPUT = vehicles_output
         self.SOC_PERCENTAGE = soc_percentage
+        self.OFFSET = offset
 
         # Set available depots
         self.DEPOTS = {
@@ -48,7 +50,9 @@ class BuildVehicles:
         start/end stop, and its scheduled departure/arrival timestamps.
         """
         trip_df = pd.read_csv(tripp_dict, sep=";").set_index("TRIP_ID")
+        self.trip_to_start: dict[Any, Any] = trip_df["START_STOP_ID"].to_dict()
         self.trip_to_end: dict[Any, Any] = trip_df["END_STOP_ID"].to_dict()
+        self.trip_to_depart: dict[Any, Any] = trip_df["START_TIMESTAMP"].to_dict()
         self.trip_to_arrival: dict[Any, Any] = trip_df["END_TIMESTAMP"].to_dict()
 
     def _load_deadhead_dictionary(self, deadhead_path: Path) -> None:
@@ -83,7 +87,7 @@ class BuildVehicles:
             id=str(bus['bus_id']),
             type=self._determine_type(bus["bus_type_name"], bus["bus_id"]),
             route=f"{bus["bus_id"]}_route",
-            depart=str(self.calculate_departure(bus)),
+            depart=str(self.calculate_departure(bus, self.OFFSET)),
             color="1,0,0",
         )
         etree.SubElement(
@@ -93,25 +97,39 @@ class BuildVehicles:
             value=self._determine_soc(bus["bus_type_name"], bus["bus_id"]),
         )
 
-    def calculate_departure(self, bus) -> int:
+    def calculate_departure(self, bus, offset = None) -> int:
         """
         Computes the vehicle's depart time so that its last deadhead of the
         (previous) simulated day loops into the start of the current one:
         last trip_end + deadhead (last stop -> end depot) - one day.
+        Can apply an offset to space out vehicle departure in the beginning of the day.
+        Only applys to vehicles that leave after offset and do have enough time till departure.
         """
         trip_sequence: list = bus["trip_sequence"]
         end_depot = self.DEPOTS[bus["end_depot"]]
+        start_depot = self.DEPOTS[bus["start_depot"]]
 
         last_trip_id = trip_sequence[-1]
         last_trip_end_stop = self.trip_to_end[last_trip_id]
         last_trip_end_time = self.trip_to_arrival[last_trip_id]
-        deadhead = self.stations_to_time[(last_trip_end_stop, end_depot)]
+        deadhead_end = self.stations_to_time[(last_trip_end_stop, end_depot)]
 
-        overflow = (last_trip_end_time + deadhead) - DAY_LENGTH
-        if overflow > 0:
-            return int(overflow)
+        first_trip_id = trip_sequence[0]
+        first_trip_start_stop = self.trip_to_start[first_trip_id]
+        first_trip_start_time = self.trip_to_depart[first_trip_id]
+        deadhead_start = self.stations_to_time[(start_depot, first_trip_start_stop)]
+
+        overflow = (last_trip_end_time + deadhead_end) - DAY_LENGTH
+        if offset:
+            if overflow - offset> 0:
+                return int(overflow-offset)
+            else:
+                return int(max(first_trip_start_time - deadhead_start - offset, 0))
         else:
-            return 0
+            if overflow > 0:
+                return int(overflow)
+            else:
+                return 0
 
     def run_sort_routes(self, root: etree.Element) -> None:
         """
