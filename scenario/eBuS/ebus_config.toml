@@ -10,7 +10,7 @@ depots = ["cicerostrasse", "muellerstrasse"]
 
 [heuristic_postprocessing]
 # Starting State of Charge for Electric Buses in %
-soc_percentage = 80
+soc_percentage = 100
 # Power that a single bus can be charged at in W
 # Actual power determined by buses power capability
 chargingstation_power = 150000 
@@ -19,7 +19,7 @@ chargingstation_power = 150000
 # (Should someday be individualised)
 # Untested for values <1
 total_power_factor = 2.0
-# Seconds to pull eligible vehicles' departure earlier than their latest
+# Seconds to pull eligible vehicles' spawn earlier than their latest
 # possible depot-exit time, so idle buses don't all spawn at once.
 # uncomment to enable; leave unset to disable staggering
 offset = 200
@@ -27,6 +27,12 @@ offset = 200
 # leave unset to disable
 # Values close to zero might have unforseen outcomes when buses are delayed
 despawn_offset = 200
+# Whether the depot charging stations are allowed to charge buses.
+# Set to false to simulate depots without charging capability.
+allow_depot_charging = true
+# Factor for total power available at depot charging stations.
+# Determines how many buses may charge at a depot simultaneously.
+depot_total_power_factor = 2.0
 
 [aggregate_battery]
 # Seconds of an aggregation step

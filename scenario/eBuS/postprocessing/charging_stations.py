@@ -22,7 +22,9 @@ class ChargingStations():
             solution_path: Path,
             station_id_path: Path,
             power: int = 150000,
-            total_power_factor: float = 2
+            total_power_factor: float = 2,
+            allow_depot_charging: bool = True,
+            depot_total_power_factor: float = 2,
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
@@ -33,6 +35,8 @@ class ChargingStations():
         self.station_id_mapping = self.station_id_lookup(station_id_path)
         self.POWER = power
         self.TOTAL_POWER_FACTOR = total_power_factor
+        self.ALLOW_DEPOT_CHARGING = allow_depot_charging
+        self.DEPOT_TOTAL_POWER_FACTOR = depot_total_power_factor
 
     def station_id_lookup(self, terminationpoints_path: str) -> dict:
         """
@@ -102,6 +106,8 @@ class ChargingStations():
                     area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
             )
         
+        depot_power = 150000 if self.ALLOW_DEPOT_CHARGING else 0
+
         # Insert charging stations at the beginning of the <additional> element
         additional.insert(
             0,
@@ -112,8 +118,8 @@ class ChargingStations():
                 lane="E1.51_0",
                 startPos="0",
                 endPos="300",
-                power="150000",
-                #totalPower="150000",
+                power=str(depot_power),
+                totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
                 efficiency="0.95",
                 chargeInTransit="false",
                 coordinates= "13.303440333503405,52.492583731258065",
@@ -130,7 +136,8 @@ class ChargingStations():
                 lane="-E19_0",
                 startPos="0",
                 endPos="530",
-                power="150000",
+                power=str(depot_power),
+                totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
                 efficiency="0.95",
                 chargeInTransit="false",
                 coordinates= "13.33776446744273,52.56058715781662",

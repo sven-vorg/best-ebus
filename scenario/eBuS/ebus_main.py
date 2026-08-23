@@ -110,6 +110,13 @@ class EBusMain:
         # Seconds added to a bus's final depot arrival before it despawns.
         despawn_offset: int = cfg.get("despawn_offset", 0)
 
+        # Whether the depot charging stations are allowed to charge buses.
+        allow_depot_charging: bool = cfg.get("allow_depot_charging", True)
+
+        # Factor for total power available at depot charging stations.
+        # Determines how many buses may charge at a depot simultaneously.
+        depot_total_power_factor: float = cfg.get("depot_total_power_factor", 2.0)
+
         HeuristicPostprocessing(
             network_file,
             stations_file,
@@ -128,6 +135,8 @@ class EBusMain:
             total_power_factor=total_power_factor,
             offset=offset,
             despawn_offset=despawn_offset,
+            allow_depot_charging=allow_depot_charging,
+            depot_total_power_factor=depot_total_power_factor,
         ).main()
         logger.info("Heuristic Postprocessing completed")
 

@@ -29,6 +29,8 @@ class HeuristicPostprocessing:
             total_power_factor: float = 2,
             offset: int | None = None,
             despawn_offset: int = 0,
+            allow_depot_charging: bool = True,
+            depot_total_power_factor: float = 2,
             ):
         self.net = net
         self.station_root = station_root
@@ -47,6 +49,8 @@ class HeuristicPostprocessing:
         self.total_power_factor = total_power_factor
         self.offset = offset
         self.despawn_offset = despawn_offset
+        self.allow_depot_charging = allow_depot_charging
+        self.depot_total_power_factor = depot_total_power_factor
 
     def main(self):
         # Create e_stations.add.xml containing stations designated as charging opportunitys
@@ -60,6 +64,8 @@ class HeuristicPostprocessing:
             station_id_path=self.station_id_path,
             power=self.chargingstation_power,
             total_power_factor=self.total_power_factor,
+            allow_depot_charging=self.allow_depot_charging,
+            depot_total_power_factor=self.depot_total_power_factor,
         )
         cs.main()
         logger.info("Step 1/2 completed: Charging station generation.")
