@@ -117,7 +117,7 @@ class FilterLines:
 
     def routes_to_trips(self, create_csv: bool = True):
         """
-        Creates mutliple csv / dict{df} of the desired format for each depot in the input: 
+        Creates csv / dict{df} of the desired format:
         TRIP_ID;ORIGINAL_TRIP_ID;START_STOP_ID;END_STOP_ID;START_TIMESTAMP;END_TIMESTAMP
         """
         # Extract the line name from the route ID

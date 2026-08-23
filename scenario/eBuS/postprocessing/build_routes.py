@@ -165,7 +165,9 @@ class BuildRoutes:
         stops.append({
             "busStop": start_depot,
             "parking": "true",
-            "duration": str(departure_time),
+            #"duration": str(departure_time),
+            # May help with delays upon startup?
+            "duration": "0",
             "until": str(departure_time),
         })
 
