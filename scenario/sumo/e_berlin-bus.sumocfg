@@ -3,7 +3,7 @@
   <input>
     <net-file value="berlin.net.xml"/>
     <route-files value="electric/e_routes.rou.xml, electric/e_vehicles.rou.xml"/>
-    <additional-files value="berlin_bus_stops.add.xml, electric/e_type.add.xml, electric/e_depots.add.xml, electric/e_stations.add.xml"/>
+    <additional-files value="berlin_bus_stops.add.xml, electric/e_type.add.xml, electric/e_stations.add.xml"/>
   </input>
   <output>
     <output-prefix value="output/electric_bus_TIME_"/>
