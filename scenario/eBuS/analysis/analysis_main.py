@@ -40,13 +40,10 @@ def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
 
     # 5. Plot ESS PV Interactions
     esspv = ESSPV(file_dict["ess"], stations_path=e_bus_directory / "e_stations.add.xml")
-    esspv.plot_grid_power_by_station(top_n=5)
-    return
+    esspv.plot_grid_power_by_station(top_n=5, save_path=plots_dir / "grid_power_by_station.svg")
     esspv.plot_pv_vs_charged(save_path=plots_dir / "pv_vs_charged.svg")
     esspv.plot_grid_and_curtailment(save_path=plots_dir / "grid_and_curtailment.svg")
     esspv.plot_ess_soc(save_path=plots_dir / "ess_soc.svg")
-
-    
 
     # 6. Create Heatmaps by plotting chargingstations map
     csm_e = ChargingStationMap(stations_path=e_bus_directory / "e_stations.add.xml", chargingstations_path=file_dict["chargingstations"])
@@ -54,7 +51,6 @@ def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
     csm_pv = ChargingStationMap(stations_path=e_bus_directory / "e_stations.add.xml", ess_path=file_dict["ess"])
     csm_pv.plot_pv_generation_map(save_path=plots_dir / "pv_map.svg")
     csm_pv.plot_pv_curtailment_map(save_path=plots_dir / "pv_curtailed_map.svg")
-
 
     # 3. Analyse energy consumption
     ec = EnergyConsumption(file_dict["chargingstations"])
@@ -65,13 +61,10 @@ def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
     si = SumoInbuilds()
     # Takes a long time to compute, doesnt really change between runs
     #si.plot_trajectories(file_dict["fcdinfo"], save_path=plots_dir / "all_locations.svg")
-
     si.compute_stopping_place_usage(file_dict["stopinfo"])
     si.trip_statistics(file_dict["tripinfo"], save_path=plots_dir / "tripinfo_statistics.txt")
     si.plot_battery_energy(file_dict["battery_aggregated"], save_path=plots_dir / "battery_energy.svg")
     si.plot_charging_events_scatter(file_dict["chargingstations"], save_path=plots_dir / "energy_charged_scatter.svg")
-
-
 
     # 2. Analyse bus timing
     bt = BusTiming(file_dict["stopinfo"])
@@ -79,14 +72,10 @@ def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
     bt.plot_aggregated_delays(interval=60, save_path=plots_dir / "aggregated_delays.svg")
     bt.plot_delay_per_bus(save_path=plots_dir / "delay_per_bus.svg")
 
-
-
     # 4. Analyse vehicle state of charge
     v_soc = VehicleSOC(file_dict["battery_aggregated"])
     v_soc.plot_cumulative_soc(save_path=plots_dir / "cumulative_soc.svg")
     v_soc.calculate_trip_end_soc()
-
-
 
     print("Analysis completed.")
 

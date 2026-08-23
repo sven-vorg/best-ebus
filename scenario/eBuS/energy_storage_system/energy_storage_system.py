@@ -55,6 +55,7 @@ class EnergyStorageSystem:
         simulate the battery, and write the result to XML if an output_path was given."""
         self.pv_data = parse_pv_data(self.pv_csv_path)
         self.peak_power = parse_peak_power(self.pv_csv_path)
+
         self.energy_per_minute(self.charging_stations)
         ess_capacities = self.calculate_ess_capacities(
             self.charging_stations, self.ess_factor, self.ess_capacity
@@ -160,6 +161,7 @@ class EnergyStorageSystem:
 
                 rows.append({
                     "station_id": station.id,
+                    "capacity": capacity,
                     "timestep_min": t,
                     "pv_generated": pv[t],
                     "energy_charged": load[t],
@@ -182,9 +184,10 @@ class EnergyStorageSystem:
                 f.write(f'    <timestep time="{timestep_min * 60:.2f}">\n')
 
                 for row in group.itertuples():
-                    f.write(
+                    f.writelines(
                         f'        <station '
                         f'id="{row.station_id}" '
+                        f'capacity="{row.capacity}" '
                         f'pvGenerated="{row.pv_generated:.6f}" '
                         f'energyCharged="{row.energy_charged:.6f}" '
                         f'essSoc="{row.ess_soc:.6f}" '
