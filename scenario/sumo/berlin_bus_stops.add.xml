@@ -10940,7 +10940,7 @@
     <busStop id="agg_9981_38_9995_0" name="Hottengrund (Berlin)" lane="-123102508.226_0" startPos="0.00" endPos="15.34" friendlyPos="1" parkingLength="28.00">
         <param key="coordinates" value="13.126201,52.445890"/></busStop>
     <busStop id="bs_cicerostrasse" name="Depot Cicerostraße" lane="E1.51_0" startPos="0.00" endPos="300.00" friendlyPos="1">
-        <param key="coordinates" value="13.302087,52.493386"/></busStop>
+        <param key="coordinates" value="13.302081,52.493632"/></busStop>
     <busStop id="bs_muellerstrasse" name="Depot Müllerstraße" lane="-E19_0" startPos="0.00" endPos="530.00" friendlyPos="1">
-        <param key="coordinates" value="13.339988,52.561038"/></busStop>
+        <param key="coordinates" value="13.339989,52.561038"/></busStop>
 </additional>
