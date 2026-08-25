@@ -76,7 +76,7 @@ class EnergyStorageSystem:
         if ess_factor is None:
             raise ValueError("Either ess_factor or ess_capacity must be provided.")
         return {
-            station.id: self.peak_power[station.id] * ess_factor
+            station.id: self.peak_power[station.id] * ess_factor * 1000
             for station in charging_stations
         }
 
