@@ -123,17 +123,19 @@ class BusTiming:
             print("No stop data available.")
             return
 
+        times_h = times / 3600
+
         plt.figure(figsize=(12, 6))
 
         plt.plot(
-            times,
+            times_h,
             delays,
             marker='o',
             linewidth=1.5,
             markersize=3
         )
 
-        plt.xlabel("Simulation time [s]")
+        plt.xlabel("Simulation time [h]")
         plt.ylabel("Mean delay [s]")
         plt.title(f"Mean bus delay per {interval}-second interval")
 
@@ -181,8 +183,10 @@ class BusTiming:
 
         # Plot each bus separately
         for bus_id, data in buses.items():
+            times_h = np.array(data['times']) / 3600
+
             plt.plot(
-                data['times'],
+                times_h,
                 data['delays'],
                 #marker='o',
                 linewidth=1.2,
@@ -190,7 +194,7 @@ class BusTiming:
                 label=f"Bus {bus_id}"
             )
 
-        plt.xlabel("Simulation time [s]")
+        plt.xlabel("Simulation time [h]")
         plt.ylabel("Delay [s]")
         plt.title("Bus delay over time")
 
@@ -280,16 +284,18 @@ class BusTiming:
             print("No stop data available.")
             return
 
+        times_h = times / 3600
+
         plt.figure(figsize=(12, 6))
 
         plt.step(
-            times,
+            times_h,
             counts,
             where='post',
             linewidth=1.5
         )
 
-        plt.xlabel("Simulation time [s]")
+        plt.xlabel("Simulation time [h]")
         plt.ylabel(f"Buses in stop > {min_duration}s")
         plt.title(f"Active long stops per {interval}-second interval")
 
