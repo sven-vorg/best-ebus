@@ -9,8 +9,6 @@ cicerostrasse,M46,DL,0,0
 cicerostrasse,M48,GN,0,0
 cicerostrasse,M76,GN,0,0
 cicerostrasse,M82,DL,0,0
-cicerostrasse,M85,GN,1,1
-cicerostrasse,X10,GN,0,0
 muellerstrasse,X11,GN,0,0
 muellerstrasse,X33,GN,0,0
 cicerostrasse,X83,GN,0,1
@@ -26,11 +24,9 @@ muellerstrasse,125,GN,0,0
 muellerstrasse,128,EN,0,0
 cicerostrasse,143,EN,0,0
 muellerstrasse,150,GN,0,0
-cicerostrasse,184,EN,0,0
 cicerostrasse,186,DL,0,0
 cicerostrasse,187,EN,1,0
 cicerostrasse,188,EN,0,0
-cicerostrasse,215,EN,0,0
 cicerostrasse,218,GN,0,1
 muellerstrasse,220,GN,0,0
 muellerstrasse,221,GN,0,0
@@ -43,7 +39,6 @@ cicerostrasse,283,EN,0,0
 cicerostrasse,284,EN,0,0
 cicerostrasse,285,DL,0,0
 cicerostrasse,309,EN,0,0
-cicerostrasse,312,GN,0,0
 muellerstrasse,322,EN,0,0
 muellerstrasse,324,EN,0,0
 muellerstrasse,327,EN,0,0
