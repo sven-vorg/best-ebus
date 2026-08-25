@@ -111,7 +111,7 @@ class BuildRoutes:
 
             start_depot = self.DEPOTS[bus["start_depot"]]
             end_depot = self.DEPOTS[bus["end_depot"]]
-            route_id = f"{bus['bus_id']}_route"
+            route_id = f"bus_{bus['bus_id']}_route"
 
             route = etree.SubElement(
                 routes_root,

@@ -81,12 +81,13 @@ class BuildVehicles:
 
 
     def _build_vehicles(self, bus, vehicles_root):
+        bus_id = f"bus_{bus['bus_id']}"
         vehicle = etree.SubElement(
             vehicles_root,
             "vehicle",
-            id=str(bus['bus_id']),
+            id=bus_id,
             type=self._determine_type(bus["bus_type_name"], bus["bus_id"]),
-            route=f"{bus["bus_id"]}_route",
+            route=f"{bus_id}_route",
             depart=str(self.calculate_departure(bus, self.OFFSET)),
             color="1,0,0",
         )
