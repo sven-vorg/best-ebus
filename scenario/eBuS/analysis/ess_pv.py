@@ -40,6 +40,7 @@ class ESSPV:
                 records.append({
                     'station_id': station.get('id'),
                     'timestep_min': time_sec / 60,
+                    'capacity': float(station.get('capacity')),
                     'pv_generated': float(station.get('pvGenerated')),
                     'energy_charged': float(station.get('energyCharged')),
                     'ess_soc': float(station.get('essSoc')),
@@ -76,10 +77,12 @@ class ESSPV:
 
         for i, station in enumerate(stations):
             sdf = self.ess_data[self.ess_data['station_id'] == station].sort_values('timestep_min')
-            plt.plot(sdf['timestep_min'] / 60, sdf['ess_soc'], color=colors[i % len(colors)], linewidth=1.2)
+            soc_pct = sdf['ess_soc'] / sdf['capacity'] * 100
+            plt.plot(sdf['timestep_min'] / 60, soc_pct, color=colors[i % len(colors)], linewidth=1.2)
 
         plt.xlabel("Simulation time [h]")
-        plt.ylabel("ESS SoC [Wh]")
+        plt.ylabel("ESS SoC [%]")
+        plt.ylim(0, 100)
         plt.title("Battery state of charge per charging station")
 
         plt.grid(True, alpha=0.3)
@@ -109,7 +112,10 @@ class ESSPV:
             print("No ESS data available.")
             return
 
-        stations = sorted(self.ess_data['station_id'].unique())
+        stations = sorted(
+            s for s in self.ess_data['station_id'].unique()
+            if 'depot' not in s.lower()
+        )
         colors = plt.cm.tab10.colors
 
         plt.figure(figsize=(12, 6))
