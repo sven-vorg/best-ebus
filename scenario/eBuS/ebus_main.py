@@ -8,6 +8,7 @@ __date__ = "02.07.2026"
 
 import os
 import subprocess
+import sys
 import tomllib
 from datetime import date, datetime
 from pathlib import Path
@@ -96,25 +97,16 @@ class EBusMain:
             PROJECT_ROOT / "../sumo/electric/e_vehicles.rou.xml"
         ).resolve()
 
-        chargingstation_power: int = cfg["chargingstation_power"] # Power that a single bus is charged at
-        # Factor for total power available at all charging stations.
-        # Determines how fast multiple buses charge.
-        # (Should someday be individualised)
-        # Untested for values <1
+        chargingstation_power: int = cfg["chargingstation_power"]
+
         total_power_factor: float = cfg["total_power_factor"]
 
-        # Seconds to pull eligible vehicles' departure earlier than their
-        # latest possible depot-exit time, so idle buses don't all spawn at once.
         offset: int | None = cfg.get("offset")
 
-        # Seconds added to a bus's final depot arrival before it despawns.
         despawn_offset: int = cfg.get("despawn_offset", 0)
 
-        # Whether the depot charging stations are allowed to charge buses.
         allow_depot_charging: bool = cfg.get("allow_depot_charging", True)
 
-        # Factor for total power available at depot charging stations.
-        # Determines how many buses may charge at a depot simultaneously.
         depot_total_power_factor: float = cfg.get("depot_total_power_factor", 2.0)
 
         HeuristicPostprocessing(
@@ -144,7 +136,10 @@ class EBusMain:
         PV_START_DATE: date = CONFIG["main"]["pv_start_date"]
         self.run_heuristic_preprocessing()
         self.run_heuristic_postprocessing()
-        self.run_simulation()
+        if "seeds" in CONFIG.get("run_simulation_seeds", {}):
+            self.run_simulation_seeds()
+        else:
+            self.run_simulation()
         self.run_aggreate_battery()
         self.run_pvgis_api_call(start_date=PV_START_DATE)
         self.run_energy_storage_system(start_date=PV_START_DATE)
@@ -160,7 +155,7 @@ class EBusMain:
         output_file = files.output_dir / battery_file.name.replace(
             "_battery.xml", "_battery_aggregated.xml"
         )
-        interval = CONFIG["aggregate_battery"]["interval"]  # seconds of an aggregation step
+        interval = CONFIG["aggregate_battery"]["interval"]
 
         aggregate(battery_file, output_file, interval)
         logger.info(f"Aggregated battery data written to {output_file}")
@@ -239,6 +234,44 @@ class EBusMain:
         logger.info("Simulation runtime: %s", end_time - start_time)
 
         logger.info("SUMO finished.")
+        logger.info(result.returncode)
+
+    def run_simulation_seeds(self):
+        """
+        Execute the SUMO simulation multiple times with different seeds
+        using SUMO's runSeeds.py tool (SUMO_HOME/tools/runSeeds.py).
+        """
+        logger.info("Running %s", self.get_sumo_version())
+
+        sumo_bin = Path(os.environ["SUMO_HOME"]) / "bin" / "sumo.exe"
+        run_seeds_script = Path(os.environ["SUMO_HOME"]) / "tools" / "runSeeds.py"
+        logger.info("from %s directory.", sumo_bin)
+        config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
+
+        cfg = CONFIG["run_simulation_seeds"]
+        # runSeeds.py expects a comma-separated list (or a "start:stop" range);
+        # the config stores seeds as a space-separated list, so convert here.
+        seeds: str = ",".join(cfg["seeds"].split())
+        threads: int = cfg.get("threads", 1)
+
+        start_time = datetime.now()
+        logger.info("Multi-seed simulation started at %s", start_time)
+
+        result = subprocess.run([
+            sys.executable, str(run_seeds_script),
+            "-k", str(config_path),
+            "-a", str(sumo_bin),
+            "-p", "SEED",
+            "--seeds", seeds,
+            "--threads", str(threads),
+            "--statistics-output", "stats.xml"
+        ])
+
+        end_time = datetime.now()
+        logger.info("Multi-seed simulation ended at %s", end_time)
+        logger.info("Multi-seed simulation runtime: %s", end_time - start_time)
+
+        logger.info("SUMO runSeeds finished.")
         logger.info(result.returncode)
 
 if __name__ == "__main__":

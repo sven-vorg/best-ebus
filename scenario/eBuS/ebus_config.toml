@@ -1,12 +1,10 @@
 # Configuration for EBusMain (ebus_main.py).
-# File/folder paths stay hardcoded in ebus_main.py; this file holds the
-# non-path values that are set per function, grouped by function.
-
 [main]
 pv_start_date = 2024-06-22
 
 [heuristic_preprocessing]
 depots = ["cicerostrasse", "muellerstrasse"]
+
 
 [heuristic_postprocessing]
 # Starting State of Charge for Electric Buses in %
@@ -20,8 +18,8 @@ chargingstation_power = 150000
 # Untested for values <1
 total_power_factor = 2.0
 # Seconds to pull eligible vehicles' spawn earlier than their latest
-# possible depot-exit time, so idle buses don't all spawn at once.
-# uncomment to enable; leave unset to disable staggering
+# possible depot-exit time
+#leave unset to disable staggering
 #offset = 200
 # Seconds added to a bus's final depot arrival before it despawns.
 # leave unset to disable
@@ -32,7 +30,7 @@ total_power_factor = 2.0
 allow_depot_charging = true
 # Factor for total power available at depot charging stations.
 # Determines how many buses may charge at a depot simultaneously.
-depot_total_power_factor = 30.0
+depot_total_power_factor = 10.0
 
 [aggregate_battery]
 # Seconds of an aggregation step
@@ -52,3 +50,12 @@ pv_factor = 1.0
 grid_charge_max_soc = 0.2
 # power (kW) drawn from grid while below grid_charge_max_soc
 grid_charge_power = 50.0
+
+[run_simulation_seeds]
+# W.I.P.
+# Space-separated list of seeds to run the simulation with, e.g. "7 11 13".
+# A single "start:stop" token (no spaces) is also accepted as a range, e.g. "0:100".
+# uncomment to run the simulation once per seed instead of a single run; leave unset to disable
+#seeds = "0 1 2"
+# Number of simulation runs to perform in parallel
+#threads = 3
