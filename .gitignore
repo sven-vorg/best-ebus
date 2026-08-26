@@ -31,3 +31,6 @@ scenario/sumo/electric/e_vehicles.rou.xml
 
 # Draw.io temporary files
 **.bkp
+scenario/sumo/e_berlin.rou.alt.gz
+scenario/sumo/e_berlin.rou.gz
+scenario/sumo/e_berlin_extended.rou.gz
