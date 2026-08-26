@@ -1,2 +1,0 @@
-The significances of the performance averages among the used assignment models are examined with the t test.
-The significance test among the different assignment methods is also done with the Kruskal-Wallis test.
