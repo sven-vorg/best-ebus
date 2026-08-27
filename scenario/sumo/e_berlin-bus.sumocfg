@@ -1,13 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
-  <c value="output/electric_config_TIME_"
   <input>
     <net-file value="berlin.net.xml"/>
     <route-files value="electric/e_routes.rou.xml, electric/e_vehicles.rou.xml"/>
-    <additional-files value="berlin_bus_stops.add.xml, electric/e_type.add.xml, electric/e_stations.add.xml"/>
+    <additional-files value="berlin_bus_stops.add.xml,electric/e_type.add.xml, electric/e_stations.add.xml"/>
   </input>
   <output>
-    <output-prefix value="output/run_TIME/electric_bus_"/>
+    <output-prefix value="output/electric_bus_TIME_"/>
     <summary-output value="summary.xml"/>
     <statistic-output value="statistics.xml"/>
     <battery-output value="battery.xml"/>
@@ -22,10 +21,9 @@
   <time>
     <begin value="0.0"/>
     <end value="104400.0"/>
-    <step-length value="1"/>
   </time>
   <processing>
-    <route-steps value="200"/>
+    <step-method.ballistic value="true"/>
     <no-internal-links value="false"/>
     <ignore-junction-blocker value="20"/>
     <time-to-teleport value="-500.0"/>

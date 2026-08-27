@@ -95,18 +95,18 @@ E.g. even though in reality a bus line may be operated on a 20 Minute schedule, 
     │       
     ├───files
     │       charging_stations.txt
-    │       cicero_mueller_routes.rou.xml
-    │       cicero_mueller_routes_trimmed.rou.xml
     │       deadhead_time_cicerostrasse.txt
     │       deadhead_time_muellerstrasse.txt
     │       depot_line_type.csv
     │       merged_routes.csv
-    │       merged_routes.rou.xml
     │       solution_cicerostrasse.json
     │       solution_muellerstrasse.json
     │       termination_points.txt
     │       trips_cicerostrasse.txt
     │       trips_muellerstrasse.txt
+    │       
+    ├───postprocessing_input
+    │       e_preprocessed_routes.rou.xml
     │       
     ├───postprocessing
     │       charging_stations.py
