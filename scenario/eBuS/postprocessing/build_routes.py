@@ -263,7 +263,7 @@ if __name__ == "__main__":
     solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
     tripp_dict = Path(HERE / "../files/postprocessing_input/trips_vbb.txt").resolve()
     deadhead_timings = Path(HERE / "../files/postprocessing_input/deadhead_times.txt").resolve()
-    routes_path = Path(HERE / "../files/merged_routes.rou.xml").resolve()
+    routes_path = Path(HERE / "../files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
     routes_output_path = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     br = BuildRoutes(solution_path, tripp_dict, deadhead_timings, routes_path, routes_output_path)
     br.main()

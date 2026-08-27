@@ -97,7 +97,7 @@ if __name__ == "__main__":
     
     net = Path(HERE / "../../sumo/berlin.net.xml").resolve()
     station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
-    route_root = Path(HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
+    route_root = Path(HERE / "../files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
     output_path = Path(HERE / "../../sumo/electric/").resolve()
     area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
     station_id_path = Path(HERE / "../files/postprocessing_input/station_id_mapping.txt").resolve()
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     input_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
     input_dict = Path(HERE / "../files/postprocessing_input/trips_vbb.txt").resolve()
     deadhead_path = Path(HERE / "../files/postprocessing_input/deadhead_times.txt").resolve()
-    merged_routes = Path(HERE / "../files/merged_routes.rou.xml").resolve()
+    merged_routes = Path(HERE / "../files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
     merged_routes_output = Path(HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_output = Path(HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
 
