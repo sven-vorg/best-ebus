@@ -4,20 +4,15 @@ from lxml import etree
 
 class CutLines():
 
-    def __init__(self, 
+    def __init__(self,
         stations_path: Path,
-        routes_path: Path,
-        output_path: Path
+        routes_root
         ):
         self.stations_path = Path(stations_path)
-        self.routes_path = Path(routes_path)
-        self.output_path = Path(output_path)
+        self.routes_root = routes_root
 
-    def _load_xml(self):
+    def _load_stations(self):
         self.stations_root = etree.parse(self.stations_path).getroot()
-
-        self.routes_tree = etree.parse(self.routes_path)
-        self.routes_root = self.routes_tree.getroot() 
 
     def _trim_route_edges(self, edges, start_edge, end_edge):
         """Returns the subsection of a route between two edges."""
@@ -29,7 +24,7 @@ class CutLines():
         return " ".join(route_edges[start_index:end_index + 1])
 
     def trim_routes(self):
-        self._load_xml()
+        self._load_stations()
         for route in self.routes_root.findall("route"):
             stops = route.findall("stop")
             first_stop = stops[0].get("busStop")
@@ -48,16 +43,16 @@ class CutLines():
             )
 
             route.set("edges", trimmed)
-        self._write_to_xml()
+        return self.routes_root
 
-    def _write_to_xml(self):
-        self.routes_tree.write(
-        self.output_path,
-        pretty_print=True,
-        xml_declaration=True,
-        encoding="UTF-8"
-    )
-
+    def write_to_xml(self, output_path: Path):
+        """Debug helper for standalone runs; not used by the pipeline."""
+        etree.ElementTree(self.routes_root).write(
+            output_path,
+            pretty_print=True,
+            xml_declaration=True,
+            encoding="UTF-8"
+        )
 
 
 if __name__ == "__main__":
@@ -65,5 +60,7 @@ if __name__ == "__main__":
     stations_path: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml")
     routes_path: Path = HERE / "../files/cicero_mueller_routes.rou.xml"
     output_path: Path = HERE / "../files/cicero_mueller_routes_trimmed.rou.xml"
-    cl = CutLines(stations_path, routes_path, output_path)
+    routes_root = etree.parse(routes_path).getroot()
+    cl = CutLines(stations_path, routes_root)
     cl.trim_routes()
+    cl.write_to_xml(output_path)

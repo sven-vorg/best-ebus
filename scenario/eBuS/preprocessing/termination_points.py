@@ -5,12 +5,12 @@ from pathlib import Path
 class TerminationPoints():
 
     def __init__(
-            self, 
-            routes: Path,
+            self,
+            routes_root,
             depots: tuple,
             output: Path
         ):
-        self.ROUTE_ROOT = etree.parse(routes).getroot()
+        self.ROUTE_ROOT = routes_root
         self.depots = depots
         self.OUTPUT_PATH = output
 
@@ -49,6 +49,7 @@ if __name__ == "__main__":
     routes: Path = (HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     output: Path = (HERE / "../postprocessing_inputs/files").resolve()
-    tp = TerminationPoints(routes, depots, output)
+    routes_root = etree.parse(routes).getroot()
+    tp = TerminationPoints(routes_root, depots, output)
     tp.main()
 

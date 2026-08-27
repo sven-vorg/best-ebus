@@ -11,18 +11,18 @@ logger = logging.getLogger(__name__)
 class DeadheadCalculator():
 
     def __init__(
-            self, 
-            network: Path, 
-            stations: Path, 
-            routes: Path,
+            self,
+            network: Path,
+            stations: Path,
+            routes_root,
             termination_points: Path,
             depots: tuple,
             output: Path,
         ):
         # Read Network
         self.net = sumolib.net.readNet(network)
-        # Parse Routes
-        self.routes_root = etree.parse(routes).getroot()
+        # Routes (already parsed/trimmed upstream)
+        self.routes_root = routes_root
         # Parse Stations
         self.station_root = etree.parse(stations).getroot()
         # Load Termination Points
@@ -100,13 +100,14 @@ class DeadheadCalculator():
 
         etree.indent(self.routes_root, space="    ")
         tree = etree.ElementTree(self.routes_root)
+        output_file = f"{self.output}/e_preprocessed_routes.rou.xml"
         tree.write(
-            f"{self.output}/merged_routes.rou.xml",
+            output_file,
             encoding="utf-8",
             xml_declaration=True,
             pretty_print=True,
         )
-        logger.info("Written %s to disk", self.output)
+        logger.info("Written %s", output_file)
 
 if __name__ == "__main__":
     
@@ -118,5 +119,6 @@ if __name__ == "__main__":
     termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
     output: Path = (HERE / "../files").resolve()
-    dc = DeadheadCalculator(network, stations, routes, termination_points, depots, output)
+    routes_root = etree.parse(routes).getroot()
+    dc = DeadheadCalculator(network, stations, routes_root, termination_points, depots, output)
     dc.calculate_station_deadheads()

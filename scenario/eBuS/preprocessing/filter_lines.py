@@ -107,14 +107,6 @@ class FilterLines:
 
         self.route_calculations = pd.DataFrame(rows)
 
-    def write_xml_to_file(self):
-        self.routes_tree.write(
-            "best-ebus/scenario/eBuS/files/cicero_mueller_routes.rou.xml",
-            pretty_print=True,
-            xml_declaration=True,
-            encoding="UTF-8",
-        )
-
     def routes_to_trips(self, create_csv: bool = True):
         """
         Creates csv / dict{df} of the desired format:
@@ -173,7 +165,6 @@ class FilterLines:
     def main(self):
         self._remove_routes()
         self._remove_flows()
-        self.write_xml_to_file()
         self.extract_flow_information()
         self.routes_to_trips(True)
 
