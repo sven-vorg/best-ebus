@@ -214,29 +214,3 @@ class SumoInbuilds:
             str(chargingstations_path),
             "--scatterplot",
         ], "plotXMLAttributes (charging events)")
-
-
-if __name__ == "__main__":
-    from output_files import OutputFiles
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        datefmt="%H:%M:%S",
-    )
-
-    output_dir = r"best-ebus\scenario\sumo\output"
-    e_bus_directory = Path(r"best-ebus\scenario\sumo\electric")
-    stops_path = r"best-ebus\scenario\sumo\berlin_bus_stops.add.xml"
-
-    files = OutputFiles(output_dir)
-    file_dict = files.get_run_files()
-    plots_dir = Path(output_dir) / "plots" / files.timestamp
-
-    si = SumoInbuilds()
-    si.plot_trajectories(file_dict["fcdinfo"], save_path=plots_dir / "all_locations.png")
-    si.plot_stops(e_bus_directory / "e_routes.rou.xml", stops_path)
-    si.compute_stopping_place_usage(file_dict["stopinfo"])
-    si.trip_statistics(file_dict["tripinfo"], save_path=plots_dir / "tripinfo_statistics.txt")
-    si.plot_battery_energy(file_dict["battery_aggregated"], save_path=plots_dir / "battery_energy.png")
-    si.plot_charging_events_scatter(file_dict["chargingstations"], save_path=plots_dir / "energy_charged_scatter.png")

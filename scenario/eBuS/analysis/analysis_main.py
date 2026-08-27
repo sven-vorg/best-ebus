@@ -21,23 +21,34 @@ from analysis.chargingstation_map import ChargingStationMap
 from analysis.infrastructure_map import InfrastructureMap
 from analysis.sumo_inbuilds import SumoInbuilds
 
-def main(output_dir: str | Path = r"best-ebus\scenario\sumo\output"):
-    """Run the complete analysis pipeline."""
+def main(
+    output_dir: str | Path = r"best-ebus\scenario\sumo\output",
+    sumo_dir: str | Path = r"best-ebus\scenario\sumo",
+):
+    """
+    Run the complete analysis pipeline.
+
+    output_dir: the run_<timestamp> folder (created by
+        EBusMain.order_output) containing that run's SUMO/ESS output files.
+    sumo_dir: the base sumo directory, used to locate the electric
+        network files and bus stops that are shared across runs.
+    """
 
     print("Starting analysis...")
 
     # 0. Load output files
     output_dir = Path(output_dir)
+    sumo_dir = Path(sumo_dir)
     files = OutputFiles(output_dir)
     # Dictionary of file types and paths
     file_dict = files.get_run_files()
 
     # Directory to save generated plots to
-    plots_dir = output_dir / "plots" / files.timestamp
+    plots_dir = output_dir / "plots"
 
     # Load other files
-    e_bus_directory = output_dir.parent / "electric"
-    stops_path = output_dir.parent / "berlin_bus_stops.add.xml"
+    e_bus_directory = sumo_dir / "electric"
+    stops_path = sumo_dir / "berlin_bus_stops.add.xml"
 
 
 
