@@ -183,18 +183,19 @@ class BuildRoutes:
                     "tripId": str(trip_id),
                 })
 
-        arrival_time = min(
-            self.trip_to_arrival[trip_ids[-1]]
-            + self.stations_to_time[(self.trip_to_end[trip_ids[-1]], end_depot)]
-            + self.DESPAWN_OFFSET, 
-            104400
-        )
+        #arrival_time = min(
+        #    self.trip_to_arrival[trip_ids[-1]]
+        #    + self.stations_to_time[(self.trip_to_end[trip_ids[-1]], end_depot)]
+        #    + self.DESPAWN_OFFSET, 
+        #    104400
+        #)
         # Set arrival at depot
         stops.append({
             "busStop": end_depot,
             "parking": "true",
             "duration": "0",
-            "until": str(arrival_time),
+            #"until": str(arrival_time),
+            "until": "104400",
         })
 
         deduped = []
