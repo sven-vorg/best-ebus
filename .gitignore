@@ -16,9 +16,7 @@ scenario/sumo/cutouts/
 # Untracked generated data files
 scenario/eBuS/files/postprocessing_input/termination_points.txt
 scenario/eBuS/files/postprocessing_input/deadhead_times.txt
-scenario/eBuS/files/postprocessing_input/merged_routes.rou.xml
-scenario/eBuS/files/cicero_mueller_routes_trimmed.rou.xml
-scenario/eBuS/files/cicero_mueller_routes.rou.xml
+scenario/eBuS/files/postprocessing_input/e_preprocessed_routes.rou.xml
 
 # Untracked generated scenario files
 scenario/sumo/electric/e_stations.add.xml

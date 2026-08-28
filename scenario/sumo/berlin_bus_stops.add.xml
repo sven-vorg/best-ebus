@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<!-- generated on 2026-08-20T12:22:57.997651+01:00 by Eclipse SUMO netedit 1.27.1
+<!-- generated on 2026-08-27T18:57:01.971067+01:00 by Eclipse SUMO netedit v1_27_1+0444-1ce3f118d88
 -->
 <additional xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/additional_file.xsd">
     <!-- StoppingPlaces -->
@@ -1518,7 +1518,7 @@
     <busStop id="10661_32" name="Pfaueninsel (Berlin)" lane="-259536422_0" startPos="0.00" endPos="6.74" friendlyPos="1" parkingLength="14.00">
         <param key="coordinates" value="13.123653,52.428382"/></busStop>
     <busStop id="10663_0" name="Pfaueninsel (Berlin)" lane="-259536415_0" startPos="0.00" endPos="13.00" friendlyPos="1" parkingLength="14.00">
-        <param key="coordinates" value="13.123557,52.428404"/></busStop>
+        <param key="coordinates" value="13.123532,52.428410"/></busStop>
     <busStop id="10663_1" name="Rübezahlweg (Berlin)" lane="48230551_0" startPos="628.51" endPos="641.51" friendlyPos="1" parkingLength="14.00">
         <param key="coordinates" value="13.124307,52.428162"/></busStop>
     <busStop id="10663_10" name="Badeweg (Berlin)" lane="-376730204_0" startPos="356.49" endPos="369.49" friendlyPos="1" parkingLength="14.00">
