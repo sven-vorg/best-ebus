@@ -50,6 +50,8 @@ pv_factor = 1.0
 grid_charge_max_soc = 0.2
 # power (kW) drawn from grid while below grid_charge_max_soc
 grid_charge_power = 50.0
+# battery round-trip efficiency (0.0-1.0), e.g. ~0.95 for lithium-ion
+efficiency = 0.95
 
 # W.I.P. Do not use!
 [run_simulation_seeds]

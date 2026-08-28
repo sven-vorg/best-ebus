@@ -26,7 +26,7 @@ def parse_peak_power(csv_path) -> dict[str, float]:
 class EnergyStorageSystem:
     def __init__(self, charging_stations, pv_csv_path, ess_factor=None, ess_capacity=None,
                  output_path=None, start_soc=0.0, pv_factor=1.0,
-                 grid_charge_max_soc=None, grid_charge_power=None) -> None:
+                 grid_charge_max_soc=None, grid_charge_power=None, efficiency=1.0) -> None:
         """ess_factor sizes each station's ESS as ess_factor * (that station's PV peak power).
         Pass ess_capacity instead to statically set the same capacity for every station,
         bypassing the factor-based calculation.
@@ -36,7 +36,10 @@ class EnergyStorageSystem:
         grid_charge_max_soc, if set, enables always drawing energy from the grid to charge the
         battery: whenever a station's SoC is below this fraction (0.0-1.0) of its capacity,
         energy is drawn from the grid at grid_charge_power (kW) in addition to any energy
-        already drawn to cover a load/PV deficit. Requires grid_charge_power to also be set."""
+        already drawn to cover a load/PV deficit. Requires grid_charge_power to also be set.
+        efficiency is the battery's round-trip efficiency (0.0-1.0, default 1.0 i.e. no losses),
+        e.g. 0.95 for a lithium-ion cell with ~5% round-trip loss. See calculate_ess for how
+        it's split between charging and discharging."""
         self.charging_stations = charging_stations
         self.ess_factor = ess_factor
         self.ess_capacity = ess_capacity
@@ -46,6 +49,7 @@ class EnergyStorageSystem:
         self.pv_factor = pv_factor
         self.grid_charge_max_soc = grid_charge_max_soc
         self.grid_charge_power = grid_charge_power
+        self.efficiency = efficiency
         self.pv_data = None
         self.peak_power = None
         self.ess_df = None
@@ -63,6 +67,7 @@ class EnergyStorageSystem:
         self.ess_df = self.calculate_ess(
             self.charging_stations, ess_capacities, self.start_soc,
             grid_charge_max_soc=self.grid_charge_max_soc, grid_charge_power=self.grid_charge_power,
+            efficiency=self.efficiency,
         )
         if self.output_path is not None:
             self.write_xml(self.output_path)
@@ -120,14 +125,21 @@ class EnergyStorageSystem:
         return pv
 
     def calculate_ess(self, charging_stations, ess_capacities, start_soc=0.0, total_minutes=TOTAL_MINUTES,
-                       grid_charge_max_soc=None, grid_charge_power=None) -> pd.DataFrame:
+                       grid_charge_max_soc=None, grid_charge_power=None, efficiency=1.0) -> pd.DataFrame:
         """Simulate each station's battery minute-by-minute and return the result as a DataFrame.
         If grid_charge_max_soc is set, whenever a station's SoC is below that fraction of its
         capacity, additional energy is drawn from the grid at grid_charge_power (kW) to charge it,
-        on top of any energy drawn to cover a load/PV deficit."""
+        on top of any energy drawn to cover a load/PV deficit.
+        efficiency is the battery's round-trip efficiency (0.0-1.0, e.g. 0.95 for a lithium-ion
+        cell with ~5% round-trip loss). It's split evenly between charging and discharging
+        (each side applies sqrt(efficiency)), so one full charge/discharge cycle loses exactly
+        (1 - efficiency) overall. Forced grid charging goes through the same charging loss as
+        PV surplus charging."""
         grid_charge_power_per_minute = (
             grid_charge_power * 1000 / MINUTES_PER_HOUR if grid_charge_power is not None else 0.0
         )
+        charge_efficiency = efficiency ** 0.5
+        discharge_efficiency = efficiency ** 0.5
         rows = []
         for station in charging_stations:
             load = self.build_load_profile(station, total_minutes)
@@ -139,24 +151,23 @@ class EnergyStorageSystem:
                 grid_draw = 0.0
                 curtailed_pv = 0.0
                 if net >= 0:
-                    new_soc = soc + net
-                    if new_soc > capacity:
-                        curtailed_pv = new_soc - capacity
-                        soc = capacity
-                    else:
-                        soc = new_soc
+                    headroom = capacity - soc
+                    stored = min(net * charge_efficiency, headroom)
+                    soc += stored
+                    curtailed_pv = net - stored / charge_efficiency
                 else:
                     deficit = -net
-                    new_soc = soc - deficit
-                    if new_soc < 0:
-                        grid_draw = -new_soc
-                        soc = 0.0
+                    required_from_soc = deficit / discharge_efficiency
+                    if required_from_soc <= soc:
+                        soc -= required_from_soc
                     else:
-                        soc = new_soc
+                        grid_draw = deficit - soc * discharge_efficiency
+                        soc = 0.0
 
                 if grid_charge_max_soc is not None and soc < grid_charge_max_soc * capacity:
-                    forced_draw = min(grid_charge_power_per_minute, capacity - soc)
-                    soc += forced_draw
+                    headroom = capacity - soc
+                    forced_draw = min(grid_charge_power_per_minute, headroom / charge_efficiency)
+                    soc += forced_draw * charge_efficiency
                     grid_draw += forced_draw
 
                 rows.append({
