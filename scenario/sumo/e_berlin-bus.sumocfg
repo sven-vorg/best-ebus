@@ -24,19 +24,14 @@
   </time>
   <processing>
     <step-method.ballistic value="true"/>
-    <no-internal-links value="false"/>
-    <ignore-junction-blocker value="20"/>
-    <time-to-teleport value="-500.0"/>
-    <time-to-teleport.highways value="0"/>
-    <eager-insert value="false"/>
+    <time-to-teleport value="-1"/>
   </processing>
   <report>
-    <verbose value="true"/>
     <log.timestamps value="true"/>
+    <aggregate-warnings value="10"/>>
+    <step-log.period value="100"/>
   </report>
   <random_number>
-    <random value="false"/>
     <seed value="251920"/>
-    <step-log.period value="100"/>
   </random_number>
 </configuration>
