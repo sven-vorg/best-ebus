@@ -6,6 +6,21 @@ import contextily as cx
 from lxml import etree
 from matplotlib.lines import Line2D
 
+# The basemap image barely changes between runs, so tiles are downloaded
+# once and cached here instead of being re-fetched from the web every time.
+BASEMAP_CACHE_DIR = Path(__file__).resolve().parent.parent / "files" / "basemaps"
+
+
+def _add_cached_basemap(ax, cache_name, source=cx.providers.CartoDB.Positron, zoom="auto"):
+    BASEMAP_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = BASEMAP_CACHE_DIR / f"{cache_name}.tif"
+
+    if not cache_path.exists():
+        west, east, south, north = ax.axis()
+        cx.bounds2raster(west, south, east, north, path=str(cache_path), zoom=zoom, source=source)
+
+    cx.add_basemap(ax, source=str(cache_path))
+
 
 class InfrastructureMap:
 
@@ -148,7 +163,7 @@ class InfrastructureMap:
 
         fig.canvas.mpl_connect('motion_notify_event', hover)
 
-        cx.add_basemap(ax, source=cx.providers.CartoDB.Positron, crs="EPSG:3857")
+        _add_cached_basemap(ax, cache_name="infrastructure_map")
 
         ax.set_axis_off()
         ax.legend(handles=legend_handles, loc='lower right', frameon=True)

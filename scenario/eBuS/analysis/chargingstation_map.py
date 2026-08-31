@@ -5,6 +5,21 @@ import geopandas as gpd
 import contextily as cx
 from lxml import etree
 
+# The basemap image barely changes between runs, so tiles are downloaded
+# once and cached here instead of being re-fetched from the web every time.
+BASEMAP_CACHE_DIR = Path(__file__).resolve().parent.parent / "files" / "basemaps"
+
+
+def _add_cached_basemap(ax, cache_name, source=cx.providers.CartoDB.Positron, zoom="auto"):
+    BASEMAP_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_path = BASEMAP_CACHE_DIR / f"{cache_name}.tif"
+
+    if not cache_path.exists():
+        west, east, south, north = ax.axis()
+        cx.bounds2raster(west, south, east, north, path=str(cache_path), zoom=zoom, source=source)
+
+    cx.add_basemap(ax, source=str(cache_path))
+
 
 class ChargingStationMap:
 
@@ -97,6 +112,7 @@ class ChargingStationMap:
             save_path=save_path,
             min_size=min_size,
             max_size=max_size,
+            cache_name="energy_map",
         )
 
     def plot_pv_generation_map(self, save_path=None, min_size=20, max_size=2000):
@@ -113,6 +129,7 @@ class ChargingStationMap:
             save_path=save_path,
             min_size=min_size,
             max_size=max_size,
+            cache_name="pv_generation_map",
         )
 
     def plot_pv_curtailment_map(self, save_path=None, min_size=20, max_size=2000):
@@ -129,6 +146,7 @@ class ChargingStationMap:
             save_path=save_path,
             min_size=min_size,
             max_size=max_size,
+            cache_name="pv_curtailment_map",
         )
 
     def _plot_station_map(
@@ -138,6 +156,7 @@ class ChargingStationMap:
         title,
         color,
         edgecolor,
+        cache_name,
         save_path=None,
         min_size=20,
         max_size=2000,
@@ -221,7 +240,7 @@ class ChargingStationMap:
 
         fig.canvas.mpl_connect('motion_notify_event', hover)
 
-        cx.add_basemap(ax, source=cx.providers.CartoDB.Positron, crs=gdf.crs)
+        _add_cached_basemap(ax, cache_name=cache_name)
 
         ax.set_axis_off()
         ax.set_title(title)

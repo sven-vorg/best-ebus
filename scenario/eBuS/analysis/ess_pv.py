@@ -114,7 +114,7 @@ class ESSPV:
 
         stations = sorted(
             s for s in self.ess_data['station_id'].unique()
-            if 'depot' not in s.lower()
+            if not s.lower().startswith('cd_')
         )
         colors = plt.cm.tab10.colors
 
@@ -242,6 +242,48 @@ class ESSPV:
 
         plt.grid(True, alpha=0.3)
         plt.legend(loc="upper right", fontsize="small")
+        plt.tight_layout()
+
+        if save_path is not None:
+            Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+            plt.savefig(save_path, dpi=150)
+
+        plt.show()
+
+    def plot_pv_power(self, save_path=None):
+        """
+        Plot PV power generation over time, with one line per charging
+        station, excluding depots.
+
+        Parameters
+        ----------
+        save_path : str or Path, optional
+            If given, the figure is saved to this path.
+        """
+
+        if self.ess_data.empty:
+            print("No ESS data available.")
+            return
+
+        stations = sorted(
+            s for s in self.ess_data['station_id'].unique()
+            if not s.lower().startswith('cd_')
+        )
+
+        plt.figure(figsize=(12, 6))
+
+        for station in stations:
+            sdf = self.ess_data[self.ess_data['station_id'] == station].sort_values('timestep_min')
+            hours = sdf['timestep_min'] / 60
+            pv_power_kw = sdf['pv_generated'] * 60 / 1000
+
+            plt.plot(hours, pv_power_kw, color="tab:orange", alpha=0.4, linewidth=0.6)
+
+        plt.xlabel("Simulation time [h]")
+        plt.ylabel("PV power [kW]")
+        plt.title("PV power generation per charging station")
+
+        plt.grid(True, alpha=0.3)
         plt.tight_layout()
 
         if save_path is not None:

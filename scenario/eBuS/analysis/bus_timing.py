@@ -22,7 +22,7 @@ class BusTiming:
         for elem in root.iter('stopinfo'):
             bus_stop = elem.get('busStop')
 
-            if bus_stop in self.EXCLUDED_STOPS:
+            if bus_stop is None or bus_stop in self.EXCLUDED_STOPS:
                 continue
 
             stops.append({
