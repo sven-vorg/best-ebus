@@ -123,7 +123,7 @@ def aggregate(input_file, output_file, interval):
 
             elif interval_index != current_interval:
 
-                write_interval(fout, current_start + interval / 2, vehicles)
+                write_interval(fout, current_start, vehicles)
 
                 vehicles.clear()
 
@@ -180,7 +180,7 @@ def aggregate(input_file, output_file, interval):
             elem.clear()
 
         if vehicles:
-            write_interval(fout, current_start + interval / 2, vehicles)
+            write_interval(fout, current_start, vehicles)
 
         fout.write("</battery-export>\n")
 
