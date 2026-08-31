@@ -6,7 +6,7 @@
     <additional-files value="berlin_bus_stops.add.xml,electric/e_type.add.xml, electric/e_stations.add.xml"/>
   </input>
   <output>
-    <output-prefix value="output/electric_bus_TIME_"/>
+    <output-prefix value="output/new_base_electric_bus_TIME_"/>
     <summary-output value="summary.xml"/>
     <statistic-output value="statistics.xml"/>
     <battery-output value="battery.xml"/>
@@ -23,12 +23,10 @@
     <end value="104400.0"/>
   </time>
   <processing>
-    <step-method.ballistic value="true"/>
-    <time-to-teleport value="-1"/>
+    <time-to-teleport value="200"/>
   </processing>
   <report>
     <log.timestamps value="true"/>
-    <aggregate-warnings value="10"/>>
     <step-log.period value="100"/>
   </report>
   <random_number>

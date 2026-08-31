@@ -18,6 +18,9 @@ scenario/eBuS/files/postprocessing_input/termination_points.txt
 scenario/eBuS/files/postprocessing_input/deadhead_times.txt
 scenario/eBuS/files/postprocessing_input/e_preprocessed_routes.rou.xml
 
+# Cached basemap rasters (re-downloaded automatically if missing)
+scenario/eBuS/files/basemaps/
+
 # Untracked generated scenario files
 scenario/sumo/electric/e_stations.add.xml
 scenario/sumo/electric/e_routes.rou.xml

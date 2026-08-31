@@ -11,7 +11,7 @@ depots = ["cicerostrasse", "muellerstrasse"]
 soc_percentage = 80
 # Power that a single bus can be charged at in W
 # Actual power determined by buses power capability
-chargingstation_power = 150000 
+chargingstation_power = 200000 
 # Factor for total power available at all charging stations.
 # Determines how fast multiple buses charge.
 # (Should someday be individualised)
