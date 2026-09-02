@@ -20,14 +20,14 @@ class HeuristicPreprocessing:
             routes_file: Path,
             stations_file: Path,
             network_file: Path,
-            selected_lines_file: Path,
+            selected_lines: dict[str, list[str]],
             termination_points: Path,
             depots: tuple,
             output_dir: Path):
         self.routes_file = routes_file
         self.stations_file = stations_file
         self.network_file = network_file
-        self.selected_lines_file = selected_lines_file
+        self.selected_lines = selected_lines
         self.termination_points = termination_points
         self.depots = depots
         self.output_dir = output_dir
@@ -38,7 +38,7 @@ class HeuristicPreprocessing:
         cc.add_coordinates_to_bus_stops()
         cc.save()
 
-        fl = FilterLines(self.routes_file, self.selected_lines_file, self.stations_file, self.output_dir)
+        fl = FilterLines(self.routes_file, self.selected_lines, self.stations_file, self.output_dir)
         fl.main()
 
         tp = TerminationPoints(fl.routes_root, self.depots, self.output_dir)
@@ -57,16 +57,21 @@ class HeuristicPreprocessing:
         dc.calculate_station_deadheads()
 
 if __name__ == "__main__":
+    import tomllib
+
     HERE = Path(__file__).resolve().parent
+
+    with open((HERE / "../ebus_config.toml").resolve(), "rb") as f:
+        heuristic_preprocessing_cfg = tomllib.load(f)["heuristic_preprocessing"]
 
     routes_file: Path = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
     stations_file: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml")
     network_file: Path = (HERE / "../../sumo/berlin.net.xml").resolve()
-    selected_lines_file: Path = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
+    selected_lines: dict[str, list[str]] = heuristic_preprocessing_cfg["lines"]
 
     termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
 
-    depots: tuple = ("cicerostrasse", "muellerstrasse")
+    depots: tuple = tuple(heuristic_preprocessing_cfg["depots"])
 
     output_dir: Path = (HERE / "../postprocessing_input/files").resolve()
 
@@ -74,7 +79,7 @@ if __name__ == "__main__":
         routes_file,
         stations_file,
         network_file,
-        selected_lines_file,
+        selected_lines,
         termination_points,
         depots,
         output_dir)

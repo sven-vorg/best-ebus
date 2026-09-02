@@ -11,14 +11,19 @@ class FilterLines:
     def __init__(
         self,
         routes_file: Path,
-        selected_lines_file: Path,
+        selected_lines: dict[str, list[str]],
         bus_stops_file: Path,
         output_dir: Path,
     ):
         self.routes_tree = etree.parse(routes_file)
         self.routes_root = self.routes_tree.getroot()
 
-        self.selected_lines = pd.read_csv(selected_lines_file)
+        self.selected_lines = pd.DataFrame(
+            [
+                {"line": line, "depot": depot, "type": bus_type}
+                for line, (depot, bus_type) in selected_lines.items()
+            ]
+        )
         self.lines = set(self.selected_lines["line"])
 
         self.bus_stops_tree = etree.parse(bus_stops_file)
@@ -151,8 +156,6 @@ class FilterLines:
             "line",
             "flow_begin",
             "flow_end",
-            "bothdepots",
-            "doubledecker",
             "period",
             "duration",
             "repetition",
@@ -191,12 +194,15 @@ class FilterLines:
 
 
 if __name__ == "__main__":
-    
+    import tomllib
+
     HERE = Path(__file__).resolve().parent
 
+    with open((HERE / "../ebus_config.toml").resolve(), "rb") as f:
+        selected_lines = tomllib.load(f)["heuristic_preprocessing"]["lines"]
+
     routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    selected_lines_file = (HERE / "../files/preprocessing_input/depot_line_type.csv").resolve()
     bus_stops_file = (HERE /  "../../sumo/berlin_bus_stops.add.xml").resolve()
     output_dir = (HERE / "../postprocessing_inputs/files").resolve()
-    fl = FilterLines(routes_file, selected_lines_file, bus_stops_file, output_dir)
+    fl = FilterLines(routes_file, selected_lines, bus_stops_file, output_dir)
     fl.main()

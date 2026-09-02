@@ -1,8 +1,0 @@
-Cicerostraße
-36 Ebusco2.2electric12m 525kWh
-30 SolarsisUrbino12electric 300kWh
-139 SolarsisUrbino18.75electric 528kWh
-Muellerstraße
-27 Ebusco2.2electric12m 525kWh
-17 SolarsisUrbino12electric 300kWh
-165 SolarsisUrbino18.75electric 528kWh

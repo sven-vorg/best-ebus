@@ -1,22 +1,69 @@
 # Configuration for EBusMain (ebus_main.py).
+
 [main]
 pv_start_date = 2024-06-22
 
 [heuristic_preprocessing]
 depots = ["cicerostrasse", "muellerstrasse"]
 
+# Depot / vehicle-type assignment per line (formerly depot_line_type.csv).
+# line = [depot, type]
+[heuristic_preprocessing.lines]
+M11 = ["cicerostrasse", "GN"]
+M19 = ["cicerostrasse", "GN"]
+M21 = ["muellerstrasse", "GN"]
+M27 = ["muellerstrasse", "GN"]
+M29 = ["cicerostrasse", "DL"]
+M43 = ["cicerostrasse", "GN"]
+M46 = ["cicerostrasse", "DL"]
+M48 = ["cicerostrasse", "GN"]
+M76 = ["cicerostrasse", "GN"]
+M82 = ["cicerostrasse", "DL"]
+X11 = ["muellerstrasse", "GN"]
+X33 = ["muellerstrasse", "GN"]
+X83 = ["cicerostrasse", "GN"]
+"101" = ["cicerostrasse", "DL"]
+"109" = ["muellerstrasse", "EN"]
+"110" = ["cicerostrasse", "EN"]
+"115" = ["cicerostrasse", "EN"]
+"120" = ["muellerstrasse", "GN"]
+"122" = ["muellerstrasse", "GN"]
+"123" = ["muellerstrasse", "EN"]
+"124" = ["muellerstrasse", "EN"]
+"125" = ["muellerstrasse", "GN"]
+"128" = ["muellerstrasse", "EN"]
+"143" = ["cicerostrasse", "EN"]
+"150" = ["muellerstrasse", "GN"]
+"186" = ["cicerostrasse", "DL"]
+"187" = ["cicerostrasse", "EN"]
+"188" = ["cicerostrasse", "EN"]
+"218" = ["cicerostrasse", "GN"]
+"220" = ["muellerstrasse", "GN"]
+"221" = ["muellerstrasse", "GN"]
+"222" = ["muellerstrasse", "GN"]
+"245" = ["muellerstrasse", "GN"]
+"247" = ["muellerstrasse", "EN"]
+"249" = ["cicerostrasse", "EN"]
+"282" = ["cicerostrasse", "DL"]
+"283" = ["cicerostrasse", "EN"]
+"284" = ["cicerostrasse", "EN"]
+"285" = ["cicerostrasse", "DL"]
+"309" = ["cicerostrasse", "EN"]
+"322" = ["muellerstrasse", "EN"]
+"324" = ["muellerstrasse", "EN"]
+"327" = ["muellerstrasse", "EN"]
 
 [heuristic_postprocessing]
 # Starting State of Charge for Electric Buses in %
 soc_percentage = 80
 # Power that a single bus can be charged at in W
 # Actual power determined by buses power capability
-chargingstation_power = 200000 
+chargingstation_power = 250000 
 # Factor for total power available at all charging stations.
 # Determines how fast multiple buses charge.
 # (Should someday be individualised)
 # Untested for values <1
-total_power_factor = 2.0
+total_power_factor = 4.0
 # Seconds to pull eligible vehicles' spawn earlier than their latest
 # possible depot-exit time
 #leave unset to disable staggering
@@ -53,12 +100,15 @@ grid_charge_power = 50.0
 # battery round-trip efficiency (0.0-1.0), e.g. ~0.95 for lithium-ion
 efficiency = 0.95
 
-# W.I.P. Do not use!
+[update_types]
+# Constant auxiliary power draw (W) written to every vType's
+# constantPowerIntake param in sumo/electric/e_type.add.xml
+"Constant Power Intake" = 1000
+
 [run_simulation_seeds]
-#
-# Space-separated list of seeds to run the simulation with, e.g. "7 11 13".
+# Space-separated list of seeds to run the simulation with, e.g. "161".
 # A single "start:stop" token (no spaces) is also accepted as a range, e.g. "0:100".
 # uncomment to run the simulation once per seed instead of a single run; leave unset to disable
-#seeds = "0 1 2"
+seeds = "70 67 75 65 68"
 # Number of simulation runs to perform in parallel
-#threads = 3
+threads = 5
