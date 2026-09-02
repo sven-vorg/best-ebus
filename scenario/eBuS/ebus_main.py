@@ -7,7 +7,6 @@ __status__ = "Prototype"
 __date__ = "02.07.2026"
 
 import os
-import shutil
 import subprocess
 import sys
 import tomllib
@@ -16,8 +15,10 @@ from pathlib import Path
 
 import logging
 
+from lxml import etree
+
 from analysis.analysis_main import main as run_full_analysis
-from analysis.output_files import OutputFiles
+from analysis.output_files import SeedOutputFiles
 
 from pv_estimation.pvgis_api_v6 import PVGISApiCall
 from energy_storage_system.charging_station import ChargingStation
@@ -25,6 +26,7 @@ from energy_storage_system.energy_storage_system import EnergyStorageSystem
 from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 from tools.betterAggregateBattery import aggregate
+from tools.order_output import order_output
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -50,26 +52,23 @@ class EBusMain:
         PV_START_DATE: date = CONFIG["main"]["pv_start_date"]
         self.run_heuristic_preprocessing()
         self.run_heuristic_postprocessing()
-        if "seeds" in CONFIG.get("run_simulation_seeds", {}):
-            self.run_simulation_seeds()
-        else:
-            self.run_simulation()
-        self.run_aggreate_battery()
+        self.run_update_types()
+        self.run_simulation_seeds()
+        run_dir = order_output(SUMO_OUTPUT_DIR)
         self.run_pvgis_api_call(start_date=PV_START_DATE)
-        self.run_energy_storage_system(start_date=PV_START_DATE)
-        run_dir = self.order_output()
-
-        self.run_analysis(run_dir)
+        for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
+            self.run_aggreate_battery(seed_dir)
+            self.run_energy_storage_system(seed_dir, start_date=PV_START_DATE)
 
     def run_heuristic_preprocessing(self):
         routes_file: Path = SUMO_DIR / "berlin_bus.rou.xml"
         stations_file: Path = SUMO_DIR / "berlin_bus_stops.add.xml"
         network_file: Path = SUMO_DIR / "berlin.net.xml"
 
-        selected_lines_file: Path = FILES_DIR / "preprocessing_input/depot_line_type.csv"
         termination_points: Path = FILES_DIR / "preprocessing_input/termination_points.txt"
 
         depots: tuple[str, ...] = tuple(CONFIG["heuristic_preprocessing"]["depots"])
+        selected_lines: dict[str, list[str]] = CONFIG["heuristic_preprocessing"]["lines"]
 
         output_dir: Path = FILES_DIR / "postprocessing_input"
 
@@ -77,7 +76,7 @@ class EBusMain:
             routes_file,
             stations_file,
             network_file,
-            selected_lines_file,
+            selected_lines,
             termination_points,
             depots,
             output_dir,
@@ -144,12 +143,32 @@ class EBusMain:
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
-    def run_aggreate_battery(self):
+    def run_update_types(self):
         """
-        Aggregate the battery data from the latest SUMO battery output
+        Write the "Constant Power Intake" value from the config into the
+        constantPowerIntake param of every vType in e_type.add.xml.
+        """
+        type_file: Path = SUMO_DIR / "electric" / "e_type.add.xml"
+        constant_power_intake: int = CONFIG["update_types"]["Constant Power Intake"]
+
+        tree = etree.parse(str(type_file))
+        params = tree.getroot().xpath(".//vType/param[@key='constantPowerIntake']")
+
+        for param in params:
+            param.set("value", str(constant_power_intake))
+
+        tree.write(str(type_file), encoding="UTF-8", xml_declaration=True)
+        logger.info(
+            f"Set constantPowerIntake to {constant_power_intake} for {len(params)} bus type(s) in {type_file}"
+        )
+
+    def run_aggreate_battery(self, run_dir: Path):
+        """
+        Aggregate the battery data from a seed run's SUMO battery output
+        (a "<seed>_directory" folder, see tools.order_output.order_output)
         and write the result back as XML.
         """
-        files = OutputFiles(SUMO_OUTPUT_DIR)
+        files = SeedOutputFiles(run_dir)
         battery_file = files.get_file("battery")
         output_file = files.output_dir / battery_file.name.replace(
             "_battery.xml", "_battery_aggregated.xml"
@@ -174,13 +193,14 @@ class EBusMain:
         pvgis = PVGISApiCall(stations_path=cs_path, output_path=pv_out, start_date=start_date)
         pvgis.main()
 
-    def run_energy_storage_system(self, start_date: date):
+    def run_energy_storage_system(self, run_dir: Path, start_date: date):
         """
-        Build the energy storage system profile from the latest SUMO
-        chargingstations output and write the result back as XML.
+        Build the energy storage system profile from a seed run's SUMO
+        chargingstations output (a "<seed>_directory" folder, see
+        tools.order_output.order_output) and write the result back as XML.
         Uses the PV data fetched for start_date by run_pvgis_api_call.
         """
-        files = OutputFiles(SUMO_OUTPUT_DIR)
+        files = SeedOutputFiles(run_dir)
         chargingstations_file = files.get_file("chargingstations")
         output_file = files.output_dir / chargingstations_file.name.replace(
             "_chargingstations.xml", "_ess.xml"
@@ -202,56 +222,9 @@ class EBusMain:
         ).main()
         logger.info(f"ESS output written to {output_file}")
 
-    def order_output(self) -> Path:
-        """
-        Move all output files belonging to the latest SUMO/ESS run
-        (battery, chargingstations, fcdinfo, statistics, stopinfo,
-        summary, tripinfo, ess, battery_aggregated) into a dedicated
-        run_<timestamp> folder, so a run's outputs stay together.
-        """
-        files = OutputFiles(SUMO_OUTPUT_DIR)
-        run_dir = SUMO_OUTPUT_DIR / f"run_{files.timestamp}"
-        run_dir.mkdir(exist_ok=True)
-
-        for path in files.get_run_files().values():
-            shutil.move(str(path), run_dir / path.name)
-
-        logger.info(f"Run output moved to {run_dir}")
-        return run_dir
-
-    def run_analysis(self, run_dir: Path):
-        """
-        Run the full analysis pipeline over the given run's output
-        folder and save the generated plots alongside it.
-        """
-        run_full_analysis(output_dir=run_dir, sumo_dir=SUMO_DIR)
-        logger.info("Analysis completed")
-
     def get_sumo_version(self):
         result = subprocess.run(["sumo", "--version"], capture_output=True, text=True)
         return result.stdout
-
-    def run_simulation(self):
-        """
-        Execute the SUMO simulation using the electric bus configuration.
-        """
-        logger.info("Running %s", self.get_sumo_version())
-
-        sumo_bin = Path(os.environ["SUMO_HOME"]) / "bin" / "sumo.exe"
-        logger.info("from %s directory.", sumo_bin)
-        config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
-
-        start_time = datetime.now()
-        logger.info("Simulation started at %s", start_time)
-
-        result = subprocess.run([str(sumo_bin), "-c", str(config_path)])
-
-        end_time = datetime.now()
-        logger.info("Simulation ended at %s", end_time)
-        logger.info("Simulation runtime: %s", end_time - start_time)
-
-        logger.info("SUMO finished.")
-        logger.info(result.returncode)
 
     def run_simulation_seeds(self):
         """
@@ -264,7 +237,7 @@ class EBusMain:
         run_seeds_script = Path(os.environ["SUMO_HOME"]) / "tools" / "runSeeds.py"
         logger.info("from %s directory.", sumo_bin)
         config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
-
+        #config_path = (PROJECT_ROOT / "../sumo/e_validation.sumocfg").resolve()
         cfg = CONFIG["run_simulation_seeds"]
         # runSeeds.py expects a comma-separated list (or a "start:stop" range);
         # the config stores seeds as a space-separated list, so convert here.
@@ -278,18 +251,21 @@ class EBusMain:
             sys.executable, str(run_seeds_script),
             "-k", str(config_path),
             "-a", str(sumo_bin),
-            "-p", "output/SEED_multirun",
+            "-p", "output/SEED_multirun_",
             "--seeds", seeds,
             "--threads", str(threads),
-            "--statistics-output", r"best-ebus\scenario\sumo\output/stats.xml"
-        ])
+            "--statistics-output", "stats.xml"
+        ], cwd=SUMO_DIR, capture_output=True, text=True)
 
         end_time = datetime.now()
         logger.info("Multi-seed simulation ended at %s", end_time)
         logger.info("Multi-seed simulation runtime: %s", end_time - start_time)
 
-        logger.info("SUMO runSeeds finished.")
-        logger.info(result.returncode)
+        logger.info("SUMO runSeeds finished with exit code %s", result.returncode)
+        if result.stdout:
+            logger.info(result.stdout)
+        if result.stderr:
+            logger.error(result.stderr)
 
 if __name__ == "__main__":
     EBusMain().main()

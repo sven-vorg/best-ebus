@@ -21,13 +21,13 @@ The **eBuS** directory contains most of the files and skripts needed to prepare 
 
 #### Heuristic Preprocessing
 
-Skripts in *preprocessing* are used to create textfiles used as input for a solving heuristic. It perfomrs the definition of depots and belonging service lines. For that it assumes a csv file with the header and name: *depot,line,type*. \
+Skripts in *preprocessing* are used to create textfiles used as input for a solving heuristic. It perfomrs the definition of depots and belonging service lines. For that it assumes a *[heuristic_preprocessing.lines]* table in *ebus_config.toml*, mapping each line to its depot and vehicle type. \
 Available lines are taken from *berlin_bus.rou.xml*, where there is a *to* and *from* for each.
 For eBuS this data has been taken from the website [berliner-lininchronik.de](https://www.berliner-linienchronik.de/fahrzeuge-bvg.html) (Sawall, Fabian; 2026) \
 While manual definition of routes is possible, and adjustments can be made to fine-tune simulation behaviour, the assignment of vehciles to services is computed by a heuristic solving method (Janus, Robert; n.y.)
 
 1. *heuristic_preprocessing.py* is a wrapper for all other skripts in the *preprocessing* directory, performing the functions calls in order.
-2. Begining with *filter_lines.py* where first every route and flow not found in the *depot_line_type.csv" is removed from *berlin_bus.rou.xml*.
+2. Begining with *filter_lines.py* where first every route and flow not found in the *[heuristic_preprocessing.lines]* table of *ebus_config.toml* is removed from *berlin_bus.rou.xml*.
     While **BeST** operates on the **SUMO** flow-functionality, which generates and destroys vehicles for a given route periodically, **eBuS** requieres the use of persistent vehicles. Therefore different parameters are calculated from the combined routes and flows of each line. 
     This operation creates a *to* and *from* for each route, and calculates the number of requiered repetitions and period intevals from the corresponding flows. The result is a *merged_routes.csv* which in turn can be used to create trip defintions for each depot.
 3. As there was an issue, with routes continuing beyond their last passenger stations, presumably to travel to operational stations, *cut_lines.py* removes these sections of routes. While it would be more accurate to also model operation stations as charging-points, this simplification was made for time expenditure reasons.
@@ -168,7 +168,7 @@ Due to long vehicles blocking the comparatively short bus stops for long duratio
 * Integrate *cut_lines.py* into filtering
 * Integrate old *gtfs_worker.ipynb* into heuristic input skript
 * Take charging time from *solution* file
-* Add more vehicle types and implement type choice dependet upon *depot_line_type.csv*
+* Add more vehicle types and implement type choice dependet upon the *[heuristic_preprocessing.lines]* table in *ebus_config.toml*
 
 ## Modifications to files provided by BeST
 Minor adjustments have been made to *berlin.net.xml*, to include two bus depots, one at **Cicerostraße** in Charlottenburg-Wilmersdorf, and the other at **Müllerstraße**, Wedding. Within the code these are named cicerostrasse and muellerstrasse respectively.
