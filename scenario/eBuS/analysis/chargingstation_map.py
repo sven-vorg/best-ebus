@@ -9,14 +9,27 @@ from lxml import etree
 # once and cached here instead of being re-fetched from the web every time.
 BASEMAP_CACHE_DIR = Path(__file__).resolve().parent.parent / "files" / "basemaps"
 
+# OpenStreetMap's tile server enforces a strict usage policy (identifying
+# User-Agent required, no anonymous/bulk downloading) and will 403 requests
+# it flags as automated. We only ever hit the network here once per
+# cache_name, so it's fine to identify ourselves and back off/retry
+# generously instead of failing fast.
+_TILE_HEADERS = {
+    "User-Agent": "BeSTeBuS-eBuS-analysis-script/1.0 (academic thesis project, one-off basemap download)",
+}
 
-def _add_cached_basemap(ax, cache_name, source=cx.providers.CartoDB.Positron, zoom="auto"):
+
+def _add_cached_basemap(ax, cache_name, source=cx.providers.OpenStreetMap.Mapnik, zoom="auto"):
     BASEMAP_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = BASEMAP_CACHE_DIR / f"{cache_name}.tif"
 
     if not cache_path.exists():
         west, east, south, north = ax.axis()
-        cx.bounds2raster(west, south, east, north, path=str(cache_path), zoom=zoom, source=source)
+        cx.bounds2raster(
+            west, south, east, north,
+            path=str(cache_path), zoom=zoom, source=source,
+            headers=_TILE_HEADERS, wait=15, max_retries=8,
+        )
 
     cx.add_basemap(ax, source=str(cache_path))
 

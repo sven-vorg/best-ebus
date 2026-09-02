@@ -41,7 +41,7 @@ class EnergyConsumption:
         total_ammount_charged = [event['total_energy'] for event in self.charging_events]
         print(f"Total energy charged: {sum(total_ammount_charged)/1000} kWh")
         print(f"Energy charged at depot stations: {sum(depot_charging)/1000} kWh")
-        print(f"Energy charged at opportunity stations: {sum(opportunity_charging)/100} kWh")
+        print(f"Energy charged at opportunity stations: {sum(opportunity_charging)/1000} kWh")
 
     def plot_charging_events(self, save_path=None):
         """

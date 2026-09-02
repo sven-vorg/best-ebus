@@ -8,10 +8,11 @@ from lxml import etree
 
 class ESSPV:
 
-    def __init__(self, ess_path, stations_path=None):
+    def __init__(self, ess_path, stations_path=None, pv_csv_path=None):
 
         self.ess_data = self.parse_ess(ess_path)
-        self.station_names = self.parse_station_names(stations_path) 
+        self.station_names = self.parse_station_names(stations_path)
+        self.raw_pv_data = self.parse_raw_pv_data(pv_csv_path) if pv_csv_path is not None else None
 
     def parse_station_names(self, xml_path):
         tree = etree.parse(xml_path)
@@ -54,6 +55,24 @@ class ESSPV:
         df.reset_index(drop=True, inplace=True)
 
         return df
+
+    def parse_raw_pv_data(self, csv_path):
+        """
+        Read the raw PV input CSV for the run's date (a
+        "<start_date>_solar_power_v6_scaled.csv" file produced by
+        pv_estimation.pvgis_api_v6 and consumed by EnergyStorageSystem
+        as pv_csv_path) and return a DataFrame of hourly PV power [kW],
+        indexed by time [h], with one column per station_id.
+        """
+        df = pd.read_csv(csv_path)
+        df['station_id'] = df['station_id'].astype(str)
+        df = df.set_index('station_id')
+        df = df.drop(columns=['peak_power'])
+        df = df[sorted(df.columns, key=lambda c: int(c))]
+        df.columns = [int(c) / 3600 for c in df.columns]
+        return df.T
+
+
 
     def plot_ess_soc(self, save_path=None):
         """
@@ -292,6 +311,108 @@ class ESSPV:
 
         plt.show()
 
+    def plot_pv_power_per_station(self, save_path=None):
+        """
+        Plot the normalized PV generation curve (power / peak power) over
+        time, with one thin line per charging station, excluding depots.
+
+        Parameters
+        ----------
+        save_path : str or Path, optional
+            If given, the figure is saved to this path.
+        """
+
+        if self.ess_data.empty:
+            print("No ESS data available.")
+            return
+
+        stations = sorted(
+            s for s in self.ess_data['station_id'].unique()
+            if not s.lower().startswith('cd_')
+        )
+        colors = plt.cm.tab10.colors
+
+        plt.figure(figsize=(12, 6))
+
+        for i, station in enumerate(stations):
+            sdf = self.ess_data[self.ess_data['station_id'] == station].sort_values('timestep_min')
+            hours = sdf['timestep_min'] / 60
+            pv_power = sdf['pv_generated']
+            peak = pv_power.max()
+            if peak <= 0:
+                continue
+            normalized = pv_power / peak
+
+            color = colors[i % len(colors)]
+            plt.plot(hours, normalized, color=color, linewidth=0.6)
+
+        plt.xlabel("Simulation time [h]")
+        plt.ylabel("Normalized PV power [-]")
+        plt.ylim(0, 1.05)
+        plt.title("PV generation curve per charging station (normalized to peak)")
+
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+        if save_path is not None:
+            Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+            plt.savefig(save_path, dpi=150)
+
+        plt.show()
+
+    def plot_raw_pv_data(self, save_path=None):
+        """
+        Plot the raw, hourly PV input data for the run's date (before any
+        per-minute interpolation, pv_factor scaling, or curtailment done
+        by EnergyStorageSystem), with one line per charging station
+        included in this run.
+
+        Requires pv_csv_path to have been passed to the constructor.
+
+        Parameters
+        ----------
+        save_path : str or Path, optional
+            If given, the figure is saved to this path.
+        """
+
+        if self.raw_pv_data is None:
+            print("No raw PV data available (pv_csv_path was not provided).")
+            return
+
+        included_stations = sorted(
+            s for s in self.ess_data['station_id'].unique()
+            if not s.lower().startswith('cd_') and s in self.raw_pv_data.columns
+        )
+        if not included_stations:
+            print("None of this run's charging stations were found in the raw PV data.")
+            return
+
+        colors = plt.cm.tab10.colors
+
+        plt.figure(figsize=(12, 6))
+
+        for i, station in enumerate(included_stations):
+            color = colors[i % len(colors)]
+            station_name = self.station_names.get(station, station)
+            plt.plot(
+                self.raw_pv_data.index, self.raw_pv_data[station],
+                color=color, marker='o', markersize=3, linewidth=1,
+                label=f"Station {station_name}",
+            )
+
+        plt.xlabel("Time [h]")
+        plt.ylabel("Raw PV power [kW]")
+        plt.title("Raw PV input data per charging station")
+
+        plt.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+        if save_path is not None:
+            Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+            plt.savefig(save_path, dpi=150)
+
+        plt.show()
+
 
 if __name__ == "__main__":
 
@@ -300,8 +421,10 @@ if __name__ == "__main__":
         r"best-ebus\scenario\sumo\output"
         r"\80percent_soc_electric_bus_2026-08-18-18-33-24_ess.xml"
     )
+    pv_csv_path = r"best-ebus\scenario\eBuS\pv_estimation\data\2024-02-22_solar_power_v6_scaled.csv"
 
-    ess_pv_II = ESSPV(ess_path_II, stations_path)
+    ess_pv_II = ESSPV(ess_path_II, stations_path, pv_csv_path)
     ess_pv_II.plot_ess_soc()
     ess_pv_II.plot_pv_vs_charged()
     ess_pv_II.plot_grid_and_curtailment()
+    ess_pv_II.plot_raw_pv_data()

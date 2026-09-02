@@ -66,6 +66,60 @@ class OutputFiles:
         }
 
 
+class SeedOutputFiles:
+    """
+    Resolves output files for a single seed's run folder, as produced by
+    tools.order_output.order_output (files named "<seed>_multirun_<type>.xml",
+    grouped under run_<timestamp>/<seed>_directory/).
+    """
+
+    def __init__(self, output_dir):
+        self.output_dir = Path(output_dir)
+        self.seed = self.find_seed()
+
+    def find_seed(self):
+        files = list(self.output_dir.glob("*_multirun_*.xml"))
+
+        if not files:
+            raise FileNotFoundError(
+                f"No multi-seed run files found in: {self.output_dir}"
+            )
+
+        match = re.match(r"(\d+)_multirun_", files[0].name)
+
+        if not match:
+            raise ValueError(
+                f"Could not determine seed from filename: {files[0].name}"
+            )
+
+        return match.group(1)
+
+    def get_file(self, file_type):
+        pattern = f"{self.seed}_multirun_{file_type}.xml"
+
+        files = list(self.output_dir.glob(pattern))
+
+        if not files:
+            raise FileNotFoundError(
+                f"No file found matching: {pattern}"
+            )
+
+        return files[0]
+
+    def get_run_files(self) -> dict:
+        return {
+            "battery": self.get_file("battery"),
+            "chargingstations": self.get_file("chargingstations"),
+            "fcdinfo": self.get_file("fcdinfo"),
+            "statistics": self.get_file("stats"),
+            "stopinfo": self.get_file("stopinfo"),
+            "summary": self.get_file("summary"),
+            "tripinfo": self.get_file("tripinfo"),
+            "ess": self.get_file("ess"),
+            "battery_aggregated": self.get_file("battery_aggregated"),
+        }
+
+
 if __name__ == "__main__":
     output_dir = r"best-ebus\scenario\sumo\output"
 

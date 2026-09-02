@@ -2,8 +2,14 @@
 Tkinter dashboard for the eBuS analysis pipeline.
 
 Lets you:
-    1. Pick a run's output folder (a `run_<timestamp>` folder created by
-       `EBusMain.order_output`, see `analysis/output_files.py`).
+    1. Pick a run's output folder: a `<description>run_<timestamp>` folder
+       (the description prefix is optional and arbitrary, e.g.
+       `validation_1051_run_2026-08-31-21-32-52`) holding one
+       `<seed>_directory` subfolder per seed, each with
+       `<seed>_multirun_<type>.xml` files, as produced by
+       `tools.order_output.order_output` (`SeedOutputFiles`, see
+       `analysis/output_files.py`). Each seed is listed as its own
+       selectable entry.
     2. Pick which analysis methods (from `dashboard.methods.METHODS`) to run
        against it, and run them in one batch.
 
@@ -11,12 +17,18 @@ Generated plots/files are written to `<output_folder>/plots`, matching
 `analysis/analysis_main.py`. Methods run with the "Agg" matplotlib backend,
 so `plt.show()` calls inside the analysis module are no-ops here - the
 dashboard is a headless batch runner, not a plot viewer.
+
+All console output produced while running is mirrored into
+`<output_folder>/plots/analysis_log.txt`, same as `analysis/analysis_main.py`
+used to do - a fresh log is written each time "Run selected methods" is
+clicked.
 """
 
 from __future__ import annotations
 
 import logging
 import queue
+import re
 import sys
 import traceback
 from pathlib import Path
@@ -34,13 +46,40 @@ SUMO_OUTPUT_DIR = SUMO_DIR / "output"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from analysis.output_files import OutputFiles
+from analysis.output_files import SeedOutputFiles
 from dashboard.methods import METHODS
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 _DONE = object()
+
+SEED_DIR_PATTERN = re.compile(r"^(\d+)_directory$")
+RUN_DIR_PATTERN = re.compile(r"run_(\d{4}-\d{2}-\d{2}-\d{2}-\d{2}-\d{2})$")
+
+
+def _seed_dirs(run_dir: Path) -> list[str]:
+    """Seed numbers of the `<seed>_directory` subfolders directly under run_dir, sorted numerically."""
+    if not run_dir.is_dir():
+        return []
+    seeds = []
+    for p in run_dir.iterdir():
+        if p.is_dir():
+            match = SEED_DIR_PATTERN.match(p.name)
+            if match:
+                seeds.append(match.group(1))
+    return sorted(seeds, key=int)
+
+
+def _load_run_files(path: Path):
+    """
+    Resolve the run-files dict for path using the per-seed layout.
+    Returns (resolver, message). Raises FileNotFoundError/ValueError if the
+    layout doesn't match.
+    """
+    resolver = SeedOutputFiles(path)
+    resolver.get_run_files()
+    return resolver, f"Valid multi-seed run (seed: {resolver.seed})"
 
 
 class QueueWriter:
@@ -56,6 +95,21 @@ class QueueWriter:
 
     def flush(self):
         pass
+
+
+class _Tee:
+    """File-like object that mirrors writes to multiple streams."""
+
+    def __init__(self, *streams):
+        self._streams = streams
+
+    def write(self, text):
+        for stream in self._streams:
+            stream.write(text)
+
+    def flush(self):
+        for stream in self._streams:
+            stream.flush()
 
 
 class QueueLogHandler(logging.Handler):
@@ -103,6 +157,7 @@ class Dashboard(ttk.Frame):
         super().__init__(root, padding=10)
         self.root = root
         self.output_dir: Path | None = None
+        self._run_entries: dict[str, Path] = {}
         self.log_queue: queue.Queue = queue.Queue()
         self.method_vars: dict[str, tk.BooleanVar] = {}
 
@@ -159,20 +214,32 @@ class Dashboard(ttk.Frame):
         self._refresh_runs()
 
     def _refresh_runs(self):
-        runs: list[str] = []
+        entries: dict[str, Path] = {}
         if SUMO_OUTPUT_DIR.is_dir():
-            runs = sorted(
-                (p.name for p in SUMO_OUTPUT_DIR.iterdir() if p.is_dir() and p.name.startswith("run_")),
-                reverse=True,
-            )
-        self.run_combo["values"] = runs
-        if not runs:
+            timestamps: dict[Path, str] = {}
+            for p in SUMO_OUTPUT_DIR.iterdir():
+                if p.is_dir():
+                    match = RUN_DIR_PATTERN.search(p.name)
+                    if match:
+                        timestamps[p] = match.group(1)
+            run_dirs = sorted(timestamps, key=lambda p: timestamps[p], reverse=True)
+            for run_dir in run_dirs:
+                seeds = _seed_dirs(run_dir)
+                if seeds:
+                    for seed in seeds:
+                        entries[f"{run_dir.name} / seed {seed}"] = run_dir / f"{seed}_directory"
+                else:
+                    entries[run_dir.name] = run_dir
+
+        self._run_entries = entries
+        self.run_combo["values"] = list(entries.keys())
+        if not entries:
             self.run_combo.set("")
 
     def _on_run_selected(self, _event=None):
-        name = self.run_combo.get()
-        if name:
-            self._set_output_dir(SUMO_OUTPUT_DIR / name)
+        path = self._run_entries.get(self.run_combo.get())
+        if path:
+            self._set_output_dir(path)
 
     def _browse_output_dir(self):
         initial_dir = SUMO_OUTPUT_DIR if SUMO_OUTPUT_DIR.is_dir() else SCENARIO_ROOT
@@ -185,12 +252,11 @@ class Dashboard(ttk.Frame):
         self.output_dir = path
         self.output_dir_var.set(str(path))
         try:
-            files = OutputFiles(path)
-            files.get_run_files()
+            _, message = _load_run_files(path)
         except (FileNotFoundError, ValueError) as exc:
             self.status_var.set(f"✗ Not a valid run folder: {exc}")
         else:
-            self.status_var.set(f"✓ Valid run (timestamp: {files.timestamp})")
+            self.status_var.set(f"✓ {message}")
 
     # -- methods section -----------------------------------------------------
 
@@ -264,31 +330,35 @@ class Dashboard(ttk.Frame):
 
     def _worker(self, methods, output_dir: Path):
         original_stdout = sys.stdout
-        sys.stdout = QueueWriter(self.log_queue)
-        try:
+        plots_dir = output_dir / "plots"
+        plots_dir.mkdir(exist_ok=True)
+        log_path = plots_dir / "analysis_log.txt"
+
+        with open(log_path, "w", encoding="utf-8") as log_file:
+            sys.stdout = _Tee(QueueWriter(self.log_queue), log_file)
             try:
-                files = OutputFiles(output_dir).get_run_files()
-            except Exception:
-                self.log_queue.put(f"Could not read run files from {output_dir}:")
-                self.log_queue.put(traceback.format_exc())
-                return
-
-            plots_dir = output_dir / "plots"
-            plots_dir.mkdir(exist_ok=True)
-
-            for method in methods:
-                self.log_queue.put(f"=== Running: {method.name} ===")
                 try:
-                    method.func(files, SUMO_DIR, plots_dir)
-                    self.log_queue.put(f"[OK] {method.name}")
+                    files = _load_run_files(output_dir)[0].get_run_files()
                 except Exception:
-                    self.log_queue.put(f"[FAILED] {method.name}")
-                    self.log_queue.put(traceback.format_exc())
+                    print(f"Could not read run files from {output_dir}:")
+                    print(traceback.format_exc())
+                    return
 
-            self.log_queue.put("=== All selected methods finished. ===")
-        finally:
-            sys.stdout = original_stdout
-            self.log_queue.put(_DONE)
+                for method in methods:
+                    log_file.write(f"# {method.name}\n")
+                    print(f"=== Running: {method.name} ===")
+                    try:
+                        method.func(files, SUMO_DIR, plots_dir)
+                        print(f"[OK] {method.name}")
+                    except Exception:
+                        print(f"[FAILED] {method.name}")
+                        print(traceback.format_exc())
+                    log_file.write("\n")
+
+                print("=== All selected methods finished. ===")
+            finally:
+                sys.stdout = original_stdout
+                self.log_queue.put(_DONE)
 
     def _poll_log_queue(self):
         while True:

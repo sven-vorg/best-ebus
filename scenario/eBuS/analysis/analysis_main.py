@@ -69,7 +69,7 @@ def main(
     Run the complete analysis pipeline.
 
     output_dir: the run_<timestamp> folder (created by
-        EBusMain.order_output) containing that run's SUMO/ESS output files.
+        tools.order_output.order_output) containing that run's SUMO/ESS output files.
     sumo_dir: the base sumo directory, used to locate the electric
         network files and bus stops that are shared across runs.
     """
@@ -145,6 +145,7 @@ def main(
         with _logged_section("Analyse trip info", log_file):
             ti = TripInfo(file_dict["tripinfo"])
             ti.plot_route_length_vs_energy(save_path=plots_dir / "route_length_vs_energy.pdf")
+            ti.plot_efficiency_boxplot(save_path=plots_dir / "efficiency_boxplot.pdf")
             ti.calculate_energy_efficiency()
 
         # 7. Plot infrastructure map (bus stops, charging stations, depots)

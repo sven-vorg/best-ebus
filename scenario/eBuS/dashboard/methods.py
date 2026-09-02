@@ -2,7 +2,7 @@
 Registry of analysis methods available to the dashboard.
 
 Each entry wires one plotting/analysis call from the `analysis` package to a
-run's output files (as produced by `EBusMain.order_output`, see
+run's output files (as produced by `tools.order_output.order_output`, see
 `analysis/output_files.py`) and to the shared `sumo/electric` network files.
 
 To add a new method to the dashboard: write a small wrapper function with
@@ -13,6 +13,7 @@ code needs to change - it will show up in the method list automatically.
 
 from __future__ import annotations
 
+import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -25,6 +26,9 @@ from analysis.infrastructure_map import InfrastructureMap
 from analysis.sumo_inbuilds import SumoInbuilds
 from analysis.trip_info import TripInfo
 from analysis.vehicle_soc import VehicleSOC
+
+EBUS_DIR = Path(__file__).resolve().parent.parent  # eBuS/
+PV_DATA_DIR = EBUS_DIR / "pv_estimation" / "data"
 
 
 @dataclass(frozen=True)
@@ -46,6 +50,19 @@ def _routes_path(sumo_dir: Path) -> Path:
 
 def _busstops_path(sumo_dir: Path) -> Path:
     return sumo_dir / "berlin_bus_stops.add.xml"
+
+
+def _pv_csv_path() -> Path:
+    """
+    The raw PV input CSV for whichever pv_start_date is currently
+    configured in ebus_config.toml (the date EnergyStorageSystem would
+    use for a new run - not necessarily the date an existing run's ESS
+    output was actually built with, since that isn't recorded anywhere).
+    """
+    with open(EBUS_DIR / "ebus_config.toml", "rb") as f:
+        config = tomllib.load(f)
+    start_date = config["main"]["pv_start_date"]
+    return PV_DATA_DIR / f"{start_date}_solar_power_v6_scaled.csv"
 
 
 # --- SUMO inbuilt tools ------------------------------------------------
@@ -102,6 +119,12 @@ def _route_length_vs_energy(files, sumo_dir, plots_dir):
     )
 
 
+def _efficiency_boxplot(files, sumo_dir, plots_dir):
+    TripInfo(files["tripinfo"]).plot_efficiency_boxplot(
+        save_path=plots_dir / "efficiency_boxplot.pdf"
+    )
+
+
 def _energy_efficiency(files, sumo_dir, plots_dir):
     TripInfo(files["tripinfo"]).calculate_energy_efficiency()
 
@@ -152,6 +175,18 @@ def _pv_power(files, sumo_dir, plots_dir):
     ESSPV(files["ess"], stations_path=_stations_path(sumo_dir)).plot_pv_power(
         save_path=plots_dir / "pv_power.pdf"
     )
+
+
+def _pv_power_per_station(files, sumo_dir, plots_dir):
+    ESSPV(files["ess"], stations_path=_stations_path(sumo_dir)).plot_pv_power_per_station(
+        save_path=plots_dir / "pv_power_per_station.pdf"
+    )
+
+
+def _raw_pv_data(files, sumo_dir, plots_dir):
+    ESSPV(
+        files["ess"], stations_path=_stations_path(sumo_dir), pv_csv_path=_pv_csv_path()
+    ).plot_raw_pv_data(save_path=plots_dir / "raw_pv_data.pdf")
 
 
 # --- Charging station maps --------------------------------------------
@@ -234,6 +269,10 @@ METHODS: list[AnalysisMethod] = [
         "Scatter plot of route length vs. total energy consumed per bus, colored by vehicle type.",
     ),
     AnalysisMethod(
+        "Efficiency boxplot", "Trip info", _efficiency_boxplot,
+        "Boxplot of energy consumption per km (kWh/km) per vehicle type, with quartile stats printed to the log.",
+    ),
+    AnalysisMethod(
         "Energy efficiency", "Trip info", _energy_efficiency,
         "Print average energy efficiency (kWh/km) per vehicle type.",
     ),
@@ -268,6 +307,15 @@ METHODS: list[AnalysisMethod] = [
     AnalysisMethod(
         "PV power by station", "ESS / PV", _pv_power,
         "PV power generated (kW) over time, per station, excluding depots.",
+    ),
+    AnalysisMethod(
+        "PV power per station (normalized)", "ESS / PV", _pv_power_per_station,
+        "Normalized PV generation curve (power / peak) per station, thin colored lines.",
+    ),
+    AnalysisMethod(
+        "Raw PV input data", "ESS / PV", _raw_pv_data,
+        "Raw hourly PV input data (pre-simulation) per station, for the pv_start_date "
+        "currently configured in ebus_config.toml.",
     ),
     AnalysisMethod(
         "Energy map", "Charging station maps", _energy_map,
