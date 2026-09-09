@@ -10,7 +10,8 @@ TOTAL_MINUTES = 1740
 
 
 def parse_pv_data(csv_path) -> dict[str, list[float]]:
-    """Read the PV CSV and return {station_id: [hourly PV values in chronological order]}."""
+    """Read the PV CSV and return {station_id: [hourly PV values in chronological order]}.
+    PV Data is in Wh"""
     df = pd.read_csv(csv_path)
     df = df.set_index('station_id')
     df = df.drop(columns=["peak_power"])
@@ -18,7 +19,8 @@ def parse_pv_data(csv_path) -> dict[str, list[float]]:
     return {str(station_id): row.astype(float).tolist() for station_id, row in df.iterrows()}
 
 def parse_peak_power(csv_path) -> dict[str, float]:
-    """Read the PV CSV and return {station_id: peak_power}."""
+    """Read the PV CSV and return {station_id: peak_power}.
+    Peak Power is in kW"""
     df = pd.read_csv(csv_path, usecols=["station_id", "peak_power"])
     df = df.set_index('station_id')
     return {str(station_id): power for station_id, power in df["peak_power"].astype(float).items()}
@@ -81,7 +83,7 @@ class EnergyStorageSystem:
         if ess_factor is None:
             raise ValueError("Either ess_factor or ess_capacity must be provided.")
         return {
-            station.id: self.peak_power[station.id] * ess_factor * 1000
+            station.id: self.peak_power[station.id] * ess_factor * 1000 # Capacity in Wh
             for station in charging_stations
         }
 
@@ -173,6 +175,7 @@ class EnergyStorageSystem:
                 rows.append({
                     "station_id": station.id,
                     "capacity": capacity,
+                    "pv_peak_power": self.peak_power[station.id],
                     "timestep_min": t,
                     "pv_generated": pv[t],
                     "energy_charged": load[t],
