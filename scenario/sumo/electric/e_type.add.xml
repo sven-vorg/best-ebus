@@ -16,6 +16,11 @@
         <param key="device.battery.maximumChargeRate" value="150000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
         <param key="device.battery.chargeCurveTable" value="150000 150000 120000"/>
+        <!-- Device Stationfinder -->
+        <param key="has.stationfinder.device" value="true"/>
+        <param key="device.stationfinder.chargingStrategy" value="balanced"/>
+        <param key="device.stationfinder.needToChargeLevel" value="0.0"/>
+        <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
     <vType id="SolarsisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
@@ -33,6 +38,11 @@
         <param key="device.battery.maximumChargeRate" value="250000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
         <param key="device.battery.chargeCurveTable" value="250000 250000 200000"/>
+        <!-- Device Stationfinder -->
+        <param key="has.stationfinder.device" value="true"/>
+        <param key="device.stationfinder.chargingStrategy" value="balanced"/>
+        <param key="device.stationfinder.needToChargeLevel" value="0.0"/>
+        <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
     <vType id="SolarsisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
@@ -50,5 +60,10 @@
         <param key="device.battery.maximumChargeRate" value="260000"/>   
         <param key="device.battery.chargeLevelTable" value="0 0.8 1"/>
         <param key="device.battery.chargeCurveTable" value="260000 260000 208000"/>
+        <!-- Device Stationfinder -->
+        <param key="has.stationfinder.device" value="true"/>
+        <param key="device.stationfinder.chargingStrategy" value="balanced"/>
+        <param key="device.stationfinder.needToChargeLevel" value="0.0"/>
+        <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 </additional>

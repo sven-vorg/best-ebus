@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> 
+  <vehicle id="bus_1051" type="SolarsisUrbino12electric" route="bus_1051_route" depart="15229" color="1,0,0">
+    <param key="device.battery.chargeLevel" value="240000.0"/>
+  </vehicle>
+</routes>

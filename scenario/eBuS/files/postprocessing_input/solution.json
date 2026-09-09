@@ -11,8 +11,8 @@
             "periode": 1,
             "busse_gesamt": 217,
             "busse_je_typ": {
-              "Ebusco_12_525": 40,
-              "Solaris_12_300": 34,
+              "Ebusco_12_525": 44,
+              "Solaris_12_300": 30,
               "Solaris_18_528": 143
             },
             "bus_ids": [
@@ -244,8 +244,8 @@
             "periode": 1,
             "busse_gesamt": 172,
             "busse_je_typ": {
-              "Ebusco_12_525": 31,
-              "Solaris_12_300": 20,
+              "Ebusco_12_525": 32,
+              "Solaris_12_300": 19,
               "Solaris_18_528": 121
             },
             "bus_ids": [
@@ -430,7 +430,7 @@
   "bus_assignments": [
     {
       "bus_id": 1001,
-      "bus_type_name": "Solaris_12_300",
+      "bus_type_name": "Ebusco_12_525",
       "period": 1,
       "trip_sequence": [
         5719,
@@ -517,7 +517,7 @@
     },
     {
       "bus_id": 1004,
-      "bus_type_name": "Solaris_12_300",
+      "bus_type_name": "Ebusco_12_525",
       "period": 1,
       "trip_sequence": [
         5487,
@@ -1329,7 +1329,7 @@
     },
     {
       "bus_id": 1031,
-      "bus_type_name": "Solaris_12_300",
+      "bus_type_name": "Ebusco_12_525",
       "period": 1,
       "trip_sequence": [
         1407,
@@ -1542,7 +1542,7 @@
     },
     {
       "bus_id": 1038,
-      "bus_type_name": "Solaris_12_300",
+      "bus_type_name": "Ebusco_12_525",
       "period": 1,
       "trip_sequence": [
         4896,
@@ -1758,7 +1758,7 @@
     },
     {
       "bus_id": 1045,
-      "bus_type_name": "Solaris_12_300",
+      "bus_type_name": "Ebusco_12_525",
       "period": 1,
       "trip_sequence": [
         4155,
