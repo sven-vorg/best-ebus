@@ -216,11 +216,14 @@ class BuildRoutes:
         return stops
 
     # WORKAROUND
-    def _enforce_monotonic_until(self, stops: list[dict], buffer: float = 1.0) -> list[dict]:
+    def _enforce_monotonic_until(self, stops: list[dict], buffer: float = 1.0, max_until: float = 104400) -> list[dict]:
         """
         Stellt sicher, dass 'until'-Werte über die Liste hinweg nicht sinken.
         Sinkt ein Wert gegenüber dem vorherigen, wird ein Buffer aufaddiert
         und als Offset auf diesen und alle folgenden Stops angewendet.
+        Werte werden zusätzlich auf max_until (Ende des Simulationstages)
+        gedeckelt, damit der aufaddierte Offset spätere Stops nicht darüber
+        hinausschiebt.
         """
         offset = 0.0
         prev_until = None
@@ -232,6 +235,8 @@ class BuildRoutes:
                 correction = (prev_until - until_val) + buffer
                 offset += correction
                 until_val += correction
+
+            until_val = min(until_val, max_until)
 
             s["until"] = str(until_val)
             prev_until = until_val
