@@ -38,13 +38,14 @@ class ChargingStations():
         self.ALLOW_DEPOT_CHARGING = allow_depot_charging
         self.DEPOT_TOTAL_POWER_FACTOR = depot_total_power_factor
 
-    def station_id_lookup(self, terminationpoints_path: str) -> dict:
+    def station_id_lookup(self, station_id_mapping_path: str) -> dict:
         """
-        Loads the termination points file and returns a dict mapping
-        short station IDs (as strings, e.g. "1", "16") to their long
-        canonical IDs (e.g. "agg_10045_25_11089_9_12475_23").
+        Loads the station ID mapping file (station_id_mapping.txt) and
+        returns its "stops" section: a dict mapping short station IDs
+        (as strings, e.g. "1", "16") to their long canonical IDs
+        (e.g. "agg_10045_25_11089_9_12475_23").
         """
-        with open(terminationpoints_path, "r") as file:
+        with open(station_id_mapping_path, "r") as file:
             data = json.load(file)
         return data["stops"]
 
@@ -62,7 +63,7 @@ class ChargingStations():
                     if long_id is None:
                         raise KeyError(
                             f"station_id '{short_id}' not found in station_id_mapping "
-                            f"(loaded from termination points file)"
+                            f"(loaded from station_id_mapping.txt 'stops' section)"
                         )
                     charging_locations.add(long_id)
         return charging_locations
@@ -117,7 +118,7 @@ class ChargingStations():
                 name="Depot Cicerostraße",
                 lane="E1.51_0",
                 startPos="5",
-                endPos="375",
+                endPos="500",
                 power=str(depot_power),
                 totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
                 efficiency="0.95",
@@ -136,7 +137,7 @@ class ChargingStations():
                 name="Depot Müllerstraße",
                 lane="-E19_0",
                 startPos="5",
-                endPos="575",
+                endPos="900",
                 power=str(depot_power),
                 totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
                 efficiency="0.95",
