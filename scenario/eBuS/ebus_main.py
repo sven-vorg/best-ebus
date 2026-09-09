@@ -17,7 +17,6 @@ import logging
 
 from lxml import etree
 
-from analysis.analysis_main import main as run_full_analysis
 from analysis.output_files import SeedOutputFiles
 
 from pv_estimation.pvgis_api_v6 import PVGISApiCall
@@ -40,25 +39,28 @@ EBUS_DIR = SCENARIO_ROOT / "eBuS"
 FILES_DIR = EBUS_DIR / "files"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 
-CONFIG_PATH = PROJECT_ROOT / "ebus_config.toml"
-with open(CONFIG_PATH, "rb") as f:
-    CONFIG = tomllib.load(f)
+SCENARIO_CONFIG_NAMES = (
+    "ebus_config_noDepot.toml",
+)
+
 
 class EBusMain:
-    def __init__(self) -> None:
-        """Create an eBuS controller."""
+    def __init__(self, config_path: Path) -> None:
+        """Create an eBuS controller for the scenario defined in config_path."""
+        with open(config_path, "rb") as f:
+            self.config = tomllib.load(f)
 
     def main(self):
-        PV_START_DATE: date = CONFIG["main"]["pv_start_date"]
+        pv_start_date: date = self.config["main"]["pv_start_date"]
         self.run_heuristic_preprocessing()
         self.run_heuristic_postprocessing()
         self.run_update_types()
         self.run_simulation_seeds()
         run_dir = order_output(SUMO_OUTPUT_DIR)
-        self.run_pvgis_api_call(start_date=PV_START_DATE)
+        self.run_pvgis_api_call(start_date=pv_start_date)
         for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
             self.run_aggreate_battery(seed_dir)
-            self.run_energy_storage_system(seed_dir, start_date=PV_START_DATE)
+            self.run_energy_storage_system(seed_dir, start_date=pv_start_date)
 
     def run_heuristic_preprocessing(self):
         routes_file: Path = SUMO_DIR / "berlin_bus.rou.xml"
@@ -67,8 +69,8 @@ class EBusMain:
 
         termination_points: Path = FILES_DIR / "preprocessing_input/termination_points.txt"
 
-        depots: tuple[str, ...] = tuple(CONFIG["heuristic_preprocessing"]["depots"])
-        selected_lines: dict[str, list[str]] = CONFIG["heuristic_preprocessing"]["lines"]
+        depots: tuple[str, ...] = tuple(self.config["heuristic_preprocessing"]["depots"])
+        selected_lines: dict[str, list[str]] = self.config["heuristic_preprocessing"]["lines"]
 
         output_dir: Path = FILES_DIR / "postprocessing_input"
 
@@ -97,7 +99,7 @@ class EBusMain:
 
         trip_file = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/trips_vbb.txt").resolve()
 
-        cfg = CONFIG["heuristic_postprocessing"]
+        cfg = self.config["heuristic_postprocessing"]
         soc_percentage: int = cfg["soc_percentage"]
 
         merged_routes: Path = (PROJECT_ROOT / "../eBuS/files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
@@ -149,7 +151,8 @@ class EBusMain:
         constantPowerIntake param of every vType in e_type.add.xml.
         """
         type_file: Path = SUMO_DIR / "electric" / "e_type.add.xml"
-        constant_power_intake: int = CONFIG["update_types"]["Constant Power Intake"]
+
+        constant_power_intake: int = self.config["update_types"]["Constant Power Intake"]
 
         tree = etree.parse(str(type_file))
         params = tree.getroot().xpath(".//vType/param[@key='constantPowerIntake']")
@@ -173,7 +176,7 @@ class EBusMain:
         output_file = files.output_dir / battery_file.name.replace(
             "_battery.xml", "_battery_aggregated.xml"
         )
-        interval = CONFIG["aggregate_battery"]["interval"]
+        interval = self.config["aggregate_battery"]["interval"]
 
         aggregate(battery_file, output_file, interval)
         logger.info(f"Aggregated battery data written to {output_file}")
@@ -207,7 +210,7 @@ class EBusMain:
         )
         pv_csv_path = PV_DATA_DIR / f"{start_date}_solar_power_v6_scaled.csv"
 
-        cfg = CONFIG["energy_storage_system"]
+        cfg = self.config["energy_storage_system"]
         EnergyStorageSystem(
             charging_stations=ChargingStation.from_xml(chargingstations_file),
             ess_factor=cfg.get("ess_factor"),  # each station's ESS = ess_factor * that station's Peak Power (kWh)
@@ -238,7 +241,7 @@ class EBusMain:
         logger.info("from %s directory.", sumo_bin)
         config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
         #config_path = (PROJECT_ROOT / "../sumo/e_validation.sumocfg").resolve()
-        cfg = CONFIG["run_simulation_seeds"]
+        cfg = self.config["run_simulation_seeds"]
         # runSeeds.py expects a comma-separated list (or a "start:stop" range);
         # the config stores seeds as a space-separated list, so convert here.
         seeds: str = ",".join(cfg["seeds"].split())
@@ -268,6 +271,7 @@ class EBusMain:
             logger.error(result.stderr)
 
 if __name__ == "__main__":
-    EBusMain().main()
+    for config_name in SCENARIO_CONFIG_NAMES:
+        EBusMain(PROJECT_ROOT / config_name).main()
 
     
