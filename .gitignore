@@ -35,3 +35,5 @@ scenario/sumo/electric/e_vehicles.rou.xml
 scenario/sumo/e_berlin.rou.alt.gz
 scenario/sumo/e_berlin.rou.gz
 scenario/sumo/e_berlin_extended.rou.gz
+scenario/eBuS/database/eBuS.duckdb
+scenario/eBuS/significanceTest.txt
