@@ -74,7 +74,7 @@ total_power_factor = 4.0
 #despawn_offset = 200
 # Whether the depot charging stations are allowed to charge buses.
 # Set to false to simulate depots without charging capability.
-allow_depot_charging = true
+allow_depot_charging = false
 # Factor for total power available at depot charging stations.
 # Determines how many buses may charge at a depot simultaneously.
 depot_total_power_factor = 10.0
