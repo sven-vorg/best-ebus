@@ -57,3 +57,9 @@ GROUP BY
 ORDER BY
     scenario,
     seed;
+
+
+SELECT
+    *
+    FROM main.multirun_tripinfo
+    WHERE depleted = 1
