@@ -63,7 +63,7 @@ chargingstation_power = 250000
 # Determines how fast multiple buses charge.
 # (Should someday be individualised)
 # Untested for values <1
-total_power_factor = 4.0
+total_power_factor = 6.0
 # Seconds to pull eligible vehicles' spawn earlier than their latest
 # possible depot-exit time
 #leave unset to disable staggering
@@ -86,7 +86,7 @@ interval = 60
 
 [energy_storage_system]
 # Each station's ESS = ess_factor * that station's Peak Power (kWh)
-ess_factor = 2.0
+ess_factor = 4.0
 # uncomment to set a static capacity (Wh) for every station instead
 # ess_capacity = 500000
 # fraction (0.0-1.0) of each station's own ESS capacity
