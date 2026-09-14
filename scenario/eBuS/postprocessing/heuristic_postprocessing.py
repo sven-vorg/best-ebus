@@ -84,11 +84,13 @@ class HeuristicPostprocessing:
 
         br = BuildRoutes(
             solution_path=self.input_path,
-            tripp_dict=self.input_dict,
-            deadhead_path=self.deadhead_path,
-            merged_routes=self.merged_routes,
-            e_routes_output=self.merged_routes_output,
-            despawn_offset=self.despawn_offset,
+            station_id_map_path=self.station_id_path,
+            trips_path=self.input_dict,
+            routes_path=self.merged_routes,
+            deadhead_timing_path=self.deadhead_path,
+
+            output_path=self.merged_routes_output,
+
         )
         br.main()
         

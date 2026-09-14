@@ -40,7 +40,10 @@ FILES_DIR = EBUS_DIR / "files"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 
 SCENARIO_CONFIG_NAMES = (
-    "ebus_config_noDepot.toml",
+    "ebus_config_winter.toml",
+    "ebus_config_summer.toml",
+    "ebus_config_reduced.toml",
+    "ebus_config_increased.toml",
 )
 
 
@@ -179,7 +182,9 @@ class EBusMain:
         interval = self.config["aggregate_battery"]["interval"]
 
         aggregate(battery_file, output_file, interval)
+        os.remove(battery_file)
         logger.info(f"Aggregated battery data written to {output_file}")
+
 
     def run_pvgis_api_call(self, start_date: date):
         """

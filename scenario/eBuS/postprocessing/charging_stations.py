@@ -118,7 +118,7 @@ class ChargingStations():
                 name="Depot Cicerostraße",
                 lane="E1.51_0",
                 startPos="5",
-                endPos="500",
+                endPos="900",
                 power=str(depot_power),
                 totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
                 efficiency="0.95",

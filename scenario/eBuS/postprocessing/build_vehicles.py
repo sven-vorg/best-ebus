@@ -99,13 +99,7 @@ class BuildVehicles:
         )
 
     def calculate_departure(self, bus, offset = None) -> int:
-        """
-        Computes the vehicle's depart time so that its last deadhead of the
-        (previous) simulated day loops into the start of the current one:
-        last trip_end + deadhead (last stop -> end depot) - one day.
-        Can apply an offset to space out vehicle departure in the beginning of the day.
-        Only applys to vehicles that leave after offset and do have enough time till departure.
-        """
+
         trip_sequence: list = bus["trip_sequence"]
         end_depot = self.DEPOTS[bus["end_depot"]]
         start_depot = self.DEPOTS[bus["start_depot"]]
@@ -121,16 +115,10 @@ class BuildVehicles:
         deadhead_start = self.stations_to_time[(start_depot, first_trip_start_stop)]
 
         overflow = (last_trip_end_time + deadhead_end) - DAY_LENGTH
-        if offset:
-            if overflow - offset> 0:
-                return int(overflow-offset)
-            else:
-                return int(max(first_trip_start_time - deadhead_start - offset, 0))
+        if overflow > 0 and overflow < (first_trip_start_time - deadhead_start - 100): 
+            return int(overflow)
         else:
-            if overflow > 0:
-                return int(overflow)
-            else:
-                return 0
+            return 0
 
     def run_sort_routes(self, root: etree.Element) -> None:
         """
