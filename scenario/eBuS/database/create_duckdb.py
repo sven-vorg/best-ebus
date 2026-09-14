@@ -3,7 +3,7 @@ import re
 import duckdb
 
 
-SCENARIOS = ("summer", "winter", "reduced", "full", "storage", "nodepot")
+SCENARIOS = ("increased", "winter", "reduced", "summer")
 
 
 def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
@@ -17,8 +17,6 @@ def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
 
         for csv_file in csv_files:
             # Expected layout: {scenario}_run_{timestamp}/{seed}_directory/{seed}_multirun_{datatype}.csv
-            if csv_file.name.endswith("ess.csv"):
-                continue
             relative_path = csv_file.relative_to(output_dir)
             scenario_match = re.match(
                 rf"({'|'.join(SCENARIOS)})_run_", relative_path.parts[0], re.IGNORECASE
@@ -75,4 +73,5 @@ def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
     finally:
         con.close()
 
-import_csvs_into_db(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output", r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb")
+#import_csvs_into_db(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output", r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb")
+import_csvs_into_db(Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\output"), Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb"))

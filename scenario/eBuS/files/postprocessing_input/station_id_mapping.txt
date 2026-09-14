@@ -88,8 +88,8 @@
     "76": 1
   },
   "stops": {
-    "1": "depot_cicerostrasse",
-    "2": "depot_muellerstrasse",
+    "1": "bs_cicerostrasse",
+    "2": "bs_muellerstrasse",
     "3": "10661_32",
     "4": "10663_0",
     "5": "10785_23",

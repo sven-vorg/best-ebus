@@ -103,7 +103,7 @@ efficiency = 0.95
 [update_types]
 # Constant auxiliary power draw (W) written to every vType's
 # constantPowerIntake param in sumo/electric/e_type.add.xml
-"Constant Power Intake" = 2000
+"Constant Power Intake" = 5000
 
 [run_simulation_seeds]
 # Space-separated list of seeds to run the simulation with, e.g. "161".

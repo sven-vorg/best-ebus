@@ -152,10 +152,12 @@ class EnergyStorageSystem:
                 net = pv[t] - load[t]
                 grid_draw = 0.0
                 curtailed_pv = 0.0
+                energy_charged_storage = 0.0
                 if net >= 0:
                     headroom = capacity - soc
                     stored = min(net * charge_efficiency, headroom)
                     soc += stored
+                    energy_charged_storage += stored
                     curtailed_pv = net - stored / charge_efficiency
                 else:
                     deficit = -net
@@ -178,7 +180,8 @@ class EnergyStorageSystem:
                     "pv_peak_power": self.peak_power[station.id],
                     "timestep_min": t,
                     "pv_generated": pv[t],
-                    "energy_charged": load[t],
+                    "energy_charged_bus": load[t],
+                    "energy_charged_storage": energy_charged_storage,
                     "ess_soc": soc,
                     "grid_energy_drawn": grid_draw,
                     "grid_power_kw": grid_draw * MINUTES_PER_HOUR / 1000,
@@ -203,7 +206,8 @@ class EnergyStorageSystem:
                         f'id="{row.station_id}" '
                         f'capacity="{row.capacity}" '
                         f'pvGenerated="{row.pv_generated:.6f}" '
-                        f'energyCharged="{row.energy_charged:.6f}" '
+                        f'energyChargedBus="{row.energy_charged_bus:.6f}" '
+                        f'energyChargedStorage="{row.energy_charged_storage:.6f}" '
                         f'essSoc="{row.ess_soc:.6f}" '
                         f'gridEnergyDrawn="{row.grid_energy_drawn:.6f}" '
                         f'gridPowerKw="{row.grid_power_kw:.6f}" '
