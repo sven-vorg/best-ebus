@@ -298,7 +298,7 @@ class EnergyConsumptionAnalysis:
 
         df["average_speed"] = df["tripinfo_routeLength"] / df["driving_time"]
 
-        for scenario in ["summer", "winter", "reduced"]:
+        for scenario in ["summer", "winter", "reduced", "storage", "nodepot"]:
             subset = df[df["scenario"] == scenario]
 
             print(scenario)

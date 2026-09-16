@@ -6,7 +6,8 @@ import numpy as np
 import pandas as pd
 
 DATABASE_PATH = "best-ebus/scenario/eBuS/database/eBuS.duckdb"
-OUTPUT_PATH = Path(r"C:\Users\svens\Nextcloud\Masterarbeit\Grafiken\NewPlots")
+#OUTPUT_PATH = Path(r"C:\Users\svens\Nextcloud\Masterarbeit\Grafiken\NewPlots")
+OUTPUT_PATH = Path(r"C:\Users\Ralop\Nextcloud\Masterarbeit\Grafiken\NewPlots")
 VEHICLE_DICT = {
     "Ebusco2.2electric12m": "Ebusco 2.2",
     "SolarsisUrbino12electric": "Urbino 12",

@@ -7,6 +7,11 @@ scenario/sumo/berlin_bus.rou.xml
 scenario/sumo/berlin.rou.gz
 scenario/eBuS/database/ebus.db
 
+scenario/eBuS/database/eBuS.duckdb
+
+scenario/eBuS/database/eBuS - Kopie.duckdb
+
+
 # Unchanging BeST Files
 scenario/sumo/berlin.sumocfg
 
@@ -17,6 +22,7 @@ scenario/sumo/cutouts/
 scenario/eBuS/files/postprocessing_input/termination_points.txt
 scenario/eBuS/files/postprocessing_input/deadhead_times.txt
 scenario/eBuS/files/postprocessing_input/e_preprocessed_routes.rou.xml
+scenario/eBuS/significanceTest.txt
 
 # Cached basemap rasters (re-downloaded automatically if missing)
 scenario/eBuS/files/basemaps/
@@ -25,6 +31,9 @@ scenario/eBuS/files/basemaps/
 scenario/sumo/electric/e_stations.add.xml
 scenario/sumo/electric/e_routes.rou.xml
 scenario/sumo/electric/e_vehicles.rou.xml
+scenario/sumo/e_berlin.rou.alt.gz
+scenario/sumo/e_berlin.rou.gz
+scenario/sumo/e_berlin_extended.rou.gz
 
 # Pycache Directorys
 **/__pycache__/
@@ -32,8 +41,4 @@ scenario/sumo/electric/e_vehicles.rou.xml
 
 # Draw.io temporary files
 **.bkp
-scenario/sumo/e_berlin.rou.alt.gz
-scenario/sumo/e_berlin.rou.gz
-scenario/sumo/e_berlin_extended.rou.gz
-scenario/eBuS/database/eBuS.duckdb
-scenario/eBuS/significanceTest.txt
+
