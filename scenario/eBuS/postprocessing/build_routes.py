@@ -43,6 +43,7 @@ class BuildRoutes:
             trip_stops.append(deadheads[3])
 
             self.remove_duplicate_edges(trip_edges)
+            self.remove_duplicate_stops(trip_stops)
 
 
             trip_edges_string = " ".join(trip_edges)
@@ -60,6 +61,29 @@ class BuildRoutes:
         deduplicated_edges = [edge for i, edge in enumerate(all_edges) if i == 0 or edge != all_edges[i - 1]]
         edges[:] = deduplicated_edges
 
+    def remove_duplicate_stops(self, stops):
+        if not stops:
+            return
+
+        deduplicated_stops = [stops[0]]
+        for stop in stops[1:]:
+            previous_stop = deduplicated_stops[-1]
+            if stop["busStop"] != previous_stop["busStop"]:
+                deduplicated_stops.append(stop)
+                continue
+
+            if "station_id" in stop:
+                if float(previous_stop["until"]) > float(stop["until"]):
+                    stop["until"] = previous_stop["until"]
+                deduplicated_stops[-1] = stop
+            elif "station_id" in previous_stop:
+                if float(stop["until"]) > float(previous_stop["until"]):
+                    previous_stop["until"] = stop["until"]
+            elif float(stop["until"]) > float(previous_stop["until"]):
+                deduplicated_stops[-1] = stop
+
+        stops[:] = deduplicated_stops
+    
     def build_depot_deadheads(self, bus, first_stop, last_stop):
         start_depot = self.station_id_dict[str(bus["start_depot"])]
         end_depot = self.station_id_dict[str(bus["end_depot"])]
@@ -82,6 +106,7 @@ class BuildRoutes:
         stops = [dict(stop) for stop in self.original_routes[original_trip_id]["stops"]]
         for stop in stops:
             stop["until"] = str(float(stop["until"]) + trip_departure_time)
+            stop["tripId"] = str(trip)
         charging_event = next(
             (
                 event for event in self.solution_dict["charging_events"]
@@ -96,8 +121,9 @@ class BuildRoutes:
         if charging_event is not None:
             charging_stop = {
                 "busStop": str(self.station_id_dict.get(str(charging_event["station_id"]))),
-                "until": str(int(charging_event["end_time"])*60),
-                "station_id": f"{charging_event["station_id"]}"
+                "until": str(int(charging_event["end_time"]*60)),
+                "station_id": f"{charging_event["station_id"]}",
+                "tripId": str(trip)
             }
             if charging_event["start_time"]*60 == trip_arrival_time:
                 stops.append(charging_stop)
