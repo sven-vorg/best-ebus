@@ -17,6 +17,9 @@
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
     <stop-output value="stopinfo.xml"/>
+    <emission-output value="emissions.xml"/>
+    <emission-output.attributes value="id, eclass, electricity, noise, route, type, waiting, lane, pos, speed, pos_x, pos_y"/>
+    <emission-output.geo value="true"/>
   </output>
   <time>
     <begin value="0.0"/>
