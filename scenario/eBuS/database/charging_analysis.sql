@@ -63,3 +63,17 @@ SELECT
     *
     FROM main.multirun_tripinfo
     WHERE depleted = 1
+
+
+SELECT * 
+    FROM "eBuS - Kopie"."main"."multirun_stopinfo"
+    WHERE stopinfo_id = 'bus_3066'
+    AND scenario = 'summer'
+    AND seed = '67'
+    ORDER BY stopinfo_started
+
+
+SELECT * FROM "eBuS - Kopie"."main"."multirun_tripinfo"
+    WHERE tripinfo_id = 'bus_3066'
+    AND scenario = 'summer'
+    AND seed = '67'
