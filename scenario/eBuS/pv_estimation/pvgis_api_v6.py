@@ -72,7 +72,7 @@ class PVGISApiCall:
                     params={
                         "latitude": latitude,
                         "longitude": longitude,
-                        "installation_height": 4, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
+                        "installation_height": 5, # Assumption is module installation above phantograph heigth, e.g. above heigth of bus roof
                         "start_time": self.start_time,
                         "end_time": self.end_time,
                         "surface_position_optimisation_mode": "Orientation & Tilt",

@@ -55,6 +55,7 @@ class EnergyStorageSystem:
         self.pv_data = None
         self.peak_power = None
         self.ess_df = None
+        self.solardata_date = None
 
     def main(self) -> pd.DataFrame:
         """Run the full ESS pipeline: load PV data, derive load/PV profiles,
