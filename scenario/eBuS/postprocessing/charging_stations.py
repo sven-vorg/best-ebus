@@ -25,6 +25,7 @@ class ChargingStations():
             total_power_factor: float = 2,
             allow_depot_charging: bool = True,
             depot_total_power_factor: float = 2,
+            inactive_list: list | None = None,
             ):
         self.net = sumolib.net.readNet(net)
         self.STATION_ROOT = etree.parse(station_root).getroot()
@@ -37,6 +38,7 @@ class ChargingStations():
         self.TOTAL_POWER_FACTOR = total_power_factor
         self.ALLOW_DEPOT_CHARGING = allow_depot_charging
         self.DEPOT_TOTAL_POWER_FACTOR = depot_total_power_factor
+        self.inactive_list = inactive_list or []
 
     def station_id_lookup(self, station_id_mapping_path: str) -> dict:
         """
@@ -65,7 +67,8 @@ class ChargingStations():
                             f"station_id '{short_id}' not found in station_id_mapping "
                             f"(loaded from station_id_mapping.txt 'stops' section)"
                         )
-                    charging_locations.add(long_id)
+                    if long_id not in self.inactive_list:
+                        charging_locations.add(long_id)
         return charging_locations
 
 

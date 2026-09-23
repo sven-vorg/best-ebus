@@ -1,10 +1,8 @@
 from __future__ import annotations
 import json
-import os
 import logging
 from pathlib import Path
 from typing import Any
-import subprocess
 import pandas as pd
 from lxml import etree
 
@@ -100,25 +98,19 @@ class BuildVehicles:
 
     def calculate_departure(self, bus, offset = None) -> int:
 
-        trip_sequence: list = bus["trip_sequence"]
-        end_depot = self.DEPOTS[bus["end_depot"]]
-        start_depot = self.DEPOTS[bus["start_depot"]]
+        if offset is None:
+            return 0
 
-        last_trip_id = trip_sequence[-1]
-        last_trip_end_stop = self.trip_to_end[last_trip_id]
-        last_trip_end_time = self.trip_to_arrival[last_trip_id]
-        deadhead_end = self.stations_to_time[(last_trip_end_stop, end_depot)]
+        trip_sequence: list = bus["trip_sequence"]
+        start_depot = self.DEPOTS[bus["start_depot"]]
 
         first_trip_id = trip_sequence[0]
         first_trip_start_stop = self.trip_to_start[first_trip_id]
         first_trip_start_time = self.trip_to_depart[first_trip_id]
         deadhead_start = self.stations_to_time[(start_depot, first_trip_start_stop)]
 
-        overflow = (last_trip_end_time + deadhead_end) - DAY_LENGTH
-        if overflow > 0 and overflow < (first_trip_start_time - deadhead_start - 100): 
-            return int(overflow)
-        else:
-            return 0
+        return max(0, int(first_trip_start_time - deadhead_start - offset))
+
 
     def run_sort_routes(self, root: etree.Element) -> None:
         """
@@ -155,9 +147,9 @@ class BuildVehicles:
         if bus_type == "Ebusco_12_525":
             return "Ebusco2.2electric12m"
         elif bus_type == "Solaris_12_300":
-            return "SolarsisUrbino12electric"
+            return "SolarisUrbino12electric"
         elif bus_type == "Solaris_18_528":
-            return "SolarsisUrbino18electric"
+            return "SolarisUrbino18electric"
         else:
             logger.warning(
                 "Unknown bus_type_name '%s' for bus %s; defaulting to Ebusco2.2electric12m", bus_type, bus_id)

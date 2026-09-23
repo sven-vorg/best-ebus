@@ -2,15 +2,26 @@ import json
 import pandas as pd
 from pathlib import Path
 from lxml import etree
+import math
 
 class BuildRoutes:
-    def __init__(self, solution_path: Path, station_id_map_path: Path, trips_path: Path, routes_path: Path, deadhead_timing_path: Path, output_path: Path):
+    def __init__(
+            self, 
+            solution_path: Path, 
+            station_id_map_path: Path, 
+            trips_path: Path, 
+            routes_path: Path, 
+            deadhead_timing_path: Path, 
+            output_path: Path,
+            despawn_offset: int | None,
+        ):
         self.solution_dict = self.parse_solution(solution_path)
         self.station_id_dict = self.parse_station_id_map(station_id_map_path)
         self.trips_df = pd.read_csv(trips_path, sep=";")
         self.original_routes = self.parse_routes(routes_path)
         self.deadhead_timings = pd.read_csv(deadhead_timing_path, sep=";")
         self.output_path = output_path
+        self.offset = despawn_offset
 
     def main(self):
         new_routes = {}
@@ -20,6 +31,15 @@ class BuildRoutes:
             trip_edges = []
             trip_stops = []
             previous_original_trip_id = None
+            charging_events = sorted(
+                (
+                    event
+                    for event in self.solution_dict["charging_events"]
+                    if event["bus_id"] == bus["bus_id"]
+                ),
+                key=lambda event: event["start_time"]
+            )
+
             for trip in bus["trip_sequence"]:
                 original_trip_id = self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "ORIGINAL_TRIP_ID"].iloc[0]
 
@@ -31,7 +51,7 @@ class BuildRoutes:
 
                 trip_edges.append(self.original_routes[original_trip_id]["edges"])
 
-                trip_stops.extend(self.build_stops(trip, original_trip_id, bus["bus_id"]))
+                trip_stops.extend(self.build_stops(trip, original_trip_id, bus["bus_id"], charging_events))
 
                 previous_original_trip_id = original_trip_id
 
@@ -91,14 +111,29 @@ class BuildRoutes:
         end_depot_edges = self.original_routes[f"{last_stop['busStop']}_{end_depot}"]["edges"]
         departure = {
             "busStop": start_depot, 
-            "until": f"{float(first_stop['until'])-self.deadhead_timings.loc[(self.deadhead_timings['FromStopID'] == start_depot) & (self.deadhead_timings['ToStopID'] == first_stop['busStop']), 'RunTime'].iloc[0]}"}
+            "until": f"{float(first_stop['until'])
+                        - self.deadhead_timings.loc[(self.deadhead_timings['FromStopID'] == start_depot) 
+                        & (self.deadhead_timings['ToStopID'] == first_stop['busStop']), 'RunTime'].iloc[0]}"}
+
+        if self.offset is None:
+                arrival_time = 104400
+        else:
+            run_time = self.deadhead_timings.loc[
+                (self.deadhead_timings["FromStopID"] == last_stop["busStop"])
+                & (self.deadhead_timings["ToStopID"] == end_depot),
+                "RunTime"
+            ].iloc[0]
+
+            arrival_time = min(104400, float(last_stop["until"]) + run_time + self.offset)
+
         arrival = {
             "busStop": end_depot,
-            "until": f"{float(last_stop['until'])+self.deadhead_timings.loc[(self.deadhead_timings['FromStopID'] == last_stop['busStop']) & (self.deadhead_timings['ToStopID'] == end_depot), 'RunTime'].iloc[0]}"
+            "until": f"{arrival_time}"
         }
+
         return start_depot_edges, end_depot_edges, departure, arrival
 
-    def build_stops(self, trip, original_trip_id, route_id):
+    def old_build_stops(self, trip, original_trip_id, route_id, charging_events):
 
         trip_departure_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "START_TIMESTAMP"].iloc[0])
         trip_arrival_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "END_TIMESTAMP"].iloc[0])
@@ -108,12 +143,11 @@ class BuildRoutes:
             stop["until"] = str(float(stop["until"]) + trip_departure_time)
             stop["tripId"] = str(trip)
         charging_event = next(
-            (
-                event for event in self.solution_dict["charging_events"]
+            (event for event in self.solution_dict["charging_events"]
                 if event["bus_id"] == route_id
                 and (
                     event["start_time"]*60 == trip_arrival_time
-                    or event["end_time"]*60 == trip_departure_time # may be to imprecise to find every match
+                    or event["end_time"]*60 == trip_departure_time
                 )
             ),
             None
@@ -129,7 +163,45 @@ class BuildRoutes:
                 stops.append(charging_stop)
             elif charging_event["end_time"]*60 == trip_departure_time:
                 stops.insert(0, charging_stop)
-        print(stops)
+        return stops
+
+    def build_stops(self, trip, original_trip_id, route_id, charging_events):
+
+        trip_departure_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "START_TIMESTAMP"].iloc[0])
+        trip_arrival_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "END_TIMESTAMP"].iloc[0])
+
+        stops = [dict(stop) for stop in self.original_routes[original_trip_id]["stops"]]
+        for stop in stops:
+            stop["until"] = str(float(stop["until"]) + trip_departure_time)
+            stop["tripId"] = str(trip)
+
+        if charging_events:
+            current_charging_event = charging_events[0]
+            #print(f"Charging Events present bus: {current_charging_event["bus_id"]}")
+   
+            charging_station_id = str(self.station_id_dict.get(str(current_charging_event["station_id"])))
+            if stops[0]["busStop"] == charging_station_id and trip_departure_time >= int(current_charging_event["end_time"])*60:
+                charging_stop = {
+                    "busStop": charging_station_id,
+                    "until": str(int(current_charging_event["end_time"]*60)),
+                    #"charging_event": f"{current_charging_event["bus_id"]}[{current_charging_event["station_id"]} start]",
+                    "tripId": str(trip)
+                }
+                stops.insert(0, charging_stop)
+                del charging_events[0]
+
+            elif stops[-1]["busStop"] == charging_station_id and trip_arrival_time <= int(current_charging_event["start_time"])*60:
+                charging_stop = {
+                    "busStop": charging_station_id,
+                    "until": str(int(current_charging_event["end_time"]*60)),
+                    #"charging_event": f"{current_charging_event["bus_id"]}[{current_charging_event["station_id"]} end]",
+                    "duration": str(int(current_charging_event["end_time"]*60)-int(current_charging_event["start_time"]*60)),
+                    "parking": "true",
+                    "tripId": str(trip)
+                }
+                stops.insert(-1, charging_stop)
+                del charging_events[0]
+
         return stops
 
     def build_xml_routes(self, new_routes, output_path):
