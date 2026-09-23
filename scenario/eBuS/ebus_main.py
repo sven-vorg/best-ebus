@@ -40,8 +40,8 @@ FILES_DIR = EBUS_DIR / "files"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 
 SCENARIO_CONFIG_NAMES = (
-    "ebus_config_winter.toml",
     "ebus_config_summer.toml",
+    "ebus_config_winter.toml",
     "ebus_config_reduced.toml",
     "ebus_config_increased.toml",
 )
@@ -125,6 +125,8 @@ class EBusMain:
 
         depot_total_power_factor: float = cfg.get("depot_total_power_factor", 2.0)
 
+        inactive_list: list = cfg.get("inactive_stations")
+
         HeuristicPostprocessing(
             network_file,
             stations_file,
@@ -145,6 +147,7 @@ class EBusMain:
             despawn_offset=despawn_offset,
             allow_depot_charging=allow_depot_charging,
             depot_total_power_factor=depot_total_power_factor,
+            inactive_list=inactive_list
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
