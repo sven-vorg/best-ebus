@@ -10,8 +10,8 @@ DATABASE_PATH = "best-ebus/scenario/eBuS/database/eBuS.duckdb"
 OUTPUT_PATH = Path(r"C:\Users\Ralop\Nextcloud\Masterarbeit\Grafiken\NewPlots")
 VEHICLE_DICT = {
     "Ebusco2.2electric12m": "Ebusco 2.2",
-    "SolarsisUrbino12electric": "Urbino 12",
-    "SolarsisUrbino18electric": "Urbino 18",
+    "SolarisUrbino12electric": "Urbino 12",
+    "SolarisUrbino18electric": "Urbino 18",
 }
 SCENARIOS = ["summer", "winter", "reduced", "increased"]
 
