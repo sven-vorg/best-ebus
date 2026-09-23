@@ -52,21 +52,15 @@ X83 = ["cicerostrasse", "GN"]
 # Starting State of Charge for Electric Buses in %
 soc_percentage = 80
 # Power that a single bus can be charged at in W
-# Actual power determined by buses power capability
 chargingstation_power = 250000 
 # Factor for total power available at all charging stations.
 # Determines how fast multiple buses charge.
-# (Should someday be individualised)
 # Untested for values <1
 total_power_factor = 4.0
-# Seconds to pull eligible vehicles' spawn earlier than their latest
-# possible depot-exit time
-#leave unset to disable staggering
-#offset = 200
+# Charging Time at Start-Depot
+#offset = 3600
 # Seconds added to a bus's final depot arrival before it despawns.
-# leave unset to disable
-# Values close to zero might have unforseen outcomes when buses are delayed
-#despawn_offset = 200
+#despawn_offset = 3600
 # Whether the depot charging stations are allowed to charge buses.
 # Set to false to simulate depots without charging capability.
 allow_depot_charging = true
