@@ -12,7 +12,7 @@ Dependencys:
 * [Eclipse Sumo (Version 1.27.0)](https://github.com/eclipse-sumo/sumo/tree/main/docs)
 * An electric Vehicle Scheduling Problem (eVSP) solving methode for a baseline solution
 * Online connectivity for [PVGIS-API](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en) calls
-* Day-ahead [pricing data](https://www.smard.de/en/downloadcenter/download-market-data/?downloadAttributes=%7B%22superCategoryId%22:3,%22subcategoryId%22:8,%22regionId%22:%22DE%22,%22resolution%22:%22hour%22,%22fileType%22:%22CSV%22,%22from%22:1783807200000,%22to%22:1784671200000%7D) for the german/luxembourg electricity market provided by the Bundesnetzagentur
+
 
 ## Instructions
 The **eBuS** directory contains most of the files and skripts needed to prepare and start a complete run of the **BeST-eBuS(cenario)**. An overview of the **eBuS** subdirectorys is provided in the *structur* sections.

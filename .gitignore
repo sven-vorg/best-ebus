@@ -41,4 +41,6 @@ scenario/sumo/e_berlin_extended.rou.gz
 
 # Draw.io temporary files
 **.bkp
-
+# DuckDB temporary files
+**.tmp
+**.wal
