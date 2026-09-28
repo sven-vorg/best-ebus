@@ -8,9 +8,8 @@ scenario/sumo/berlin.rou.gz
 scenario/eBuS/database/ebus.db
 
 scenario/eBuS/database/eBuS.duckdb
-
 scenario/eBuS/database/eBuS - Kopie.duckdb
-
+scenario/eBuS/database/eBuS - backup-nogrid.duckdb
 
 # Unchanging BeST Files
 scenario/sumo/berlin.sumocfg
@@ -44,3 +43,4 @@ scenario/sumo/e_berlin_extended.rou.gz
 # DuckDB temporary files
 **.tmp
 **.wal
+
