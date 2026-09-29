@@ -1,0 +1,211 @@
+flowchart LR
+    subgraph d_scenario["scenario/"]
+        subgraph d_scenario_eBuS["eBuS/"]
+            subgraph d_scenario_eBuS_analysis["analysis/"]
+                subgraph d_scenario_eBuS_analysis_chargingstations["chargingstations/"]
+                    n_scenario_eBuS_analysis_chargingstations_integrated_energy_hub_analysis_py["integrated_energy_hub_analysis.py"]
+                end
+            end
+            subgraph d_scenario_eBuS_database["database/"]
+                n_scenario_eBuS_database_create_duckdb_py["create_duckdb.py"]
+            end
+            subgraph d_scenario_eBuS_energy_storage_system["energy_storage_system/"]
+                n_scenario_eBuS_energy_storage_system_charging_event_py["charging_event.py"]
+                n_scenario_eBuS_energy_storage_system_charging_station_py["charging_station.py"]
+                n_scenario_eBuS_energy_storage_system_energy_storage_system_py["energy_storage_system.py"]
+            end
+            subgraph d_scenario_eBuS_files["files/"]
+                subgraph d_scenario_eBuS_files_postprocessing_input["postprocessing_input/"]
+                    n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt[("deadhead_times.txt")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml[("e_preprocessed_routes.rou.xml")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_id_mapping_txt[("id_mapping.txt")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv[("pv_area_estimation.csv")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt[("station_id_mapping.txt")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_termination_points_txt[("termination_points.txt")]:::data
+                    n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt[("trips_vbb.txt")]:::data
+                end
+                subgraph d_scenario_eBuS_files_preprocessing_input["preprocessing_input/"]
+                    n_scenario_eBuS_files_preprocessing_input_line_timings_csv[("line_timings.csv")]:::data
+                    n_scenario_eBuS_files_preprocessing_input_termination_points_txt[("termination_points.txt")]:::data
+                end
+            end
+            subgraph d_scenario_eBuS_postprocessing["postprocessing/"]
+                n_scenario_eBuS_postprocessing_build_routes_py["build_routes.py"]
+                n_scenario_eBuS_postprocessing_build_vehicles_py["build_vehicles.py"]
+                n_scenario_eBuS_postprocessing_charging_stations_py["charging_stations.py"]
+                n_scenario_eBuS_postprocessing_heuristic_postprocessing_py["heuristic_postprocessing.py"]
+            end
+            subgraph d_scenario_eBuS_preprocessing["preprocessing/"]
+                n_scenario_eBuS_preprocessing_coordinate_calculator_py["coordinate_calculator.py"]
+                n_scenario_eBuS_preprocessing_cut_lines_py["cut_lines.py"]
+                n_scenario_eBuS_preprocessing_deadhead_calculator_py["deadhead_calculator.py"]
+                n_scenario_eBuS_preprocessing_filter_lines_py["filter_lines.py"]
+                n_scenario_eBuS_preprocessing_heuristic_preprocessing_py["heuristic_preprocessing.py"]
+                n_scenario_eBuS_preprocessing_termination_points_py["termination_points.py"]
+            end
+            subgraph d_scenario_eBuS_pv_estimation["pv_estimation/"]
+                subgraph d_scenario_eBuS_pv_estimation_data["data/"]
+                    n_scenario_eBuS_pv_estimation_data_2024_01_22_raw_pv_data_csv[("2024-01-22_raw_pv_data.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_01_22_solar_power_v6_raw_csv[("2024-01-22_solar_power_v6_raw.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_01_22_solar_power_v6_scaled_csv[("2024-01-22_solar_power_v6_scaled.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_02_22_raw_pv_data_csv[("2024-02-22_raw_pv_data.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_02_22_solar_power_v6_raw_csv[("2024-02-22_solar_power_v6_raw.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_02_22_solar_power_v6_scaled_csv[("2024-02-22_solar_power_v6_scaled.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_06_22_raw_pv_data_csv[("2024-06-22_raw_pv_data.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_06_22_solar_power_v6_raw_csv[("2024-06-22_solar_power_v6_raw.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_06_22_solar_power_v6_scaled_csv[("2024-06-22_solar_power_v6_scaled.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_08_22_raw_pv_data_csv[("2024-08-22_raw_pv_data.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_08_22_solar_power_v6_raw_csv[("2024-08-22_solar_power_v6_raw.csv")]:::data
+                    n_scenario_eBuS_pv_estimation_data_2024_08_22_solar_power_v6_scaled_csv[("2024-08-22_solar_power_v6_scaled.csv")]:::data
+                end
+                n_scenario_eBuS_pv_estimation_pvgis_api_v6_py["pvgis_api_v6.py"]
+            end
+            subgraph d_scenario_eBuS_tools["tools/"]
+                n_scenario_eBuS_tools_betterAggregateBattery_py["betterAggregateBattery.py"]
+                n_scenario_eBuS_tools_class_mermaid_py["class_mermaid.py"]
+                n_scenario_eBuS_tools_extend_rou_file_py["extend_rou_file.py"]
+                n_scenario_eBuS_tools_flow_mermaid_py["flow_mermaid.py"]
+                n_scenario_eBuS_tools_manual_ess_py["manual_ess.py"]
+                n_scenario_eBuS_tools_order_output_py["order_output.py"]
+                n_scenario_eBuS_tools_output_files_py["output_files.py"]
+                n_scenario_eBuS_tools_tree_mermaid_py["tree_mermaid.py"]
+            end
+            n_scenario_eBuS_ebus_config_gridsoc_toml[("ebus_config_gridsoc.toml")]:::data
+            n_scenario_eBuS_ebus_config_increased_toml[("ebus_config_increased.toml")]:::data
+            n_scenario_eBuS_ebus_config_reduced_toml[("ebus_config_reduced.toml")]:::data
+            n_scenario_eBuS_ebus_config_summer_toml[("ebus_config_summer.toml")]:::data
+            n_scenario_eBuS_ebus_config_winter_toml[("ebus_config_winter.toml")]:::data
+            n_scenario_eBuS_ebus_main_py["ebus_main.py"]
+        end
+        subgraph d_scenario_sumo["sumo/"]
+            subgraph d_scenario_sumo_electric["electric/"]
+                n_scenario_sumo_electric_e_routes_rou_xml[("e_routes.rou.xml")]:::data
+                n_scenario_sumo_electric_e_stations_add_xml[("e_stations.add.xml")]:::data
+                n_scenario_sumo_electric_e_type_add_xml[("e_type.add.xml")]:::data
+                n_scenario_sumo_electric_e_validation_rou_xml[("e_validation.rou.xml")]:::data
+                n_scenario_sumo_electric_e_vehicles_rou_xml[("e_vehicles.rou.xml")]:::data
+            end
+            subgraph d_scenario_sumo_output["output/"]
+                subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59["run_2026-09-25-13-39-59/"]
+                    subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory["65_directory/"]
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_battery_aggregated_xml[("65_multirun_battery_aggregated.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_chargingstations_xml[("65_multirun_chargingstations.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_emissions_xml[("65_multirun_emissions.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_ess_xml[("65_multirun_ess.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_fcdinfo_xml[("65_multirun_fcdinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_stats_xml[("65_multirun_stats.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_stopinfo_xml[("65_multirun_stopinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_summary_xml[("65_multirun_summary.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_65_directory_65_multirun_tripinfo_xml[("65_multirun_tripinfo.xml")]:::data
+                    end
+                    subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory["67_directory/"]
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_battery_aggregated_xml[("67_multirun_battery_aggregated.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_chargingstations_xml[("67_multirun_chargingstations.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_emissions_xml[("67_multirun_emissions.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_ess_xml[("67_multirun_ess.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_fcdinfo_xml[("67_multirun_fcdinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_stats_xml[("67_multirun_stats.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_stopinfo_xml[("67_multirun_stopinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_summary_xml[("67_multirun_summary.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_67_directory_67_multirun_tripinfo_xml[("67_multirun_tripinfo.xml")]:::data
+                    end
+                    subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory["68_directory/"]
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_battery_aggregated_xml[("68_multirun_battery_aggregated.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_chargingstations_xml[("68_multirun_chargingstations.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_emissions_xml[("68_multirun_emissions.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_ess_xml[("68_multirun_ess.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_fcdinfo_xml[("68_multirun_fcdinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_stats_xml[("68_multirun_stats.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_stopinfo_xml[("68_multirun_stopinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_summary_xml[("68_multirun_summary.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_68_directory_68_multirun_tripinfo_xml[("68_multirun_tripinfo.xml")]:::data
+                    end
+                    subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory["70_directory/"]
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_battery_aggregated_xml[("70_multirun_battery_aggregated.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_chargingstations_xml[("70_multirun_chargingstations.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_emissions_xml[("70_multirun_emissions.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_ess_xml[("70_multirun_ess.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_fcdinfo_xml[("70_multirun_fcdinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_stats_xml[("70_multirun_stats.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_stopinfo_xml[("70_multirun_stopinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_summary_xml[("70_multirun_summary.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_70_directory_70_multirun_tripinfo_xml[("70_multirun_tripinfo.xml")]:::data
+                    end
+                    subgraph d_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory["75_directory/"]
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_battery_aggregated_xml[("75_multirun_battery_aggregated.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_chargingstations_xml[("75_multirun_chargingstations.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_emissions_xml[("75_multirun_emissions.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_ess_xml[("75_multirun_ess.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_fcdinfo_xml[("75_multirun_fcdinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_stats_xml[("75_multirun_stats.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_stopinfo_xml[("75_multirun_stopinfo.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_summary_xml[("75_multirun_summary.xml")]:::data
+                        n_scenario_sumo_output_run_2026_09_25_13_39_59_75_directory_75_multirun_tripinfo_xml[("75_multirun_tripinfo.xml")]:::data
+                    end
+                end
+            end
+            n_scenario_sumo_berlin_net_xml[("berlin.net.xml")]:::data
+            n_scenario_sumo_berlin_bus_rou_xml[("berlin_bus.rou.xml")]:::data
+            n_scenario_sumo_berlin_bus_stops_add_xml[("berlin_bus_stops.add.xml")]:::data
+        end
+    end
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py --> n_scenario_eBuS_postprocessing_build_routes_py
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py --> n_scenario_eBuS_postprocessing_build_vehicles_py
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py --> n_scenario_eBuS_postprocessing_charging_stations_py
+    n_scenario_eBuS_preprocessing_heuristic_preprocessing_py --> n_scenario_eBuS_preprocessing_coordinate_calculator_py
+    n_scenario_eBuS_preprocessing_heuristic_preprocessing_py --> n_scenario_eBuS_preprocessing_cut_lines_py
+    n_scenario_eBuS_preprocessing_heuristic_preprocessing_py --> n_scenario_eBuS_preprocessing_deadhead_calculator_py
+    n_scenario_eBuS_preprocessing_heuristic_preprocessing_py --> n_scenario_eBuS_preprocessing_filter_lines_py
+    n_scenario_eBuS_preprocessing_heuristic_preprocessing_py --> n_scenario_eBuS_preprocessing_termination_points_py
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_ebus_config_increased_toml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_ebus_config_reduced_toml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_ebus_config_summer_toml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_ebus_config_winter_toml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_eBuS_files_preprocessing_input_termination_points_txt
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_berlin_bus_rou_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_berlin_net_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_electric_e_routes_rou_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_electric_e_stations_add_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_electric_e_type_add_xml
+    n_scenario_eBuS_ebus_main_py -.-> n_scenario_sumo_electric_e_vehicles_rou_xml
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_sumo_electric_e_routes_rou_xml
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_sumo_berlin_net_xml
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_sumo_electric_e_stations_add_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_sumo_berlin_net_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_sumo_electric_e_routes_rou_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_sumo_electric_e_vehicles_rou_xml
+    n_scenario_eBuS_preprocessing_coordinate_calculator_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_preprocessing_coordinate_calculator_py -.-> n_scenario_sumo_berlin_net_xml
+    n_scenario_eBuS_preprocessing_cut_lines_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_eBuS_files_preprocessing_input_termination_points_txt
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_sumo_berlin_bus_rou_xml
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_preprocessing_deadhead_calculator_py -.-> n_scenario_sumo_berlin_net_xml
+    n_scenario_eBuS_preprocessing_filter_lines_py -.-> n_scenario_sumo_berlin_bus_rou_xml
+    n_scenario_eBuS_preprocessing_filter_lines_py -.-> n_scenario_sumo_berlin_bus_stops_add_xml
+    n_scenario_eBuS_preprocessing_termination_points_py -.-> n_scenario_eBuS_files_postprocessing_input_termination_points_txt
+    n_scenario_eBuS_preprocessing_termination_points_py -.-> n_scenario_eBuS_files_preprocessing_input_termination_points_txt
+    n_scenario_eBuS_pv_estimation_pvgis_api_v6_py -.-> n_scenario_sumo_electric_e_stations_add_xml
+    classDef data fill:#fff4d6,stroke:#c99a2e,color:#333

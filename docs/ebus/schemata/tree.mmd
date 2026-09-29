@@ -1,0 +1,260 @@
+flowchart LR
+    n0("best-ebus/"):::root
+    n1("scenario/"):::folder
+    n0 --> n1
+    n2("eBuS/"):::folder
+    n1 --> n2
+    n3("analysis/"):::folder
+    n2 --> n3
+    n4("chargingstations/"):::folder
+    n3 --> n4
+    n5["integrated_energy_hub_analysis.py"]:::py
+    n4 --> n5
+    n6("database/"):::folder
+    n2 --> n6
+    n7["create_duckdb.py"]:::py
+    n6 --> n7
+    n8("energy_storage_system/"):::folder
+    n2 --> n8
+    n9["charging_event.py"]:::py
+    n8 --> n9
+    n10["charging_station.py"]:::py
+    n8 --> n10
+    n11["energy_storage_system.py"]:::py
+    n8 --> n11
+    n12("files/"):::folder
+    n2 --> n12
+    n13("postprocessing_input/"):::folder
+    n12 --> n13
+    n14[("deadhead_times.txt")]:::data
+    n13 --> n14
+    n15[("e_preprocessed_routes.rou.xml")]:::data
+    n13 --> n15
+    n16[("id_mapping.txt")]:::data
+    n13 --> n16
+    n17[("pv_area_estimation.csv")]:::data
+    n13 --> n17
+    n18[("station_id_mapping.txt")]:::data
+    n13 --> n18
+    n19[("termination_points.txt")]:::data
+    n13 --> n19
+    n20[("trips_vbb.txt")]:::data
+    n13 --> n20
+    n21("preprocessing_input/"):::folder
+    n12 --> n21
+    n22[("line_timings.csv")]:::data
+    n21 --> n22
+    n23[("termination_points.txt")]:::data
+    n21 --> n23
+    n24("postprocessing/"):::folder
+    n2 --> n24
+    n25["build_routes.py"]:::py
+    n24 --> n25
+    n26["build_vehicles.py"]:::py
+    n24 --> n26
+    n27["charging_stations.py"]:::py
+    n24 --> n27
+    n28["heuristic_postprocessing.py"]:::py
+    n24 --> n28
+    n29("preprocessing/"):::folder
+    n2 --> n29
+    n30["coordinate_calculator.py"]:::py
+    n29 --> n30
+    n31["cut_lines.py"]:::py
+    n29 --> n31
+    n32["deadhead_calculator.py"]:::py
+    n29 --> n32
+    n33["filter_lines.py"]:::py
+    n29 --> n33
+    n34["heuristic_preprocessing.py"]:::py
+    n29 --> n34
+    n35["termination_points.py"]:::py
+    n29 --> n35
+    n36("pv_estimation/"):::folder
+    n2 --> n36
+    n37("data/"):::folder
+    n36 --> n37
+    n38[("2024-01-22_raw_pv_data.csv")]:::data
+    n37 --> n38
+    n39[("2024-01-22_solar_power_v6_raw.csv")]:::data
+    n37 --> n39
+    n40[("2024-01-22_solar_power_v6_scaled.csv")]:::data
+    n37 --> n40
+    n41[("2024-02-22_raw_pv_data.csv")]:::data
+    n37 --> n41
+    n42[("2024-02-22_solar_power_v6_raw.csv")]:::data
+    n37 --> n42
+    n43[("2024-02-22_solar_power_v6_scaled.csv")]:::data
+    n37 --> n43
+    n44[("2024-06-22_raw_pv_data.csv")]:::data
+    n37 --> n44
+    n45[("2024-06-22_solar_power_v6_raw.csv")]:::data
+    n37 --> n45
+    n46[("2024-06-22_solar_power_v6_scaled.csv")]:::data
+    n37 --> n46
+    n47[("2024-08-22_raw_pv_data.csv")]:::data
+    n37 --> n47
+    n48[("2024-08-22_solar_power_v6_raw.csv")]:::data
+    n37 --> n48
+    n49[("2024-08-22_solar_power_v6_scaled.csv")]:::data
+    n37 --> n49
+    n50["pvgis_api_v6.py"]:::py
+    n36 --> n50
+    n51("tools/"):::folder
+    n2 --> n51
+    n52["betterAggregateBattery.py"]:::py
+    n51 --> n52
+    n53["class_mermaid.py"]:::py
+    n51 --> n53
+    n54["extend_rou_file.py"]:::py
+    n51 --> n54
+    n55["flow_mermaid.py"]:::py
+    n51 --> n55
+    n56["manual_ess.py"]:::py
+    n51 --> n56
+    n57["order_output.py"]:::py
+    n51 --> n57
+    n58["output_files.py"]:::py
+    n51 --> n58
+    n59["tree_mermaid.py"]:::py
+    n51 --> n59
+    n60[("ebus_config_gridsoc.toml")]:::data
+    n2 --> n60
+    n61[("ebus_config_increased.toml")]:::data
+    n2 --> n61
+    n62[("ebus_config_reduced.toml")]:::data
+    n2 --> n62
+    n63[("ebus_config_summer.toml")]:::data
+    n2 --> n63
+    n64[("ebus_config_winter.toml")]:::data
+    n2 --> n64
+    n65["ebus_main.py"]:::py
+    n2 --> n65
+    n66("sumo/"):::folder
+    n1 --> n66
+    n67("electric/"):::folder
+    n66 --> n67
+    n68[("e_routes.rou.xml")]:::data
+    n67 --> n68
+    n69[("e_stations.add.xml")]:::data
+    n67 --> n69
+    n70[("e_type.add.xml")]:::data
+    n67 --> n70
+    n71[("e_validation.rou.xml")]:::data
+    n67 --> n71
+    n72[("e_vehicles.rou.xml")]:::data
+    n67 --> n72
+    n73("output/"):::folder
+    n66 --> n73
+    n74("run_2026-09-25-13-39-59/"):::folder
+    n73 --> n74
+    n75("65_directory/"):::folder
+    n74 --> n75
+    n76[("65_multirun_battery_aggregated.xml")]:::data
+    n75 --> n76
+    n77[("65_multirun_chargingstations.xml")]:::data
+    n75 --> n77
+    n78[("65_multirun_emissions.xml")]:::data
+    n75 --> n78
+    n79[("65_multirun_ess.xml")]:::data
+    n75 --> n79
+    n80[("65_multirun_fcdinfo.xml")]:::data
+    n75 --> n80
+    n81[("65_multirun_stats.xml")]:::data
+    n75 --> n81
+    n82[("65_multirun_stopinfo.xml")]:::data
+    n75 --> n82
+    n83[("65_multirun_summary.xml")]:::data
+    n75 --> n83
+    n84[("65_multirun_tripinfo.xml")]:::data
+    n75 --> n84
+    n85("67_directory/"):::folder
+    n74 --> n85
+    n86[("67_multirun_battery_aggregated.xml")]:::data
+    n85 --> n86
+    n87[("67_multirun_chargingstations.xml")]:::data
+    n85 --> n87
+    n88[("67_multirun_emissions.xml")]:::data
+    n85 --> n88
+    n89[("67_multirun_ess.xml")]:::data
+    n85 --> n89
+    n90[("67_multirun_fcdinfo.xml")]:::data
+    n85 --> n90
+    n91[("67_multirun_stats.xml")]:::data
+    n85 --> n91
+    n92[("67_multirun_stopinfo.xml")]:::data
+    n85 --> n92
+    n93[("67_multirun_summary.xml")]:::data
+    n85 --> n93
+    n94[("67_multirun_tripinfo.xml")]:::data
+    n85 --> n94
+    n95("68_directory/"):::folder
+    n74 --> n95
+    n96[("68_multirun_battery_aggregated.xml")]:::data
+    n95 --> n96
+    n97[("68_multirun_chargingstations.xml")]:::data
+    n95 --> n97
+    n98[("68_multirun_emissions.xml")]:::data
+    n95 --> n98
+    n99[("68_multirun_ess.xml")]:::data
+    n95 --> n99
+    n100[("68_multirun_fcdinfo.xml")]:::data
+    n95 --> n100
+    n101[("68_multirun_stats.xml")]:::data
+    n95 --> n101
+    n102[("68_multirun_stopinfo.xml")]:::data
+    n95 --> n102
+    n103[("68_multirun_summary.xml")]:::data
+    n95 --> n103
+    n104[("68_multirun_tripinfo.xml")]:::data
+    n95 --> n104
+    n105("70_directory/"):::folder
+    n74 --> n105
+    n106[("70_multirun_battery_aggregated.xml")]:::data
+    n105 --> n106
+    n107[("70_multirun_chargingstations.xml")]:::data
+    n105 --> n107
+    n108[("70_multirun_emissions.xml")]:::data
+    n105 --> n108
+    n109[("70_multirun_ess.xml")]:::data
+    n105 --> n109
+    n110[("70_multirun_fcdinfo.xml")]:::data
+    n105 --> n110
+    n111[("70_multirun_stats.xml")]:::data
+    n105 --> n111
+    n112[("70_multirun_stopinfo.xml")]:::data
+    n105 --> n112
+    n113[("70_multirun_summary.xml")]:::data
+    n105 --> n113
+    n114[("70_multirun_tripinfo.xml")]:::data
+    n105 --> n114
+    n115("75_directory/"):::folder
+    n74 --> n115
+    n116[("75_multirun_battery_aggregated.xml")]:::data
+    n115 --> n116
+    n117[("75_multirun_chargingstations.xml")]:::data
+    n115 --> n117
+    n118[("75_multirun_emissions.xml")]:::data
+    n115 --> n118
+    n119[("75_multirun_ess.xml")]:::data
+    n115 --> n119
+    n120[("75_multirun_fcdinfo.xml")]:::data
+    n115 --> n120
+    n121[("75_multirun_stats.xml")]:::data
+    n115 --> n121
+    n122[("75_multirun_stopinfo.xml")]:::data
+    n115 --> n122
+    n123[("75_multirun_summary.xml")]:::data
+    n115 --> n123
+    n124[("75_multirun_tripinfo.xml")]:::data
+    n115 --> n124
+    n125[("berlin.net.xml")]:::data
+    n66 --> n125
+    n126[("berlin_bus.rou.xml")]:::data
+    n66 --> n126
+    n127[("berlin_bus_stops.add.xml")]:::data
+    n66 --> n127
+    classDef root fill:#d9e8ff,stroke:#3b6fb6,color:#111,font-weight:bold
+    classDef folder fill:#eef3f8,stroke:#7a8ea6,color:#222
+    classDef py fill:#e6f4e6,stroke:#4d9a4d,color:#222
+    classDef data fill:#fff4d6,stroke:#c99a2e,color:#222

@@ -1,0 +1,232 @@
+classDiagram
+    direction TB
+    class c_scenario_eBuS_analysis_chargingstations_integrated_energy_hub_analysis_IntegratedEnergyHubAnalysis["IntegratedEnergyHubAnalysis"] {
+        +stacked_ieh_power_no_depot(output_dir)$
+        +ess_soc_over_time(output_dir)
+    }
+    class c_scenario_eBuS_ebus_main_EBusMain["EBusMain"] {
+        +config
+        +__init__(config_path) None
+        +main()
+        +run_heuristic_preprocessing()
+        +run_heuristic_postprocessing()
+        +run_update_types()
+        +run_aggreate_battery(run_dir)
+        +run_pvgis_api_call(start_date)
+        +run_energy_storage_system(run_dir, start_date)
+        ... +2 methods
+    }
+    class c_scenario_eBuS_energy_storage_system_charging_event_ChargingEvent["ChargingEvent"] {
+        +vehicle
+        +total_energy
+        +begin_sec
+        +end_sec
+        +energy_per_minute
+        +__init__(vehicle, total_energy, begin_sec, end_sec)
+    }
+    class c_scenario_eBuS_energy_storage_system_charging_station_ChargingStation["ChargingStation"] {
+        +id
+        +charging_events
+        +__init__(station_id)
+        +add_event(event)
+        +from_xml(xml_path)
+    }
+    class c_scenario_eBuS_energy_storage_system_energy_storage_system_EnergyStorageSystem["EnergyStorageSystem"] {
+        +charging_stations
+        +ess_factor
+        +ess_capacity
+        +pv_csv_path
+        +output_path
+        +start_soc
+        +pv_factor
+        +grid_charge_max_soc
+        ... +6 attributes
+        +__init__(charging_stations, pv_csv_path, ess_factor, ess_capacity, output_path, start_soc, pv_factor, grid_charge_max_soc, grid_charge_power, efficiency) None
+        +main() pd.DataFrame
+        +calculate_ess_capacities(charging_stations, ess_factor, ess_capacity) dict~str float~
+        +energy_per_minute(charging_stations) None
+        +get_pv_generated(charging_station, hour) float
+        +build_load_profile(charging_station, total_minutes) list~float~
+        +build_pv_profile(charging_station, total_minutes) list~float~
+        +calculate_ess(charging_stations, ess_capacities, start_soc, total_minutes, grid_charge_max_soc, grid_charge_power, efficiency) pd.DataFrame
+        ... +1 methods
+    }
+    class c_scenario_eBuS_postprocessing_build_routes_BuildRoutes["BuildRoutes"] {
+        +solution_dict
+        +station_id_dict
+        +trips_df
+        +original_routes
+        +deadhead_timings
+        +output_path
+        +offset
+        +__init__(solution_path, station_id_map_path, trips_path, routes_path, deadhead_timing_path, output_path, despawn_offset)
+        +main()
+        +build_deadheads(last_stop, first_stop)
+        +remove_duplicate_edges(edges)
+        +remove_duplicate_stops(stops)
+        +build_depot_deadheads(bus, first_stop, last_stop)
+        +old_build_stops(trip, original_trip_id, route_id, charging_events)
+        +build_stops(trip, original_trip_id, route_id, charging_events)
+        ... +4 methods
+    }
+    class c_scenario_eBuS_postprocessing_build_vehicles_BuildVehicles["BuildVehicles"] {
+        +SOLUTION_PATH
+        +VEHICLES_OUTPUT
+        +SOC_PERCENTAGE
+        +OFFSET
+        +DEPOTS
+        +dict~Any Any~ trip_to_start
+        +dict~Any Any~ trip_to_end
+        +dict~Any Any~ trip_to_depart
+        ... +2 attributes
+        +__init__(solution_path, vehicles_output, soc_percentage, tripp_dict, deadhead_path, offset)
+        +main()
+        +calculate_departure(bus, offset) int
+        +run_sort_routes(root) None
+    }
+    class c_scenario_eBuS_postprocessing_charging_stations_ChargingStations["ChargingStations"] {
+        +net
+        +STATION_ROOT
+        +ROUTE_ROOT
+        +OUTPUT_PATH
+        +AREA_LOOKUP
+        +SOLUTION
+        +station_id_mapping
+        +POWER
+        ... +4 attributes
+        +__init__(net, station_root, route_root, output_path, area_path, solution_path, station_id_path, power, total_power_factor, allow_depot_charging, depot_total_power_factor, inactive_list)
+        +station_id_lookup(station_id_mapping_path) dict
+        +area_lookup(area_df)
+        +charging_stations_from_solution()
+        +main()
+    }
+    class c_scenario_eBuS_postprocessing_heuristic_postprocessing_HeuristicPostprocessing["HeuristicPostprocessing"] {
+        +net
+        +station_root
+        +route_root
+        +output_path
+        +area_path
+        +input_path
+        +input_dict
+        +deadhead_path
+        ... +12 attributes
+        +__init__(net, station_root, route_root, output_path, area_path, input_path, input_dict, deadhead_path, soc_percentage, merged_routes, merged_routes_output, vehicles_output, station_id_path, chargingstation_power, total_power_factor, offset, despawn_offset, allow_depot_charging, depot_total_power_factor, inactive_list)
+        +main()
+    }
+    class c_scenario_eBuS_preprocessing_coordinate_calculator_CoordinateCalculator["CoordinateCalculator"] {
+        +net_file_path
+        +bus_stops_file_path
+        +net
+        +bus_stops_tree
+        +bus_stops_root
+        +__init__(net_file_path, bus_stops_file_path)
+        +add_coordinates_to_bus_stops()
+        +save(output_path)
+    }
+    class c_scenario_eBuS_preprocessing_cut_lines_CutLines["CutLines"] {
+        +stations_path
+        +routes_root
+        +stations_root
+        +__init__(stations_path, routes_root)
+        +trim_routes()
+        +write_to_xml(output_path)
+    }
+    class c_scenario_eBuS_preprocessing_deadhead_calculator_DeadheadCalculator["DeadheadCalculator"] {
+        +net
+        +routes_root
+        +station_root
+        +termination_points
+        +depots
+        +output
+        +__init__(network, stations, routes_root, termination_points, depots, output)
+        +calculate_station_deadheads()
+    }
+    class c_scenario_eBuS_preprocessing_filter_lines_FilterLines["FilterLines"] {
+        +routes_tree
+        +routes_root
+        +selected_lines
+        +lines
+        +bus_stops_tree
+        +bus_stops_root
+        +output_dir
+        +route_calculations
+        +__init__(routes_file, selected_lines, bus_stops_file, output_dir)
+        +extract_flow_information()
+        +routes_to_trips(create_csv)
+        +main()
+        +parse_time(t)
+        +stop_name_dict()
+        +stop_coord_dict()
+    }
+    class c_scenario_eBuS_preprocessing_heuristic_preprocessing_HeuristicPreprocessing["HeuristicPreprocessing"] {
+        +routes_file
+        +stations_file
+        +network_file
+        +selected_lines
+        +termination_points
+        +depots
+        +output_dir
+        +__init__(routes_file, stations_file, network_file, selected_lines, termination_points, depots, output_dir)
+        +main()
+    }
+    class c_scenario_eBuS_preprocessing_termination_points_TerminationPoints["TerminationPoints"] {
+        +ROUTE_ROOT
+        +depots
+        +OUTPUT_PATH
+        +__init__(routes_root, depots, output)
+        +get_final_stop_ids()
+        +txt_for_heuristic()
+        +main()
+    }
+    class c_scenario_eBuS_pv_estimation_pvgis_api_v6_PVGISApiCall["PVGISApiCall"] {
+        +stations_path
+        +output_path
+        +start_date
+        +start_time
+        +end_time
+        +file_prefix
+        +__init__(stations_path, output_path, start_date)
+        +main()
+        +get_existing_station_ids() set
+        +v6(stations, csv) pd.DataFrame
+        +calculate_kWp(area) int
+        +optimize_csv(answer_df)
+    }
+    class c_scenario_eBuS_tools_class_mermaid_ClassInfo["ClassInfo"] {
+        +str name
+        +str module
+        +list~str~ bases
+        +dict~str str~ attrs
+        +list~tuple~str str str str~~ methods
+        +list~tuple~str str str~~ refs
+        +cid() str
+    }
+    class c_scenario_eBuS_tools_output_files_OutputFiles["OutputFiles"] {
+        +output_dir
+        +timestamp
+        +__init__(output_dir)
+        +find_latest_timestamp()
+        +get_file(file_type)
+        +get_run_files() dict
+    }
+    class c_scenario_eBuS_tools_output_files_SeedOutputFiles["SeedOutputFiles"] {
+        +output_dir
+        +seed
+        +__init__(output_dir)
+        +find_seed()
+        +get_file(file_type)
+        +get_run_files() dict
+    }
+    class c_scenario_eBuS_tools_output_files_RunFiles["RunFiles"] {
+        +baseline_seed
+        +ci_seeds
+        +__init__(baseline_files, baseline_seed, ci_seeds)
+    }
+    class c_scenario_eBuS_tools_output_files_MultiSeedRunFiles["MultiSeedRunFiles"] {
+        +run_dir
+        +baseline_seed
+        +seeds
+        +__init__(run_dir, baseline_seed)
+        +ci_seed_ids() list~str~
+        +get_run_files() RunFiles
+    }
