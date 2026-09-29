@@ -17,7 +17,7 @@ import logging
 
 from lxml import etree
 
-from analysis.output_files import SeedOutputFiles
+from tools.output_files import SeedOutputFiles
 
 from pv_estimation.pvgis_api_v6 import PVGISApiCall
 from energy_storage_system.charging_station import ChargingStation
@@ -39,6 +39,10 @@ EBUS_DIR = SCENARIO_ROOT / "eBuS"
 FILES_DIR = EBUS_DIR / "files"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 
+
+# Change it to accept config files as arguments.
+# Multiple files still exectued one after another, 
+# until output directory and naming problem is solved.
 SCENARIO_CONFIG_NAMES = (
     "ebus_config_summer.toml",
     "ebus_config_winter.toml",
@@ -54,7 +58,7 @@ class EBusMain:
             self.config = tomllib.load(f)
 
     def main(self):
-        pv_start_date: date = self.config["main"]["pv_start_date"]
+        pv_start_date: date = self.config["photvoltaic_storage_configuration"]["pv_start_date"]
         self.run_heuristic_preprocessing()
         self.run_heuristic_postprocessing()
         self.run_update_types()

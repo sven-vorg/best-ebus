@@ -1,7 +1,6 @@
 # Configuration for EBusMain (ebus_main.py).
 
 [main]
-pv_start_date = 2024-08-22
 
 [heuristic_preprocessing]
 depots = ["cicerostrasse", "muellerstrasse"]
@@ -74,6 +73,10 @@ depot_total_power_factor = 10.0
 # Seconds of an aggregation step
 # Determines how strongly the battery output is compressed
 interval = 60 
+
+[photvoltaic_storage_configuration]
+# Sets the date for which PV data should be requested
+pv_start_date = 2024-08-22
 
 [energy_storage_system]
 # Each station's ESS = ess_factor * that station's Peak Power (kWh)
