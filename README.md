@@ -164,11 +164,8 @@ Due to long vehicles blocking the comparatively short bus stops for long duratio
 
 
 ## ToDos
-* *split filter_lines.py* into a file responsible for filtering, and a file responsible for providing heuristic input
-* Integrate *cut_lines.py* into filtering
-* Integrate old *gtfs_worker.ipynb* into heuristic input skript
-* Take charging time from *solution* file
-* Add more vehicle types and implement type choice dependet upon the *[heuristic_preprocessing.lines]* table in *ebus_config.toml*
+* Integrate applicable Data (PV-Estimation, Multiple SolutionFiles, etc.)
+* Allow for ESS-execution on existing outputs, creating new scenarios.
 
 ## Modifications to files provided by BeST
 Minor adjustments have been made to *berlin.net.xml*, to include two bus depots, one at **Cicerostraße** in Charlottenburg-Wilmersdorf, and the other at **Müllerstraße**, Wedding. Within the code these are named cicerostrasse and muellerstrasse respectively.
