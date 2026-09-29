@@ -1,5 +1,5 @@
 __author__ = "Sven Vorgheim"
-__license__ = "GPL v2 or later (In accoardance to SUMO)"
+__license__ = "GPL v2 or later (In accordance to SUMO)"
 __maintainer__ = "Sven Vorgheim"
 __email__ = "sven.vorgheim@fu-berlin.de"
 __status__ = "Prototype"
@@ -55,32 +55,3 @@ class HeuristicPreprocessing:
             self.depots,
             self.output_dir)
         dc.calculate_station_deadheads()
-
-if __name__ == "__main__":
-    import tomllib
-
-    HERE = Path(__file__).resolve().parent
-
-    with open((HERE / "../ebus_config.toml").resolve(), "rb") as f:
-        heuristic_preprocessing_cfg = tomllib.load(f)["heuristic_preprocessing"]
-
-    routes_file: Path = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    stations_file: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml")
-    network_file: Path = (HERE / "../../sumo/berlin.net.xml").resolve()
-    selected_lines: dict[str, list[str]] = heuristic_preprocessing_cfg["lines"]
-
-    termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
-
-    depots: tuple = tuple(heuristic_preprocessing_cfg["depots"])
-
-    output_dir: Path = (HERE / "../postprocessing_input/files").resolve()
-
-    hp = HeuristicPreprocessing(
-        routes_file,
-        stations_file,
-        network_file,
-        selected_lines,
-        termination_points,
-        depots,
-        output_dir)
-    hp.main()
