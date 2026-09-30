@@ -1,14 +1,13 @@
 """ Skript for adding coordinates as custom xml parameter to berlin_bus_stops.add.xml """
 
 from lxml import etree
-import pandas as pd
 import sumolib
 from pathlib import Path
 from sumolib.geomhelper import positionAtShapeOffset
 
 class CoordinateCalculator:
 
-    def __init__(self, net_file_path, bus_stops_file_path):
+    def __init__(self, net_file_path: Path, bus_stops_file_path: Path):
         self.net_file_path = net_file_path
         self.bus_stops_file_path = bus_stops_file_path
 

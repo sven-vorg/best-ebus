@@ -28,14 +28,9 @@ class TerminationPoints():
             final_stop_ids.add(f"bs_{depot}")
         return final_stop_ids
 
-    def _append_depots(self, final_stop_ids):
-        for depot in self.depots:
-            final_stop_ids.add(f"bs_{depot}")
-        return final_stop_ids
 
     def txt_for_heuristic(self):
         df = pd.DataFrame(self.get_final_stop_ids())
-        df = self._append_depots(df)
         df.to_csv(f"{self.OUTPUT_PATH}/termination_points.txt", index=False, sep=";", header= False)
 
     def main(self):
