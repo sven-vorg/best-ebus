@@ -53,8 +53,6 @@ flowchart TB
     n43[/"VBB GTFSScheduling Data"/] -.-> n6
 ```
 
-#### Scenario/preprocessing
-The heuristic preprocessing 
 
 
 ### Additional Files
