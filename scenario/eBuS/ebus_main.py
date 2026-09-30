@@ -162,7 +162,7 @@ class EBusMain:
         """
         type_file: Path = SUMO_DIR / "electric" / "e_type.add.xml"
 
-        constant_power_intake: int = self.config["update_types"]["Constant Power Intake"]
+        constant_power_intake: int = self.config["vehicles"]["constant_power_intake"]
 
         tree = etree.parse(str(type_file))
         params = tree.getroot().xpath(".//vType/param[@key='constantPowerIntake']")

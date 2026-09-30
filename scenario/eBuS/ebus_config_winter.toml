@@ -92,10 +92,10 @@ grid_charge_power = 50.0
 # battery round-trip efficiency (0.0-1.0), e.g. ~0.95 for lithium-ion
 efficiency = 0.95
 
-[update_types]
+[vehicles]
 # Constant auxiliary power draw (W) written to every vType's
 # constantPowerIntake param in sumo/electric/e_type.add.xml
-"Constant Power Intake" = 5000
+"constant_power_intake" = 5000
 
 [run_simulation_seeds]
 # Space-separated list of seeds to run the simulation with, e.g. "161".
