@@ -1,0 +1,66 @@
+---
+config:
+  flowchart:
+    curve: monotoneX
+---
+flowchart TB
+ subgraph d_scenario_eBuS_files_postprocessing_input["postprocessing_input/"]
+        n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt[("deadhead_times.txt")]
+        n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml[("e_preprocessed_routes.rou.xml")]
+        n_scenario_eBuS_files_postprocessing_input_id_mapping_txt[("id_mapping.txt")]
+        n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv[("pv_area_estimation.csv")]
+        n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt[("station_id_mapping.txt")]
+        n_scenario_eBuS_files_postprocessing_input_termination_points_txt[("termination_points.txt")]
+        n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt[("trips_vbb.txt")]
+  end
+ subgraph d_scenario_eBuS_files["files/"]
+        d_scenario_eBuS_files_postprocessing_input
+  end
+ subgraph d_scenario_eBuS_postprocessing["postprocessing/"]
+        n_scenario_eBuS_postprocessing_build_routes_py["build_routes.py"]
+        n_scenario_eBuS_postprocessing_build_vehicles_py["build_vehicles.py"]
+        n_scenario_eBuS_postprocessing_charging_stations_py["charging_stations.py"]
+        n_scenario_eBuS_postprocessing_heuristic_postprocessing_py["heuristic_postprocessing.py"]
+  end
+ subgraph d_scenario_eBuS["eBuS/"]
+        d_scenario_eBuS_files
+        d_scenario_eBuS_postprocessing
+  end
+ subgraph d_scenario_sumo_electric["electric/"]
+        n_scenario_sumo_electric_e_routes_rou_xml[("e_routes.rou.xml")]
+        n_scenario_sumo_electric_e_stations_add_xml[("e_stations.add.xml")]
+        n_scenario_sumo_electric_e_type_add_xml[("e_type.add.xml")]
+        n_scenario_sumo_electric_e_validation_rou_xml[("e_validation.rou.xml")]
+        n_scenario_sumo_electric_e_vehicles_rou_xml[("e_vehicles.rou.xml")]
+  end
+ subgraph d_scenario_sumo["sumo/"]
+        d_scenario_sumo_electric
+        n_scenario_sumo_berlin_net_xml[("berlin.net.xml")]
+        n_scenario_sumo_berlin_bus_rou_xml[("berlin_bus.rou.xml")]
+        n_scenario_sumo_berlin_bus_stops_add_xml[("berlin_bus_stops.add.xml")]
+  end
+ subgraph d_scenario["scenario/"]
+        d_scenario_eBuS
+        d_scenario_sumo
+  end
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py --> n_scenario_eBuS_postprocessing_build_routes_py & n_scenario_eBuS_postprocessing_build_vehicles_py & n_scenario_eBuS_postprocessing_charging_stations_py
+    n_scenario_eBuS_postprocessing_build_routes_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt & n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml & n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt & n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt & n_scenario_sumo_electric_e_routes_rou_xml
+    n_scenario_eBuS_postprocessing_charging_stations_py -.-> n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml & n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv & n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt & n_scenario_sumo_berlin_bus_stops_add_xml & n_scenario_sumo_berlin_net_xml & n_scenario_sumo_electric_e_stations_add_xml
+    n_scenario_eBuS_postprocessing_heuristic_postprocessing_py -.-> n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt & n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml & n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv & n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt & n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt & n_scenario_sumo_berlin_bus_stops_add_xml & n_scenario_sumo_berlin_net_xml & n_scenario_sumo_electric_e_routes_rou_xml
+
+     n_scenario_eBuS_files_postprocessing_input_deadhead_times_txt:::data
+     n_scenario_eBuS_files_postprocessing_input_e_preprocessed_routes_rou_xml:::data
+     n_scenario_eBuS_files_postprocessing_input_id_mapping_txt:::data
+     n_scenario_eBuS_files_postprocessing_input_pv_area_estimation_csv:::data
+     n_scenario_eBuS_files_postprocessing_input_station_id_mapping_txt:::data
+     n_scenario_eBuS_files_postprocessing_input_termination_points_txt:::data
+     n_scenario_eBuS_files_postprocessing_input_trips_vbb_txt:::data
+     n_scenario_sumo_electric_e_routes_rou_xml:::data
+     n_scenario_sumo_electric_e_stations_add_xml:::data
+     n_scenario_sumo_electric_e_type_add_xml:::data
+     n_scenario_sumo_electric_e_validation_rou_xml:::data
+     n_scenario_sumo_electric_e_vehicles_rou_xml:::data
+     n_scenario_sumo_berlin_net_xml:::data
+     n_scenario_sumo_berlin_bus_rou_xml:::data
+     n_scenario_sumo_berlin_bus_stops_add_xml:::data
+    classDef data fill:#fff4d6,stroke:#c99a2e,color:#333
