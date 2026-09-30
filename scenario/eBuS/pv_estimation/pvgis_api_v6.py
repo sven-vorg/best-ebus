@@ -36,7 +36,7 @@ class PVGISApiCall:
     def main(self):
         answer_df = self.v6(self.stations_path)
         if answer_df.empty:
-            print("Keine neuen Stationen gefunden, nichts anzuhängen.")
+            logger.info("No new stations found, nothing to add.")
             return
         self.optimize_csv(answer_df)
 
@@ -60,7 +60,6 @@ class PVGISApiCall:
             # Koordinaten extrahieren und in Float umwandeln
             coordinates = station.get("coordinates")
             peak_power = self.calculate_kWp(station.get("area"))
-            print(peak_power)
             if coordinates:
                 lon_str, lat_str = coordinates.split(",")
                 latitude = float(lat_str.strip())
@@ -84,14 +83,12 @@ class PVGISApiCall:
                     },
                     timeout=60  # Timeout für bessere Stabilität
                 )
-                print(response.url)
-                #print(response.status_code)
+
          
                 # Ergebnis als Dictionary speichern
                 response.raise_for_status()
 
                 raw_data = response.json()
-                print(raw_data)
 
                 # PVGIS returns hourly production normalized per installed kWp.
                 # Workaround: scale by installed capacity and convert W/Wh -> kW/kWh
@@ -112,7 +109,7 @@ class PVGISApiCall:
         if csv and not df.empty:
             raw_path = Path(self.output_path) / f"{self.file_prefix}raw_pv_data.csv"
             df.to_csv(raw_path, mode="a", header=not raw_path.exists(), index=False)
-        print(f"\nVerarbeitung abgeschlossen. {len(results)} neue Stationen verarbeitet.")
+        logger.info(f"\nPV call and scaling completed. {len(results)} new stations processed.")
         return df
 
     def calculate_kWp(self, area) -> int:
