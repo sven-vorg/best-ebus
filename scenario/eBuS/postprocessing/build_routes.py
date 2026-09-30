@@ -2,7 +2,6 @@ import json
 import pandas as pd
 from pathlib import Path
 from lxml import etree
-import math
 
 class BuildRoutes:
     def __init__(
