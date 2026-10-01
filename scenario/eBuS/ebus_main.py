@@ -49,13 +49,15 @@ SCENARIO_CONFIG_NAMES = (
     "ebus_config_reduced.toml",
     "ebus_config_increased.toml",
 )
-
+SCENARIO_CONFIG_PREFIX = "ebus_config_" 
 
 class EBusMain:
     def __init__(self, config_path: Path) -> None:
         """Create an eBuS controller for the scenario defined in config_path."""
         with open(config_path, "rb") as f:
             self.config = tomllib.load(f)
+        # "ebus_config_summer.toml" -> "summer"
+        self.scenario_name: str = config_path.stem.removeprefix(SCENARIO_CONFIG_PREFIX)
 
     def main(self):
         pv_start_date: date = self.config["photvoltaic_storage_configuration"]["pv_start_date"]
@@ -66,8 +68,9 @@ class EBusMain:
         run_dir = order_output(SUMO_OUTPUT_DIR)
         self.run_pvgis_api_call(start_date=pv_start_date)
         for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
-            self.run_aggreate_battery(seed_dir)
+            self.run_aggregate_battery(seed_dir)
             self.run_energy_storage_system(seed_dir, start_date=pv_start_date)
+        self.rename_scenario_directory(run_dir)
 
     def run_heuristic_preprocessing(self):
         routes_file: Path = SUMO_DIR / "berlin_bus.rou.xml"
@@ -175,7 +178,7 @@ class EBusMain:
             f"Set constantPowerIntake to {constant_power_intake} for {len(params)} bus type(s) in {type_file}"
         )
 
-    def run_aggreate_battery(self, run_dir: Path):
+    def run_aggregate_battery(self, run_dir: Path):
         """
         Aggregate the battery data from a seed run's SUMO battery output
         (a "<seed>_directory" folder, see tools.order_output.order_output)
@@ -240,6 +243,20 @@ class EBusMain:
     def get_sumo_version(self):
         result = subprocess.run(["sumo", "--version"], capture_output=True, text=True)
         return result.stdout
+
+    def rename_scenario_directory(self, run_dir: Path) -> Path:
+        """
+        Rename the output directory "run_<date>" to "<scenario>_run_<date>",
+        where <scenario> is derived from the config file (e.g. summer, winter,
+        reduced, increased). Returns the new path.
+        """
+        new_dir = run_dir.with_name(f"{self.scenario_name}_{run_dir.name}")
+        if new_dir.exists():
+            raise FileExistsError(f"Cannot rename {run_dir}: {new_dir} already exists")
+        run_dir.rename(new_dir)
+        logger.info("Renamed output directory %s -> %s", run_dir.name, new_dir.name)
+        return new_dir
+
 
     def run_simulation_seeds(self):
         """
