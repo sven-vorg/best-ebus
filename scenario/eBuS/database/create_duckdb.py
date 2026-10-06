@@ -4,7 +4,7 @@ import duckdb
 
 
 #SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc")
-SCENARIOS = ("gridsoc",)
+SCENARIOS = ("wbase",)
 
 
 def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
