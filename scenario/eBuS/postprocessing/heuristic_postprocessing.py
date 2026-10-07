@@ -28,7 +28,7 @@ class HeuristicPostprocessing:
             chargingstation_power: int = 150000,
             total_power_factor: float = 2,
             offset: int | None = None,
-            despawn_offset: int = 0,
+            despawn_offset: int | None = None,
             allow_depot_charging: bool = True,
             depot_total_power_factor: float = 2,
             inactive_list: list | None = None,

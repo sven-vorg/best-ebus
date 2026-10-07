@@ -34,12 +34,16 @@ scenario/sumo/e_berlin.rou.alt.gz
 scenario/sumo/e_berlin.rou.gz
 scenario/sumo/e_berlin_extended.rou.gz
 
+# Archives
+**.zip
+
 # Pycache Directorys
 **/__pycache__/
 **/.pyc
 
 # Draw.io temporary files
 **.bkp
+
 # DuckDB temporary files
 **.tmp
 **.wal

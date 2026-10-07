@@ -126,7 +126,7 @@ class EBusMain:
 
         offset: int | None = cfg.get("offset")
 
-        despawn_offset: int = cfg.get("despawn_offset", 0)
+        despawn_offset: int | None = cfg.get("despawn_offset", 0)
 
         allow_depot_charging: bool = cfg.get("allow_depot_charging", True)
 
