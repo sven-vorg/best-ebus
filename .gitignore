@@ -7,8 +7,11 @@ scenario/sumo/berlin_bus.rou.xml
 scenario/sumo/berlin.rou.gz
 scenario/eBuS/database/ebus.db
 
-# Databases
-**.duckdb
+# Database
+scenario/eBuS/database/*.duckdb
+
+# Analysis
+scenario/eBuS/analysis/
 
 # Unchanging BeST Files
 scenario/sumo/berlin.sumocfg

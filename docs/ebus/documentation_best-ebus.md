@@ -1,8 +1,19 @@
 # BeST-eBuS
 
 ## Introduction
-The Berlin Sumo Traffic Scenario is a
-Also refer to the ReadMe.
+The **electric Bus utilization Scenario (eBuS)** is a fork of the **[Berlin Sumo Traffic (BeST) Scenario.](https://github.com/mosaic-addons/best-scenario)**
+It is being developed as part of a masters-thesis at the FU-Berlin in 2026 with the goal of extending the capabilitys of **BeST** to simulate electric buses and their charging stations to generate data on charging behaviour and energy requierments.
+Additionaly skripts for extending charging stations into integrated energy hubs, using energy storage systems and photovoltaic power generation, are planned.
+
+The simulation is intended to be able to handle multiple depots, service lines, charging stations and bus models.
+
+To limit the scope during the development and the proof-of-concept phase, the implementation focuses on two depots, each designed for 200+ buses, servicing nearly 50 lines and implementing 94 charging Stations.
+
+Dependencys:
+* [Eclipse Sumo (Version 1.27.0)](https://github.com/eclipse-sumo/sumo/tree/main/docs)
+* An electric Vehicle Scheduling Problem (eVSP) solving methode for a baseline solution
+* Online connectivity for [PVGIS-API](https://joint-research-centre.ec.europa.eu/photovoltaic-geographical-information-system-pvgis_en) calls
+
 
 ## Codebase
 The code base is seperated accoarding to function and progression of simulation preperation.
