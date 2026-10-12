@@ -6,7 +6,7 @@
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              
+        <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>           
         <param key="personCapacity" value="70"/>
@@ -23,13 +23,13 @@
         <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
-    <vType id="SolarsisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
+    <vType id="SolarisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
+        <param key="constantPowerIntake" value="5000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>
         <!-- Device Battery -->
@@ -45,13 +45,13 @@
         <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
-    <vType id="SolarsisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
+    <vType id="SolarisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              
+        <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>
         <!-- Device Battery -->
