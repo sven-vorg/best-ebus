@@ -26,6 +26,8 @@ from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 from tools.betterAggregateBattery import aggregate
 from tools.order_output import order_output
+from tools.xml2csv import xml2csv
+from collections.abc import Iterable
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -43,12 +45,18 @@ PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 # Change it to accept config files as arguments.
 # Multiple files still exectued one after another, 
 # until output directory and naming problem is solved.
+#SCENARIO_CONFIG_NAMES = (
+#    "ebus_config_summer.toml",
+#    "ebus_config_winter.toml",
+#    "ebus_config_reduced.toml",
+#   "ebus_config_increased.toml",
+#   "ebus_config_gridsoc.toml",
+#)
+
 SCENARIO_CONFIG_NAMES = (
-    "ebus_config_summer.toml",
-    "ebus_config_winter.toml",
-    "ebus_config_reduced.toml",
-    "ebus_config_increased.toml",
+    "ebus_config_gridsoc.toml",
 )
+
 SCENARIO_CONFIG_PREFIX = "ebus_config_" 
 
 class EBusMain:
@@ -67,9 +75,11 @@ class EBusMain:
         self.run_simulation_seeds()
         run_dir = order_output(SUMO_OUTPUT_DIR)
         self.run_pvgis_api_call(start_date=pv_start_date)
-        for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
+        seed_dirs = sorted(p for p in run_dir.iterdir() if p.is_dir())
+        for seed_dir in seed_dirs:
             self.run_aggregate_battery(seed_dir)
             self.run_energy_storage_system(seed_dir, start_date=pv_start_date)
+        self.run_xml2csv(seed_dirs)
         self.rename_scenario_directory(run_dir)
 
     def run_heuristic_preprocessing(self):
@@ -126,7 +136,7 @@ class EBusMain:
 
         offset: int | None = cfg.get("offset")
 
-        despawn_offset: int | None = cfg.get("despawn_offset", 0)
+        despawn_offset: int | None = cfg.get("despawn_offset")
 
         allow_depot_charging: bool = cfg.get("allow_depot_charging", True)
 
@@ -195,6 +205,14 @@ class EBusMain:
         os.remove(battery_file)
         logger.info(f"Aggregated battery data written to {output_file}")
 
+    def run_xml2csv(self, run_dirs: Iterable[Path]) -> None:
+        """
+        Convert the XML output files of every given seed run directory to CSV
+        (see tools.xml2csv.xml2csv). The number of parallel workers equals the
+        number of simulation threads from the config.
+        """
+        max_workers: int = self.config["run_simulation_seeds"].get("threads", 1)
+        xml2csv(run_dirs, max_workers)
 
     def run_pvgis_api_call(self, start_date: date):
         """

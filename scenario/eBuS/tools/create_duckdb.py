@@ -3,8 +3,8 @@ import re
 import duckdb
 
 
-#SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc")
-SCENARIOS = ("wbase",)
+#SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc","pscbase","wbase")
+SCENARIOS = ("wdepot",)
 
 
 def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
@@ -66,4 +66,4 @@ def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
         con.close()
 
 #import_csvs_into_db(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output", r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb")
-import_csvs_into_db(Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output"), Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb"))
+import_csvs_into_db(Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output"), Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS_wdepot.duckdb"))

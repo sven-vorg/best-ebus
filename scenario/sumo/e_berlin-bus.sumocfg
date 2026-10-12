@@ -13,7 +13,8 @@
     <battery-output.precision value="2"/>
     <chargingstations-output value="chargingstations.xml"/>
     <chargingstations-output.aggregated value="true"/>
-    <fcd-output value="fcdinfo.xml"/>
+    <chargingstations-output.aggregated.write-unfinished value="true"/>
+    <!--<fcd-output value="fcdinfo.xml"/> -->
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
     <stop-output value="stopinfo.xml"/>
