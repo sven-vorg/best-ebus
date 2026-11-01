@@ -3,6 +3,8 @@ import pandas as pd
 from pathlib import Path
 from lxml import etree
 
+SIMULATION_RUNTIME = 104399
+
 class BuildRoutes:
     def __init__(
             self, 
@@ -109,60 +111,33 @@ class BuildRoutes:
         start_depot_edges = self.original_routes[f"{start_depot}_{first_stop['busStop']}"]["edges"]
         end_depot_edges = self.original_routes[f"{last_stop['busStop']}_{end_depot}"]["edges"]
         departure = {
-            "busStop": start_depot, 
+            "busStop": start_depot,
             "until": f"{float(first_stop['until'])
                         - self.deadhead_timings.loc[(self.deadhead_timings['FromStopID'] == start_depot) 
-                        & (self.deadhead_timings['ToStopID'] == first_stop['busStop']), 'RunTime'].iloc[0]}"}
+                        & (self.deadhead_timings['ToStopID'] == first_stop['busStop']), 'RunTime'].iloc[0]}",
+            "parking": "true",
+                        }
+
+        run_time = self.deadhead_timings.loc[
+            (self.deadhead_timings["FromStopID"] == last_stop["busStop"])
+            & (self.deadhead_timings["ToStopID"] == end_depot),
+            "RunTime"
+        ].iloc[0]
+
+        arrival_offset = 1800
 
         if self.offset is None:
-                arrival_time = 104400
+            arrival_time = SIMULATION_RUNTIME - arrival_offset
         else:
-            run_time = self.deadhead_timings.loc[
-                (self.deadhead_timings["FromStopID"] == last_stop["busStop"])
-                & (self.deadhead_timings["ToStopID"] == end_depot),
-                "RunTime"
-            ].iloc[0]
-
-            arrival_time = min(104400, float(last_stop["until"]) + run_time + self.offset)
+            arrival_time = min(SIMULATION_RUNTIME- arrival_offset, float(last_stop["until"]) + run_time + self.offset)
 
         arrival = {
             "busStop": end_depot,
-            "until": f"{arrival_time}"
+            "until": f"{arrival_time}",
+            "parking": "true"
         }
 
         return start_depot_edges, end_depot_edges, departure, arrival
-
-    def old_build_stops(self, trip, original_trip_id, route_id, charging_events):
-
-        trip_departure_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "START_TIMESTAMP"].iloc[0])
-        trip_arrival_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "END_TIMESTAMP"].iloc[0])
-        
-        stops = [dict(stop) for stop in self.original_routes[original_trip_id]["stops"]]
-        for stop in stops:
-            stop["until"] = str(float(stop["until"]) + trip_departure_time)
-            stop["tripId"] = str(trip)
-        charging_event = next(
-            (event for event in self.solution_dict["charging_events"]
-                if event["bus_id"] == route_id
-                and (
-                    event["start_time"]*60 == trip_arrival_time
-                    or event["end_time"]*60 == trip_departure_time
-                )
-            ),
-            None
-        )
-        if charging_event is not None:
-            charging_stop = {
-                "busStop": str(self.station_id_dict.get(str(charging_event["station_id"]))),
-                "until": str(int(charging_event["end_time"]*60)),
-                "station_id": f"{charging_event["station_id"]}",
-                "tripId": str(trip)
-            }
-            if charging_event["start_time"]*60 == trip_arrival_time:
-                stops.append(charging_stop)
-            elif charging_event["end_time"]*60 == trip_departure_time:
-                stops.insert(0, charging_stop)
-        return stops
 
     def build_stops(self, trip, original_trip_id, route_id, charging_events):
 

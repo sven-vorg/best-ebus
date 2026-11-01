@@ -6,7 +6,7 @@
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              
+        <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>           
         <param key="personCapacity" value="70"/>
@@ -29,7 +29,7 @@
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
+        <param key="constantPowerIntake" value="5000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>
         <!-- Device Battery -->
@@ -51,7 +51,7 @@
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="1000"/>              
+        <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
         <param key="recuperationEfficiency" value=".9"/>
         <!-- Device Battery -->
