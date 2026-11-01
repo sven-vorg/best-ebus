@@ -23,7 +23,7 @@
         <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
-    <vType id="SolarsisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
+    <vType id="SolarisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              
         <param key="rotatingMass" value="100"/>                      
@@ -45,7 +45,7 @@
         <param key="device.stationfinder.rescueAction" value="remove"/>
     </vType>
 
-    <vType id="SolarsisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
+    <vType id="SolarisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
         <param key="frontSurfaceArea" value="8.415"/>      
         <param key="airDragCoefficient" value="0.35"/>              
         <param key="rotatingMass" value="100"/>                      
