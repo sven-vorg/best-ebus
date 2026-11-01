@@ -1,7 +1,11 @@
 # Imports
 import logging
+from datetime import date
 from pathlib import Path
 
+from pv_estimation.pvgis_api_v6 import PVGISApiCall
+
+from .station_id_matching import StationIdMatching
 from .charging_stations import ChargingStations
 from .build_vehicles import BuildVehicles
 from .build_routes import BuildRoutes
@@ -32,7 +36,13 @@ class HeuristicPostprocessing:
             allow_depot_charging: bool = True,
             depot_total_power_factor: float = 2,
             inactive_list: list | None = None,
+            pv_start_date: date | None = None,
+            pv_data_path: Path | None = None,
+            energy_parameters: dict | None = None,
             ):
+        """pv_start_date and pv_data_path enable the PV estimation, the stations then get
+        the PV data of <pv_data_path>/<pv_start_date>_solar_power_v6_scaled.csv.
+        energy_parameters are passed on to ChargingStations, e.g. ses_factor, ses_drawPower or pv_factor."""
         self.net = net
         self.station_root = station_root
         self.route_root = route_root
@@ -53,27 +63,40 @@ class HeuristicPostprocessing:
         self.allow_depot_charging = allow_depot_charging
         self.depot_total_power_factor = depot_total_power_factor
         self.inactive_list = inactive_list
+        self.pv_start_date = pv_start_date
+        self.pv_data_path = pv_data_path
+        self.energy_parameters = energy_parameters or {}
 
     def main(self):
-        # Create e_stations.add.xml containing stations designated as charging opportunitys
-        cs = ChargingStations(
-            net=self.net,
+        # Stations designated as charging opportunitys
+        stations = StationIdMatching(
             station_root=self.station_root,
-            route_root=self.route_root,
-            output_path=self.output_path,
             area_path=self.area_path,
             solution_path=self.input_path,
             station_id_path=self.station_id_path,
+            inactive_list=self.inactive_list,
+        ).main()
+
+        # PV for stations
+        pv_csv_path = None
+        if self.pv_start_date is not None and self.pv_data_path is not None:
+            PVGISApiCall(stations=stations, output_path=self.pv_data_path, start_date=self.pv_start_date).main()
+            pv_csv_path = Path(self.pv_data_path) / f"{self.pv_start_date}_solar_power_v6_scaled.csv"
+            logger.info("PV estimation completed.")
+
+        # Create e_stations.add.xml
+        cs = ChargingStations(
+            stations=stations,
+            output_path=self.output_path,
             power=self.chargingstation_power,
             total_power_factor=self.total_power_factor,
             allow_depot_charging=self.allow_depot_charging,
             depot_total_power_factor=self.depot_total_power_factor,
-            inactive_list=self.inactive_list,
+            pv_csv_path=pv_csv_path,
+            **self.energy_parameters,
         )
         cs.main()
         logger.info("Step 1/2 completed: Charging station generation.")
-        # Work in Progress
-        # pv for stations
 
         bv = BuildVehicles(
             solution_path=self.input_path,

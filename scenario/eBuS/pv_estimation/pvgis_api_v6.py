@@ -2,7 +2,6 @@ from datetime import date, datetime, timedelta
 from math import floor
 from pathlib import Path
 
-from lxml import etree
 import pandas as pd
 import requests
 
@@ -15,11 +14,12 @@ class PVGISApiCall:
 
     def __init__(
             self,
-            stations_path: Path,
+            stations: list,
             output_path: Path,
             start_date: date | str,
             ):
-        self.stations_path = stations_path
+        """stations as provided by StationIdMatching (postprocessing.station_id_matching.Station)."""
+        self.stations = stations
         self.output_path = output_path
 
         if isinstance(start_date, str):
@@ -34,7 +34,7 @@ class PVGISApiCall:
         self.file_prefix = f"{self.start_date}_"
 
     def main(self):
-        answer_df = self.v6(self.stations_path)
+        answer_df = self.v6(self.stations)
         if answer_df.empty:
             logger.info("No new stations found, nothing to add.")
             return
@@ -47,19 +47,20 @@ class PVGISApiCall:
         existing_df = pd.read_csv(raw_path, usecols=["station_id"])
         return set(existing_df["station_id"])
 
-    def v6(self, stations: Path, csv: bool = True) -> pd.DataFrame:
-        root = etree.parse(stations).getroot()
+    def v6(self, stations: list, csv: bool = True) -> pd.DataFrame:
         existing_station_ids = self.get_existing_station_ids()
-        # Load station output
         # Liste für Ergebnisse initialisieren
         results = []
-        # Alle chargingStation Elemente durchlaufen
-        for station in root.findall(".//chargingStation"):
-            if station.get("id") in existing_station_ids:
+        # Alle Stationen durchlaufen
+        for station in stations:
+            if station.id in existing_station_ids:
+                continue
+            if station.area is None:
+                logger.warning("No area for station %s, skipping PV.", station.id)
                 continue
             # Koordinaten extrahieren und in Float umwandeln
-            coordinates = station.get("coordinates")
-            peak_power = self.calculate_kWp(station.get("area"))
+            coordinates = station.coordinates
+            peak_power = self.calculate_kWp(station.area)
             if coordinates:
                 lon_str, lat_str = coordinates.split(",")
                 latitude = float(lat_str.strip())
@@ -100,7 +101,7 @@ class PVGISApiCall:
                 }
 
                 results.append({
-                    "station_id": station.get("id"),
+                    "station_id": station.id,
                     "peak_power": peak_power,
                     "raw_solar_data": raw_data,
                     "scaled_solar_data": scaled_data,
@@ -161,7 +162,17 @@ class PVGISApiCall:
         )
 
 if __name__ == "__main__":
-    stations_path: Path = Path("best-ebus/scenario/sumo/electric/e_stations.add.xml")
-    output_path: Path = Path("best-ebus/scenario/eBuS/pv_estimation/data")
+    import sys
+    EBUS = Path(__file__).resolve().parent.parent
+    sys.path.append(str(EBUS))
+    from postprocessing.station_id_matching import StationIdMatching
+
+    stations = StationIdMatching(
+        station_root=EBUS / "../sumo/berlin_bus_stops.add.xml",
+        area_path=EBUS / "files/postprocessing_input/pv_area_estimation.csv",
+        solution_path=EBUS / "files/postprocessing_input/solution.json",
+        station_id_path=EBUS / "files/postprocessing_input/station_id_mapping.txt",
+    ).main()
+    output_path: Path = EBUS / "pv_estimation/data"
     start_date: date = date(2024, 6, 22)
-    PVGISApiCall(stations_path=stations_path, output_path=output_path, start_date=start_date).main()
+    PVGISApiCall(stations=stations, output_path=output_path, start_date=start_date).main()

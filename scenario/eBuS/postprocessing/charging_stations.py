@@ -1,161 +1,199 @@
-"""Skript to create charging stations accoarding busstop ids"""
-from lxml import etree
-import pandas as pd
-import sumolib
-from pathlib import Path
-import json
+# AI-generated code — 2026-11-01
+"""Skript to create the charging stations provided by StationIdMatching.
+
+Each charging station can carry a stationary energy storage and a PV energy source,
+which are simulated inside SUMO (MSStationaryEnergyStorage / MSEnergySourcePV).
+Both are configured through <param> children of the <chargingStation>:
+    ses.maximumStorageCapacity  capacity [Wh], enables the storage
+    ses.stateOfChargeStartUp    initial state of charge as fraction of capacity [0..1]
+    ses.drawTarget              passive grid draw until this fraction of capacity [0..1]
+    ses.drawPower               passive grid draw power [W]
+    pv.energyValueList          space separated PV energy per time frame [Wh]
+    pv.timeFrame                length of one time frame [s], value k covers (k * timeFrame, (k + 1) * timeFrame]
+"""
 import datetime
 import logging
+from pathlib import Path
+
+import pandas as pd
+from lxml import etree
+
+from .station_id_matching import Station
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-class ChargingStations():
+
+def format_value(value: float) -> str:
+    """Write numbers without float noise, e.g. 67612.7717175 -> "67612.772", 0.0 -> "0"."""
+    return f"{value:.3f}".rstrip("0").rstrip(".")
+
+
+class ChargingStations:
 
     def __init__(
             self,
-            net: Path,
-            station_root: Path,
-            route_root: Path,
+            stations: list[Station],
             output_path: Path,
-            area_path: Path,
-            solution_path: Path,
-            station_id_path: Path,
             power: int = 150000,
             total_power_factor: float = 2,
             allow_depot_charging: bool = True,
             depot_total_power_factor: float = 2,
-            inactive_list: list | None = None,
+            ses_maximumStorageCapacity: float | None = None,
+            ses_factor: float | None = None,
+            ses_stateOfChargeStartUp: float = 0.0,
+            ses_drawTarget: float = 0.0,
+            ses_drawPower: float = 0.0,
+            pv_csv_path: Path | None = None,
+            pv_factor: float = 1.0,
+            pv_energyValueList: list[float] | None = None,
+            pv_timeFrame: int = 3600,
             ):
-        self.net = sumolib.net.readNet(net)
-        self.STATION_ROOT = etree.parse(station_root).getroot()
-        self.ROUTE_ROOT = etree.parse(route_root).getroot()
+        """stations as provided by StationIdMatching.
+        ses_maximumStorageCapacity sets the same storage capacity (Wh) for every station.
+        Alternatively ses_factor sizes each station's storage as ses_factor * its PV peak power (kWp),
+        giving the capacity in kWh. ses_maximumStorageCapacity takes precedence.
+        Without both no storage is created, unless the station has PV data, then a storage
+        of capacity 0 is created so the PV energy can be used directly.
+        ses_drawPower is in W.
+        pv_csv_path is a "<date>_solar_power_v6_scaled.csv" as written by PVGISApiCall,
+        holding the peak power and the PV energy per hour (Wh) of every station.
+        pv_factor scales those PV values.
+        pv_energyValueList, if given, is used for every station instead of the CSV values,
+        e.g. for testing."""
+        self.stations = stations
         self.OUTPUT_PATH = output_path
-        self.AREA_LOOKUP = self.area_lookup(pd.read_csv(area_path, sep=";"))
-        self.SOLUTION = solution_path
-        self.station_id_mapping = self.station_id_lookup(station_id_path)
         self.POWER = power
         self.TOTAL_POWER_FACTOR = total_power_factor
         self.ALLOW_DEPOT_CHARGING = allow_depot_charging
         self.DEPOT_TOTAL_POWER_FACTOR = depot_total_power_factor
-        self.inactive_list = inactive_list or []
 
-    def station_id_lookup(self, station_id_mapping_path: str) -> dict:
-        """
-        Loads the station ID mapping file (station_id_mapping.txt) and
-        returns its "stops" section: a dict mapping short station IDs
-        (as strings, e.g. "1", "16") to their long canonical IDs
-        (e.g. "agg_10045_25_11089_9_12475_23").
-        """
-        with open(station_id_mapping_path, "r") as file:
-            data = json.load(file)
-        return data["stops"]
+        if pv_factor < 0:
+            raise ValueError("pv_factor must not be negative.")
+        if pv_timeFrame <= 0:
+            raise ValueError("pv_timeFrame must be positive.")
+        self.ses_maximumStorageCapacity = ses_maximumStorageCapacity
+        self.ses_factor = ses_factor
+        self.ses_stateOfChargeStartUp = ses_stateOfChargeStartUp
+        self.ses_drawTarget = ses_drawTarget
+        self.ses_drawPower = ses_drawPower
+        self.pv_factor = pv_factor
+        self.pv_energyValueList = pv_energyValueList
+        self.pv_timeFrame = pv_timeFrame
+        self.peak_power, self.pv_data = self.pv_lookup(pv_csv_path)
 
-    def area_lookup(self, area_df: pd.DataFrame):
-        return area_df.set_index("chargingStation_id")["free_area"].to_dict()
+    def pv_lookup(self, pv_csv_path: Path | None) -> tuple[dict[str, float], dict[str, list[float]]]:
+        """Read the scaled PV CSV and return ({station_id: peak_power (kWp)}, {station_id: [Wh per hour]}).
+        Returns empty dicts if no CSV is given."""
+        if pv_csv_path is None:
+            return {}, {}
+        if not Path(pv_csv_path).exists():
+            raise FileNotFoundError(f"PV file {pv_csv_path} not found, run PVGISApiCall first.")
+        df = pd.read_csv(pv_csv_path).set_index("station_id")
+        df.index = df.index.astype(str)
+        peak_power = df["peak_power"].astype(float).to_dict()
+        hour_columns = sorted((c for c in df.columns if c != "peak_power"), key=int)
+        pv_data = {
+            station_id: row.astype(float).tolist()
+            for station_id, row in df[hour_columns].iterrows()
+        }
+        return peak_power, pv_data
 
-    def charging_stations_from_solution(self):
-        charging_locations = set()
-        with open(self.SOLUTION, "r") as file:
-            data = json.load(file)
-            for station_decision in data["station_decisions"]:
-                if station_decision["investment_period"] is not None:
-                    short_id = str(station_decision["station_id"])
-                    long_id = self.station_id_mapping.get(short_id)
-                    if long_id is None:
-                        raise KeyError(
-                            f"station_id '{short_id}' not found in station_id_mapping "
-                            f"(loaded from station_id_mapping.txt 'stops' section)"
-                        )
-                    if long_id not in self.inactive_list:
-                        charging_locations.add(long_id)
-        return charging_locations
+    def storage_capacity(self, station_id: str) -> float | None:
+        """Storage capacity (Wh) of a station or None if it has no storage."""
+        if self.ses_maximumStorageCapacity is not None:
+            return self.ses_maximumStorageCapacity
+        if self.ses_factor is not None:
+            if station_id not in self.peak_power:
+                logger.warning("No peak power for %s, cannot size its storage by ses_factor.", station_id)
+                return None
+            return self.peak_power[station_id] * self.ses_factor * 1000
+        return None
 
+    def pv_values(self, station_id: str) -> list[float] | None:
+        """PV energy per time frame (Wh) of a station or None if it has no PV data."""
+        if self.pv_energyValueList is not None:
+            return self.pv_energyValueList
+        if station_id not in self.pv_data:
+            return None
+        return [value * self.pv_factor for value in self.pv_data[station_id]]
 
+    def add_energy_params(self, charging_station: etree._Element):
+        """Add the ses.* and pv.* params to a charging station element."""
+        station_id = charging_station.get("id")
+        capacity = self.storage_capacity(station_id)
+        pv_values = self.pv_values(station_id)
+        if capacity is None and pv_values is None:
+            return
+        if capacity is None:
+            # SUMO ignores a PV source without storage, capacity 0 uses the PV energy directly
+            capacity = 0.0
+        params = {
+            "ses.maximumStorageCapacity": format_value(capacity),
+            "ses.stateOfChargeStartUp": format_value(self.ses_stateOfChargeStartUp),
+            "ses.drawTarget": format_value(self.ses_drawTarget),
+            "ses.drawPower": format_value(self.ses_drawPower),
+        }
+        if pv_values is not None:
+            params["pv.energyValueList"] = " ".join(format_value(value) for value in pv_values)
+            params["pv.timeFrame"] = str(self.pv_timeFrame)
+        for key, value in params.items():
+            etree.SubElement(charging_station, "param", key=key, value=value)
+
+    def charging_station_element(self, station: Station) -> etree._Element:
+        """Create a <chargingStation> with its energy params, attributes set to None are left out."""
+        if station.depot:
+            power = 150000 if self.ALLOW_DEPOT_CHARGING else 0
+            total_power = power * self.DEPOT_TOTAL_POWER_FACTOR
+            charge_delay = None
+        else:
+            power = self.POWER
+            # BUG 3221225477
+            #total_power = 150000
+            total_power = self.POWER * self.TOTAL_POWER_FACTOR
+            charge_delay = "21"
+        attributes = {
+            "id": station.id,
+            "name": station.name,
+            "lane": station.lane,
+            "startPos": station.startPos,
+            "endPos": station.endPos,
+            "power": power,
+            "totalPower": total_power,
+            "efficiency": "0.95",
+            "chargeInTransit": "false",
+            "friendlyPos": "true",
+            "parkingLength": station.parkingLength,
+            "chargeDelay": charge_delay,
+            "coordinates": station.coordinates,
+            "area": station.area,
+        }
+        charging_station = etree.Element(
+            "chargingStation",
+            {key: str(value) for key, value in attributes.items() if value is not None},
+        )
+        self.add_energy_params(charging_station)
+        return charging_station
 
     def main(self):
-
-        # Store unique final stop IDs
-        charging_stop_ids = self.charging_stations_from_solution()
-        logger.info("Found %s stops to create charging stations at.", len(charging_stop_ids))
 
         # Create the root element
         additional = etree.Element(
             "additional",
             nsmap={"xsi": "http://www.w3.org/2001/XMLSchema-instance"}
             )
-
-        for bus_stop in self.STATION_ROOT.findall("busStop"):
-            if bus_stop.get("id") in charging_stop_ids:
-                param = bus_stop.find("param[@key='coordinates']")
-                coordinates = param.get("value") if param is not None else None
-                etree.SubElement(
-                    additional,
-                    "chargingStation",
-                    id=f"cs_{bus_stop.get('id')}",
-                    name=f"{bus_stop.get('name')}_Charger",
-                    lane=bus_stop.get("lane"),
-                    startPos=bus_stop.get("startPos"),
-                    endPos=bus_stop.get("endPos"),
-                    power=str(self.POWER),
-                    # BUG 3221225477
-                    #totalPower="150000",
-                    totalPower=str(self.POWER * self.TOTAL_POWER_FACTOR),
-                    efficiency="0.95",
-                    chargeInTransit="false",
-                    friendlyPos="true",
-                    parkingLength=bus_stop.get("parkingLength"),
-                    chargeDelay="21",
-                    coordinates= str(coordinates),
-                    area= str(self.AREA_LOOKUP.get(f"cs_{bus_stop.get('id')}"))
-            )
-        
-        depot_power = 150000 if self.ALLOW_DEPOT_CHARGING else 0
-
-        # Insert charging stations at the beginning of the <additional> element
-        additional.insert(
-            0,
-            etree.Element(
-                "chargingStation",
-                id="cd_cicerostrasse_01",
-                name="Depot Cicerostraße",
-                lane="E1.51_0",
-                startPos="5",
-                endPos="900",
-                power=str(depot_power),
-                totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
-                efficiency="0.95",
-                chargeInTransit="false",
-                friendlyPos="true",
-                coordinates= "13.303440333503405,52.492583731258065",
-                area= str(self.AREA_LOOKUP.get("cd_cicerostrasse_01"))
-            ),
-        )
-
-        additional.insert(
-            0,
-            etree.Element(
-                "chargingStation",
-                id="cd_muellerstrasse_01",
-                name="Depot Müllerstraße",
-                lane="-E19_0",
-                startPos="5",
-                endPos="900",
-                power=str(depot_power),
-                totalPower=str(depot_power * self.DEPOT_TOTAL_POWER_FACTOR),
-                efficiency="0.95",
-                chargeInTransit="false",
-                friendlyPos="true",
-                coordinates= "13.33776446744273,52.56058715781662",
-                area= str(self.AREA_LOOKUP.get("cd_muellerstrasse_01"))
-            ),
-        )
-
-        additional.insert(
-            0,
+        additional.append(
             etree.Comment(
                 f"Generated using {type(self).__name__} Skript on {str(datetime.datetime.now())}")
                 )
+
+        for station in self.stations:
+            additional.append(self.charging_station_element(station))
+
+        with_storage = len(additional.findall("chargingStation/param[@key='ses.maximumStorageCapacity']"))
+        with_pv = len(additional.findall("chargingStation/param[@key='pv.energyValueList']"))
+        logger.info("Created %s charging stations, %s with storage, %s with PV.",
+                    len(self.stations), with_storage, with_pv)
 
         # Write the XML to a file
         tree = etree.ElementTree(additional)
@@ -165,15 +203,3 @@ class ChargingStations():
             xml_declaration=True,
             encoding="UTF-8",
         )
-
-if __name__ == "__main__":
-    HERE = Path(__file__).resolve().parent
-    net = Path(HERE / "../../sumo/berlin.net.xml").resolve()
-    station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
-    route_root = Path(HERE / "../files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
-    output_path = Path(HERE / "../../sumo/electric/").resolve()
-    area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
-    solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
-    station_id_path = Path(HERE / "../files/postprocessing_input/station_id_mapping.txt").resolve()
-    cs = ChargingStations(net, station_root, route_root, output_path, area_path, solution_path, station_id_path)
-    cs.main()

@@ -19,9 +19,6 @@ from lxml import etree
 
 from tools.output_files import SeedOutputFiles
 
-from pv_estimation.pvgis_api_v6 import PVGISApiCall
-from energy_storage_system.charging_station import ChargingStation
-from energy_storage_system.energy_storage_system import EnergyStorageSystem
 from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 from tools.betterAggregateBattery import aggregate
@@ -45,9 +42,9 @@ PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 # until output directory and naming problem is solved.
 SCENARIO_CONFIG_NAMES = (
     "ebus_config_summer.toml",
-    "ebus_config_winter.toml",
-    "ebus_config_reduced.toml",
-    "ebus_config_increased.toml",
+#    "ebus_config_winter.toml",
+#    "ebus_config_reduced.toml",
+#    "ebus_config_increased.toml",
 )
 SCENARIO_CONFIG_PREFIX = "ebus_config_" 
 
@@ -62,14 +59,12 @@ class EBusMain:
     def main(self):
         pv_start_date: date = self.config["photvoltaic_storage_configuration"]["pv_start_date"]
         self.run_heuristic_preprocessing()
-        self.run_heuristic_postprocessing()
+        self.run_heuristic_postprocessing(pv_start_date=pv_start_date)
         self.run_update_types()
         self.run_simulation_seeds()
         run_dir = order_output(SUMO_OUTPUT_DIR)
-        self.run_pvgis_api_call(start_date=pv_start_date)
         for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
             self.run_aggregate_battery(seed_dir)
-            self.run_energy_storage_system(seed_dir, start_date=pv_start_date)
         self.rename_scenario_directory(run_dir)
 
     def run_heuristic_preprocessing(self):
@@ -95,7 +90,7 @@ class EBusMain:
         ).main()
         logger.info("Heuristic Preprocessing completed")
 
-    def run_heuristic_postprocessing(self):
+    def run_heuristic_postprocessing(self, pv_start_date: date):
         network_file: Path = (PROJECT_ROOT / "../sumo/berlin.net.xml").resolve()
         stations_file: Path = (PROJECT_ROOT / "../sumo/berlin_bus_stops.add.xml").resolve()
         routes_file: Path = (FILES_DIR / "postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
@@ -134,6 +129,17 @@ class EBusMain:
 
         inactive_list: list = cfg.get("inactive_stations")
 
+        # Stationary energy storage and PV of the charging stations, simulated inside SUMO
+        ess_cfg = self.config["energy_storage_system"]
+        energy_parameters = {
+            "ses_maximumStorageCapacity": ess_cfg.get("ess_capacity"),  # Wh, takes precedence over ess_factor
+            "ses_factor": ess_cfg.get("ess_factor"),  # capacity (kWh) = ess_factor * PV peak power (kWp)
+            "ses_stateOfChargeStartUp": ess_cfg["start_soc"],
+            "ses_drawTarget": ess_cfg["grid_charge_max_soc"],
+            "ses_drawPower": ess_cfg["grid_charge_power"] * 1000,  # kW -> W
+            "pv_factor": ess_cfg["pv_factor"],
+        }
+
         HeuristicPostprocessing(
             network_file,
             stations_file,
@@ -154,7 +160,10 @@ class EBusMain:
             despawn_offset=despawn_offset,
             allow_depot_charging=allow_depot_charging,
             depot_total_power_factor=depot_total_power_factor,
-            inactive_list=inactive_list
+            inactive_list=inactive_list,
+            pv_start_date=pv_start_date,
+            pv_data_path=PV_DATA_DIR,
+            energy_parameters=energy_parameters,
         ).main()
         logger.info("Heuristic Postprocessing completed")
 
@@ -195,50 +204,6 @@ class EBusMain:
         os.remove(battery_file)
         logger.info(f"Aggregated battery data written to {output_file}")
 
-
-    def run_pvgis_api_call(self, start_date: date):
-        """
-        Execute the PVGIS v6 API call for the given start_date.
-        Data is fetched from start_date 00:00 to the following day 04:59
-        and saved with a "<start_date>_" filename prefix. If a file for
-        that date already exists, the API calls are skipped.
-        May result in a high number of calls at first run,
-        or after creating new charging stations.
-        May be rate limited server side.
-        """
-        cs_path = (SUMO_DIR / "electric/e_stations.add.xml")
-        pv_out = (EBUS_DIR /"pv_estimation/data")
-        pvgis = PVGISApiCall(stations_path=cs_path, output_path=pv_out, start_date=start_date)
-        pvgis.main()
-
-    def run_energy_storage_system(self, run_dir: Path, start_date: date):
-        """
-        Build the energy storage system profile from a seed run's SUMO
-        chargingstations output (a "<seed>_directory" folder, see
-        tools.order_output.order_output) and write the result back as XML.
-        Uses the PV data fetched for start_date by run_pvgis_api_call.
-        """
-        files = SeedOutputFiles(run_dir)
-        chargingstations_file = files.get_file("chargingstations")
-        output_file = files.output_dir / chargingstations_file.name.replace(
-            "_chargingstations.xml", "_ess.xml"
-        )
-        pv_csv_path = PV_DATA_DIR / f"{start_date}_solar_power_v6_scaled.csv"
-
-        cfg = self.config["energy_storage_system"]
-        EnergyStorageSystem(
-            charging_stations=ChargingStation.from_xml(chargingstations_file),
-            ess_factor=cfg.get("ess_factor"),  # each station's ESS = ess_factor * that station's Peak Power (kWh)
-            ess_capacity=cfg.get("ess_capacity"),  # or set a static capacity (Wh) for every station instead
-            pv_csv_path=pv_csv_path,
-            output_path=output_file,
-            start_soc=cfg["start_soc"],  # fraction (0.0-1.0) of each station's own ESS capacity
-            pv_factor=cfg["pv_factor"],  # scales the PV power generated by each station
-            grid_charge_max_soc=cfg["grid_charge_max_soc"],  # always draw from grid below this fraction of SoC
-            grid_charge_power=cfg["grid_charge_power"],  # power (kW) drawn from grid while below grid_charge_max_soc
-            efficiency=cfg["efficiency"],  # battery round-trip efficiency (0.0-1.0)
-        ).main()
-        logger.info(f"ESS output written to {output_file}")
 
     def get_sumo_version(self):
         result = subprocess.run(["sumo", "--version"], capture_output=True, text=True)
