@@ -3,32 +3,45 @@ import re
 import duckdb
 
 
-#SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc","pscbase","wbase")
-SCENARIOS = ("wdepot",)
+SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc","pscbase","wbase")
 
 
-def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
+# Maps file extension -> DuckDB table function used to read it
+READERS = {
+    ".csv": "read_csv_auto",
+    ".parquet": "read_parquet",
+}
+
+
+def import_files_into_db(output_dir: Path, db_file: Path) -> None:
     output_dir = Path(output_dir)
 
-    con = duckdb.connect(str(db_file))
-    created_tables = set()
+    # DuckDB 2.x writes storage version 999 by default ("latest"), which older readers
+    # (e.g. the VS Code DuckDB extension, max. storage version 68) cannot open.
+    # v1.5.0 -> storage version 68. Only applies when the file is newly created.
+    con = duckdb.connect(
+        str(db_file), config={"storage_compatibility_version": "v1.5.0"}
+    )
 
     try:
-        csv_files = sorted(output_dir.rglob("*.csv"))
+        data_files = sorted(
+            f for f in output_dir.rglob("*") if f.suffix.lower() in READERS
+        )
 
-        for csv_file in csv_files:
-            # Expected layout: {scenario}_run_{timestamp}/{seed}_directory/{seed}_multirun_{datatype}.csv
-            relative_path = csv_file.relative_to(output_dir)
+        for data_file in data_files:
+            # Expected layout: {scenario}_run_{timestamp}/{seed}_directory/{seed}_multirun_{datatype}.{csv|parquet}
+            relative_path = data_file.relative_to(output_dir)
             scenario_match = re.match(
                 rf"({'|'.join(SCENARIOS)})_run_", relative_path.parts[0], re.IGNORECASE
             )
-            seed_match = re.match(r"(\d+)_", csv_file.stem)
+            seed_match = re.match(r"(\d+)_", data_file.stem)
 
             if scenario_match and seed_match:
                 scenario = scenario_match.group(1).lower()
                 seed = int(seed_match.group(1))
-                datatype = csv_file.stem[seed_match.end():]
+                datatype = data_file.stem[seed_match.end():]
                 table_name = re.sub(r"[^a-zA-Z0-9_]", "_", datatype)
+                reader = READERS[data_file.suffix.lower()]
 
                 table_exists = con.execute(
                     """
@@ -44,26 +57,31 @@ def import_csvs_into_db(output_dir: Path, db_file: Path) -> None:
                         f"""
                         CREATE TABLE "{table_name}" AS
                         SELECT *, ? AS scenario, ? AS seed
-                        FROM read_csv_auto(?)
+                        FROM {reader}(?)
                         """,
-                        [scenario, seed, str(csv_file)],
+                        [scenario, seed, str(data_file)],
                     )
                 else:
                     con.execute(
                         f"""
                         INSERT INTO "{table_name}"
                         SELECT *, ? AS scenario, ? AS seed
-                        FROM read_csv_auto(?)
+                        FROM {reader}(?)
                         """,
-                        [scenario, seed, str(csv_file)],
+                        [scenario, seed, str(data_file)],
                     )
 
                 print(
-                    f"Imported {csv_file} -> {table_name} "
+                    f"Imported {data_file} -> {table_name} "
                     f"(scenario={scenario}, seed={seed})"
                 )
     finally:
         con.close()
 
-#import_csvs_into_db(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output", r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS.duckdb")
-import_csvs_into_db(Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\sumo\output"), Path(r"G:\Dokumente\Studium\FU Berlin\BeSTeBuS\best-ebus\scenario\eBuS\database\eBuS_wdepot.duckdb"))
+# Paths relative to this script (tools/), independent of the current working directory
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = SCRIPT_DIR.parent.parent / "sumo" / "output"
+DB_FILE = SCRIPT_DIR.parent / "database" / "ebus.duckdb"
+
+DB_FILE.parent.mkdir(parents=True, exist_ok=True)
+import_files_into_db(OUTPUT_DIR, DB_FILE)

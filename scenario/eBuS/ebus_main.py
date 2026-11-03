@@ -23,8 +23,6 @@ from postprocessing.heuristic_postprocessing import HeuristicPostprocessing
 from preprocessing.heuristic_preprocessing import HeuristicPreprocessing
 from tools.betterAggregateBattery import aggregate
 from tools.order_output import order_output
-from tools.xml2csv import xml2csv
-from collections.abc import Iterable
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
@@ -42,21 +40,12 @@ PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
 # Change it to accept config files as arguments.
 # Multiple files still exectued one after another, 
 # until output directory and naming problem is solved.
-#SCENARIO_CONFIG_NAMES = (
-#    "ebus_config_summer.toml",
-#    "ebus_config_winter.toml",
-#    "ebus_config_reduced.toml",
-#   "ebus_config_increased.toml",
-#   "ebus_config_gridsoc.toml",
-#)
-
 SCENARIO_CONFIG_NAMES = (
-    "ebus_config_summer.toml",
-#    "ebus_config_winter.toml",
+#    "ebus_config_summer.toml",
+    "ebus_config_winter.toml",
 #    "ebus_config_reduced.toml",
 #    "ebus_config_increased.toml",
 )
-
 SCENARIO_CONFIG_PREFIX = "ebus_config_" 
 
 class EBusMain:
@@ -74,12 +63,8 @@ class EBusMain:
         self.run_update_types()
         self.run_simulation_seeds()
         run_dir = order_output(SUMO_OUTPUT_DIR)
-        self.run_pvgis_api_call(start_date=pv_start_date)
-        seed_dirs = sorted(p for p in run_dir.iterdir() if p.is_dir())
-        for seed_dir in seed_dirs:
+        for seed_dir in sorted(p for p in run_dir.iterdir() if p.is_dir()):
             self.run_aggregate_battery(seed_dir)
-            self.run_energy_storage_system(seed_dir, start_date=pv_start_date)
-        self.run_xml2csv(seed_dirs)
         self.rename_scenario_directory(run_dir)
 
     def run_heuristic_preprocessing(self):
@@ -136,7 +121,7 @@ class EBusMain:
 
         offset: int | None = cfg.get("offset")
 
-        despawn_offset: int | None = cfg.get("despawn_offset")
+        despawn_offset: int = cfg.get("despawn_offset")
 
         allow_depot_charging: bool = cfg.get("allow_depot_charging", True)
 
@@ -184,23 +169,33 @@ class EBusMain:
 
     def run_update_types(self):
         """
-        Write the "Constant Power Intake" value from the config into the
-        constantPowerIntake param of every vType in e_type.add.xml.
+        Write the "Constant Power Intake" and "Energy Recuperation" values from
+        the config into the matching params of every vType in e_type.add.xml.
         """
         type_file: Path = SUMO_DIR / "electric" / "e_type.add.xml"
 
         constant_power_intake: int = self.config["vehicles"]["constant_power_intake"]
+        energy_recuperation: float = self.config["vehicles"]["energy_recuperation"]
+
+        new_values = {
+            "constantPowerIntake": constant_power_intake,
+            "recuperationEfficiency": energy_recuperation,
+        }
 
         tree = etree.parse(str(type_file))
-        params = tree.getroot().xpath(".//vType/param[@key='constantPowerIntake']")
+        params = tree.getroot().xpath(
+            ".//vType/param[@key='constantPowerIntake' or @key='recuperationEfficiency']"
+        )
 
         for param in params:
-            param.set("value", str(constant_power_intake))
+            param.set("value", str(new_values[param.get("key")]))
 
         tree.write(str(type_file), encoding="UTF-8", xml_declaration=True)
         logger.info(
-            f"Set constantPowerIntake to {constant_power_intake} for {len(params)} bus type(s) in {type_file}"
+            f"Set constantPowerIntake to {constant_power_intake} and "
+            f"recuperationEfficiency to {energy_recuperation} in {type_file}"
         )
+
 
     def run_aggregate_battery(self, run_dir: Path):
         """
@@ -219,58 +214,6 @@ class EBusMain:
         os.remove(battery_file)
         logger.info(f"Aggregated battery data written to {output_file}")
 
-    def run_xml2csv(self, run_dirs: Iterable[Path]) -> None:
-        """
-        Convert the XML output files of every given seed run directory to CSV
-        (see tools.xml2csv.xml2csv). The number of parallel workers equals the
-        number of simulation threads from the config.
-        """
-        max_workers: int = self.config["run_simulation_seeds"].get("threads", 1)
-        xml2csv(run_dirs, max_workers)
-
-    def run_pvgis_api_call(self, start_date: date):
-        """
-        Execute the PVGIS v6 API call for the given start_date.
-        Data is fetched from start_date 00:00 to the following day 04:59
-        and saved with a "<start_date>_" filename prefix. If a file for
-        that date already exists, the API calls are skipped.
-        May result in a high number of calls at first run,
-        or after creating new charging stations.
-        May be rate limited server side.
-        """
-        cs_path = (SUMO_DIR / "electric/e_stations.add.xml")
-        pv_out = (EBUS_DIR /"pv_estimation/data")
-        pvgis = PVGISApiCall(stations_path=cs_path, output_path=pv_out, start_date=start_date)
-        pvgis.main()
-
-    def run_energy_storage_system(self, run_dir: Path, start_date: date):
-        """
-        Build the energy storage system profile from a seed run's SUMO
-        chargingstations output (a "<seed>_directory" folder, see
-        tools.order_output.order_output) and write the result back as XML.
-        Uses the PV data fetched for start_date by run_pvgis_api_call.
-        """
-        files = SeedOutputFiles(run_dir)
-        chargingstations_file = files.get_file("chargingstations")
-        output_file = files.output_dir / chargingstations_file.name.replace(
-            "_chargingstations.xml", "_ess.xml"
-        )
-        pv_csv_path = PV_DATA_DIR / f"{start_date}_solar_power_v6_scaled.csv"
-
-        cfg = self.config["energy_storage_system"]
-        EnergyStorageSystem(
-            charging_stations=ChargingStation.from_xml(chargingstations_file),
-            ess_factor=cfg.get("ess_factor"),  # each station's ESS = ess_factor * that station's Peak Power (kWh)
-            ess_capacity=cfg.get("ess_capacity"),  # or set a static capacity (Wh) for every station instead
-            pv_csv_path=pv_csv_path,
-            output_path=output_file,
-            start_soc=cfg["start_soc"],  # fraction (0.0-1.0) of each station's own ESS capacity
-            pv_factor=cfg["pv_factor"],  # scales the PV power generated by each station
-            grid_charge_max_soc=cfg["grid_charge_max_soc"],  # always draw from grid below this fraction of SoC
-            grid_charge_power=cfg["grid_charge_power"],  # power (kW) drawn from grid while below grid_charge_max_soc
-            efficiency=cfg["efficiency"],  # battery round-trip efficiency (0.0-1.0)
-        ).main()
-        logger.info(f"ESS output written to {output_file}")
 
     def get_sumo_version(self):
         result = subprocess.run(["sumo", "--version"], capture_output=True, text=True)
@@ -300,8 +243,7 @@ class EBusMain:
         sumo_bin = Path(os.environ["SUMO_HOME"]) / "bin" / "sumo.exe"
         run_seeds_script = Path(os.environ["SUMO_HOME"]) / "tools" / "runSeeds.py"
         logger.info("from %s directory.", sumo_bin)
-        config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus.sumocfg").resolve()
-        #config_path = (PROJECT_ROOT / "../sumo/e_validation.sumocfg").resolve()
+        config_path = (PROJECT_ROOT / "../sumo/e_berlin-bus_p.sumocfg").resolve()
         cfg = self.config["run_simulation_seeds"]
         # runSeeds.py expects a comma-separated list (or a "start:stop" range);
         # the config stores seeds as a space-separated list, so convert here.

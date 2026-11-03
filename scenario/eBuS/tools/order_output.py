@@ -6,22 +6,23 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-SEED_FILE_PATTERN = re.compile(r"^(\d+)_multirun_.+\.xml$")
+SEED_FILE_PATTERN = re.compile(r"^(\d+)_multirun_.+\.(xml|parquet)$")
 
 
 def order_output(output_dir: Path) -> Path:
     """
     Move all output files from a multi-seed SUMO run (named
-    "<seed>_multirun_<type>.xml", see EBusMain.run_simulation_seeds)
-    into per-seed "<seed>_directory" folders, grouped together under
-    one run_<timestamp> folder so a run's seeds stay together.
+    "<seed>_multirun_<type>.xml" or ".parquet", see
+    EBusMain.run_simulation_seeds) into per-seed "<seed>_directory"
+    folders, grouped together under one run_<timestamp> folder so a
+    run's seeds stay together.
     """
     output_dir = Path(output_dir)
 
     seeds = sorted(
         {
             match.group(1)
-            for path in output_dir.glob("*_multirun_*.xml")
+            for path in output_dir.glob("*_multirun_*")
             if (match := SEED_FILE_PATTERN.match(path.name))
         },
         key=int,
@@ -37,8 +38,9 @@ def order_output(output_dir: Path) -> Path:
         seed_dir = run_dir / f"{seed}_directory"
         seed_dir.mkdir(exist_ok=True)
 
-        for path in output_dir.glob(f"{seed}_multirun_*.xml"):
-            shutil.move(str(path), seed_dir / path.name)
+        for path in output_dir.glob(f"{seed}_multirun_*"):
+            if SEED_FILE_PATTERN.match(path.name):
+                shutil.move(str(path), seed_dir / path.name)
 
         logger.info(f"Seed {seed} output moved to {seed_dir}")
 
