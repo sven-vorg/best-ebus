@@ -8,7 +8,7 @@
         <param key="rollDragCoefficient" value="0.01"/>             
         <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value=".9"/>           
+        <param key="recuperationEfficiency" value="0.38"/>           
         <param key="personCapacity" value="70"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
@@ -31,7 +31,7 @@
         <param key="rollDragCoefficient" value="0.01"/>             
         <param key="constantPowerIntake" value="5000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value=".9"/>
+        <param key="recuperationEfficiency" value="0.38"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
         <param key="device.battery.capacity" value="700000"/>                         
@@ -53,7 +53,7 @@
         <param key="rollDragCoefficient" value="0.01"/>             
         <param key="constantPowerIntake" value="5000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value=".9"/>
+        <param key="recuperationEfficiency" value="0.38"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
         <param key="device.battery.capacity" value="300000"/>                        
