@@ -95,12 +95,14 @@ efficiency = 0.95
 [vehicles]
 # Constant auxiliary power draw (W) written to every vType's
 # constantPowerIntake param in sumo/electric/e_type.add.xml
-"constant_power_intake" = 1000
+constant_power_intake = 1000
+energy_recuperation = 0.54
+
 
 [run_simulation_seeds]
 # Space-separated list of seeds to run the simulation with, e.g. "161".
 # A single "start:stop" token (no spaces) is also accepted as a range, e.g. "0:100".
 # uncomment to run the simulation once per seed instead of a single run; leave unset to disable
-seeds = "70 67 75 65 68"
+seeds = "70"
 # Number of simulation runs to perform in parallel
-threads = 5
+threads = 1

@@ -14,17 +14,17 @@
     <chargingstations-output value="chargingstations.xml"/>
     <chargingstations-output.aggregated value="true"/>
     <chargingstations-output.aggregated.write-unfinished value="true"/>
-    <!--<fcd-output value="fcdinfo.xml"/> -->
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
     <stop-output value="stopinfo.xml"/>
+    <stationary-energy-storage-output value="ses.xml"/>
+    <!--<stationary-energy-storage-output.period value="60"/>-->
+    <!--<fcd-output value="fcdinfo.xml"/>
     <emission-output value="emissions.xml"/>
     <emission-output.attributes value="id, eclass, electricity, noise, route, type, waiting, lane, pos, speed, pos_x, pos_y"/>
     <emission-output.geo value="true"/>
     <edgeData id="traffic" file="traffic_edgedata.xml"/>
-    <edgedata-output value="true.xml"/>
-    <stationary-energy-storage-output value="ses.xml"/>
-    <!--<stationary-energy-storage-output.period value="60"/>-->
+    <edgedata-output value="true.xml"/>-->
   </output>
   <time>
     <begin value="0.0"/>
