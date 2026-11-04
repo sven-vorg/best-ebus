@@ -34,7 +34,7 @@ class ChargingStations:
     def __init__(
             self,
             stations: list[Station],
-            output_path: Path,
+            output_file: Path,
             power: int = 150000,
             total_power_factor: float = 2,
             allow_depot_charging: bool = True,
@@ -49,7 +49,7 @@ class ChargingStations:
             pv_energyValueList: list[float] | None = None,
             pv_timeFrame: int = 3600,
             ):
-        """stations as provided by StationIdMatching.
+        """stations as provided by StationIdMatching, written to output_file (e_stations.add.xml).
         ses_maximumStorageCapacity sets the same storage capacity (Wh) for every station.
         Alternatively ses_factor sizes each station's storage as ses_factor * its PV peak power (kWp),
         giving the capacity in kWh. ses_maximumStorageCapacity takes precedence.
@@ -62,7 +62,7 @@ class ChargingStations:
         pv_energyValueList, if given, is used for every station instead of the CSV values,
         e.g. for testing."""
         self.stations = stations
-        self.OUTPUT_PATH = output_path
+        self.OUTPUT_FILE = output_file
         self.POWER = power
         self.TOTAL_POWER_FACTOR = total_power_factor
         self.ALLOW_DEPOT_CHARGING = allow_depot_charging
@@ -148,8 +148,6 @@ class ChargingStations:
             charge_delay = None
         else:
             power = self.POWER
-            # BUG 3221225477
-            #total_power = 150000
             total_power = self.POWER * self.TOTAL_POWER_FACTOR
             charge_delay = "21"
         attributes = {
@@ -198,7 +196,7 @@ class ChargingStations:
         # Write the XML to a file
         tree = etree.ElementTree(additional)
         tree.write(
-            f"{self.OUTPUT_PATH}/e_stations.add.xml",
+            str(self.OUTPUT_FILE),
             pretty_print=True,
             xml_declaration=True,
             encoding="UTF-8",

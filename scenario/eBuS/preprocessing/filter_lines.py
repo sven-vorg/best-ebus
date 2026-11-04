@@ -13,7 +13,7 @@ class FilterLines:
         routes_file: Path,
         selected_lines: dict[str, list[str]],
         bus_stops_file: Path,
-        output_dir: Path,
+        trips_file: Path,
     ):
         self.routes_tree = etree.parse(routes_file)
         self.routes_root = self.routes_tree.getroot()
@@ -29,7 +29,7 @@ class FilterLines:
         self.bus_stops_tree = etree.parse(bus_stops_file)
         self.bus_stops_root = self.bus_stops_tree.getroot()
 
-        self.output_dir = output_dir
+        self.trips_file = trips_file
 
         self.route_calculations = pd.DataFrame()
 
@@ -163,7 +163,7 @@ class FilterLines:
         ])
 
         df.reset_index(drop=True, inplace=True)
-        df.to_csv(f"{self.output_dir}/trips_best.txt", index=False, sep=";")
+        df.to_csv(self.trips_file, index=False, sep=";")
 
     def main(self):
         self._remove_routes()
@@ -186,10 +186,11 @@ class FilterLines:
         return bus_stop_names
 
     def stop_coord_dict(self):
-        bus_stop_coords = {
-            stop.get("id"): stop.get("coordinates")
-            for stop in self.bus_stops_root.findall("busStop")
-        }
+        # coordinates are a <param key="coordinates" value="lon,lat"/> child, added by the CoordinateCalculator
+        bus_stop_coords = {}
+        for stop in self.bus_stops_root.findall("busStop"):
+            param = stop.find("param[@key='coordinates']")
+            bus_stop_coords[stop.get("id")] = param.get("value") if param is not None else None
         return bus_stop_coords
 
 
@@ -202,7 +203,7 @@ if __name__ == "__main__":
         selected_lines = tomllib.load(f)["heuristic_preprocessing"]["lines"]
 
     routes_file = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    bus_stops_file = (HERE /  "../../sumo/berlin_bus_stops.add.xml").resolve()
-    output_dir = (HERE / "../postprocessing_inputs/files").resolve()
-    fl = FilterLines(routes_file, selected_lines, bus_stops_file, output_dir)
+    bus_stops_file = (HERE /  "../../sumo/electric/e_bus_stops.add.xml").resolve()
+    trips_file = (HERE / "../files/postprocessing_input/trips_best.txt").resolve()
+    fl = FilterLines(routes_file, selected_lines, bus_stops_file, trips_file)
     fl.main()

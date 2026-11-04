@@ -15,12 +15,20 @@ class PVGISApiCall:
     def __init__(
             self,
             stations: list,
-            output_path: Path,
             start_date: date | str,
+            raw_data_file: Path,
+            raw_power_file: Path,
+            scaled_power_file: Path,
             ):
-        """stations as provided by StationIdMatching (postprocessing.station_id_matching.Station)."""
+        """stations as provided by StationIdMatching (postprocessing.station_id_matching.Station).
+        raw_data_file holds the complete PVGIS answers and tells which stations were already fetched,
+        raw_power_file the PV power per station and hour as returned by PVGIS,
+        scaled_power_file the PV energy per station and hour [Wh] scaled by the peak power.
+        All three are appended to, so stations fetched before are kept."""
         self.stations = stations
-        self.output_path = output_path
+        self.raw_data_file = Path(raw_data_file)
+        self.raw_power_file = Path(raw_power_file)
+        self.scaled_power_file = Path(scaled_power_file)
 
         if isinstance(start_date, str):
             start_date = date.fromisoformat(start_date)
@@ -31,7 +39,6 @@ class PVGISApiCall:
 
         self.start_time = f"{self.start_date} 00:00:00"
         self.end_time = f"{end_date} 04:59:59"
-        self.file_prefix = f"{self.start_date}_"
 
     def main(self):
         answer_df = self.v6(self.stations)
@@ -41,10 +48,9 @@ class PVGISApiCall:
         self.optimize_csv(answer_df)
 
     def get_existing_station_ids(self) -> set:
-        raw_path = Path(self.output_path) / f"{self.file_prefix}raw_pv_data.csv"
-        if not raw_path.exists():
+        if not self.raw_data_file.exists():
             return set()
-        existing_df = pd.read_csv(raw_path, usecols=["station_id"])
+        existing_df = pd.read_csv(self.raw_data_file, usecols=["station_id"])
         return set(existing_df["station_id"])
 
     def v6(self, stations: list, csv: bool = True) -> pd.DataFrame:
@@ -108,8 +114,7 @@ class PVGISApiCall:
                 })
         df = pd.DataFrame(results)
         if csv and not df.empty:
-            raw_path = Path(self.output_path) / f"{self.file_prefix}raw_pv_data.csv"
-            df.to_csv(raw_path, mode="a", header=not raw_path.exists(), index=False)
+            df.to_csv(self.raw_data_file, mode="a", header=not self.raw_data_file.exists(), index=False)
         logger.info(f"\nPV call and scaling completed. {len(results)} new stations processed.")
         return df
 
@@ -144,35 +149,16 @@ class PVGISApiCall:
             axis=1,
         )
 
-        raw_out_path = Path(self.output_path) / f"{self.file_prefix}solar_power_v6_raw.csv"
-        scaled_out_path = Path(self.output_path) / f"{self.file_prefix}solar_power_v6_scaled.csv"
-
         raw_result.to_csv(
-            raw_out_path,
+            self.raw_power_file,
             mode="a",
-            header=not raw_out_path.exists(),
+            header=not self.raw_power_file.exists(),
             index=False,
         )
 
         scaled_result.to_csv(
-            scaled_out_path,
+            self.scaled_power_file,
             mode="a",
-            header=not scaled_out_path.exists(),
+            header=not self.scaled_power_file.exists(),
             index=False,
         )
-
-if __name__ == "__main__":
-    import sys
-    EBUS = Path(__file__).resolve().parent.parent
-    sys.path.append(str(EBUS))
-    from postprocessing.station_id_matching import StationIdMatching
-
-    stations = StationIdMatching(
-        station_root=EBUS / "../sumo/berlin_bus_stops.add.xml",
-        area_path=EBUS / "files/postprocessing_input/pv_area_estimation.csv",
-        solution_path=EBUS / "files/postprocessing_input/solution.json",
-        station_id_path=EBUS / "files/postprocessing_input/station_id_mapping.txt",
-    ).main()
-    output_path: Path = EBUS / "pv_estimation/data"
-    start_date: date = date(2024, 6, 22)
-    PVGISApiCall(stations=stations, output_path=output_path, start_date=start_date).main()

@@ -8,11 +8,12 @@ class TerminationPoints():
             self,
             routes_root,
             depots: tuple,
-            output: Path
+            output_file: Path
         ):
         self.ROUTE_ROOT = routes_root
         self.depots = depots
-        self.OUTPUT_PATH = output
+        # read by the DeadheadCalculator
+        self.output_file = output_file
 
     def get_final_stop_ids(self):
         # Store unique final stop IDs
@@ -31,7 +32,7 @@ class TerminationPoints():
 
     def txt_for_heuristic(self):
         df = pd.DataFrame(self.get_final_stop_ids())
-        df.to_csv(f"{self.OUTPUT_PATH}/termination_points.txt", index=False, sep=";", header= False)
+        df.to_csv(self.output_file, index=False, sep=";", header= False)
 
     def main(self):
         self.get_final_stop_ids()
@@ -43,8 +44,8 @@ if __name__ == "__main__":
     
     routes: Path = (HERE / "../files/cicero_mueller_routes.rou.xml").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
-    output: Path = (HERE / "../postprocessing_inputs/files").resolve()
+    output_file: Path = (HERE / "../files/postprocessing_input/termination_points.txt").resolve()
     routes_root = etree.parse(routes).getroot()
-    tp = TerminationPoints(routes_root, depots, output)
+    tp = TerminationPoints(routes_root, depots, output_file)
     tp.main()
 

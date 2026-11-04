@@ -17,7 +17,8 @@ class DeadheadCalculator():
             routes_root,
             termination_points: Path,
             depots: tuple,
-            output: Path,
+            deadhead_file: Path,
+            routes_file: Path,
         ):
         # Read Network
         self.net = sumolib.net.readNet(network)
@@ -28,8 +29,9 @@ class DeadheadCalculator():
         # Load Termination Points
         self.termination_points = self._load_termination_points(termination_points)
         self.depots = depots
-        # Set Output
-        self.output = output
+        # Set Output: run times and routes between all termination points
+        self.deadhead_file = deadhead_file
+        self.routes_file = routes_file
 
     def _load_termination_points(self, path):
         return set(pd.read_csv(path, header = None)[0].astype(str))
@@ -51,11 +53,11 @@ class DeadheadCalculator():
 
     def _write_deadhead_time(self, time_rows):
         pd.DataFrame(time_rows).to_csv(
-            f"{self.output}/deadhead_times.txt",
+            self.deadhead_file,
             sep=";",
             index=False
         )
-        logger.info("Written deadhead_times.txt")
+        logger.info("Written %s", self.deadhead_file)
 
     def calculate_station_deadheads(self):
         logger.info("Starting Network Deadhead Calculations")
@@ -100,14 +102,13 @@ class DeadheadCalculator():
 
         etree.indent(self.routes_root, space="    ")
         tree = etree.ElementTree(self.routes_root)
-        output_file = f"{self.output}/e_preprocessed_routes.rou.xml"
         tree.write(
-            output_file,
+            self.routes_file,
             encoding="utf-8",
             xml_declaration=True,
             pretty_print=True,
         )
-        logger.info("Written %s", output_file)
+        logger.info("Written %s", self.routes_file)
 
 if __name__ == "__main__":
     
@@ -116,9 +117,11 @@ if __name__ == "__main__":
     network: Path = (HERE / "../../sumo/berlin.net.xml").resolve()
     stations: Path = (HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
     routes: Path = (HERE / "../../sumo/berlin_bus.rou.xml").resolve()
-    termination_points: Path = (HERE / "../files/preprocessing_input/termination_points.txt").resolve()
+    # written by TerminationPoints in the preprocessing
+    termination_points: Path = (HERE / "../files/postprocessing_input/termination_points.txt").resolve()
     depots: tuple = ("cicerostrasse", "muellerstrasse")
-    output: Path = (HERE / "../files").resolve()
+    deadhead_file: Path = (HERE / "../files/postprocessing_input/deadhead_times.txt").resolve()
+    routes_file: Path = (HERE / "../files/postprocessing_input/e_preprocessed_routes.rou.xml").resolve()
     routes_root = etree.parse(routes).getroot()
-    dc = DeadheadCalculator(network, stations, routes_root, termination_points, depots, output)
+    dc = DeadheadCalculator(network, stations, routes_root, termination_points, depots, deadhead_file, routes_file)
     dc.calculate_station_deadheads()

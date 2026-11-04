@@ -132,13 +132,3 @@ class StationIdMatching:
                     parkingLength=bus_stop.get("parkingLength"),
                 ))
         return stations
-
-
-if __name__ == "__main__":
-    HERE = Path(__file__).resolve().parent
-    station_root = Path(HERE / "../../sumo/berlin_bus_stops.add.xml").resolve()
-    area_path = Path(HERE / "../files/postprocessing_input/pv_area_estimation.csv").resolve()
-    solution_path = Path(HERE / "../files/postprocessing_input/solution.json").resolve()
-    station_id_path = Path(HERE / "../files/postprocessing_input/station_id_mapping.txt").resolve()
-    for station in StationIdMatching(station_root, area_path, solution_path, station_id_path).main():
-        print(station)

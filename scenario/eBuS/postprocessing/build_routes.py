@@ -1,9 +1,14 @@
 import json
+import logging
 import pandas as pd
 from pathlib import Path
 from lxml import etree
 
+logger = logging.getLogger(__name__)
+
 SIMULATION_RUNTIME = 104399
+# Tolerance [s] when comparing the charging times of the solution (float minutes) with stop times (s)
+TIME_TOLERANCE = 1.0
 
 class BuildRoutes:
     def __init__(
@@ -23,6 +28,8 @@ class BuildRoutes:
         self.deadhead_timings = pd.read_csv(deadhead_timing_path, sep=";")
         self.output_path = output_path
         self.offset = despawn_offset
+        # charging events of the solution that could not be turned into a charging stop
+        self.unplaced_events = []
 
     def main(self):
         new_routes = {}
@@ -56,6 +63,8 @@ class BuildRoutes:
 
                 previous_original_trip_id = original_trip_id
 
+            for event in charging_events:
+                self.report_unplaced_event(event, "after the last trip")
 
             deadheads = self.build_depot_deadheads(bus, trip_stops[0], trip_stops[-1])
             trip_edges.insert(0, deadheads[0])
@@ -72,6 +81,9 @@ class BuildRoutes:
                 "edges": trip_edges_string,
                 "stops": trip_stops
             }
+        if self.unplaced_events:
+            logger.warning("%s of %s charging events could not be placed (see warnings above).",
+                           len(self.unplaced_events), len(self.solution_dict["charging_events"]))
         self.build_xml_routes(new_routes, self.output_path)
 
     def build_deadheads(self, last_stop, first_stop):
@@ -140,43 +152,64 @@ class BuildRoutes:
         return start_depot_edges, end_depot_edges, departure, arrival
 
     def build_stops(self, trip, original_trip_id, route_id, charging_events):
+        """Stops of one trip, shifted to its scheduled departure, plus the charging stops planned around it.
 
+        The departure comes from the trip file (VBB schedule), the stop times within the trip from the
+        preprocessed routes (SUMO run times). The arrival is therefore taken from the shifted last stop,
+        which is the time SUMO and the optimizer use, not from the END_TIMESTAMP of the trip file.
+        charging_events (sorted by start) is consumed: placed and unplaceable events are removed."""
         trip_departure_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "START_TIMESTAMP"].iloc[0])
-        trip_arrival_time = int(self.trips_df.loc[self.trips_df["TRIP_ID"] == trip, "END_TIMESTAMP"].iloc[0])
 
         stops = [dict(stop) for stop in self.original_routes[original_trip_id]["stops"]]
         for stop in stops:
             stop["until"] = str(float(stop["until"]) + trip_departure_time)
             stop["tripId"] = str(trip)
+        trip_arrival_time = float(stops[-1]["until"])
+        first_stop, last_stop = stops[0]["busStop"], stops[-1]["busStop"]
 
+        # Charging before this trip, at its first stop: every event that ends by the departure.
+        # Such an event at another station cannot be placed anymore (its gap between two trips has
+        # passed), so it is reported and dropped instead of blocking all later events of the bus.
+        placed_before = 0
+        while charging_events and charging_events[0]["end_time"] * 60 <= trip_departure_time + TIME_TOLERANCE:
+            event = charging_events.pop(0)
+            station = self.charging_station(event)
+            if station == first_stop:
+                stops.insert(placed_before, {
+                    "busStop": station,
+                    "until": str(int(event["end_time"] * 60)),
+                    "tripId": str(trip),
+                })
+                placed_before += 1
+            else:
+                self.report_unplaced_event(event, f"before trip {trip}, which starts at {first_stop}")
+
+        # Charging after this trip, at its last stop: the next event, if it starts once the bus has arrived.
+        # If not, it stays in the list and is handled as "before the next trip".
         if charging_events:
-            current_charging_event = charging_events[0]
-            #print(f"Charging Events present bus: {current_charging_event["bus_id"]}")
-   
-            charging_station_id = str(self.station_id_dict.get(str(current_charging_event["station_id"])))
-            if stops[0]["busStop"] == charging_station_id and trip_departure_time >= int(current_charging_event["end_time"])*60:
-                charging_stop = {
-                    "busStop": charging_station_id,
-                    "until": str(int(current_charging_event["end_time"]*60)),
-                    #"charging_event": f"{current_charging_event["bus_id"]}[{current_charging_event["station_id"]} start]",
-                    "tripId": str(trip)
-                }
-                stops.insert(0, charging_stop)
-                del charging_events[0]
-
-            elif stops[-1]["busStop"] == charging_station_id and trip_arrival_time <= int(current_charging_event["start_time"])*60:
-                charging_stop = {
-                    "busStop": charging_station_id,
-                    "until": str(int(current_charging_event["end_time"]*60)),
-                    #"charging_event": f"{current_charging_event["bus_id"]}[{current_charging_event["station_id"]} end]",
-                    "duration": str(int(current_charging_event["end_time"]*60)-int(current_charging_event["start_time"]*60)),
+            event = charging_events[0]
+            station = self.charging_station(event)
+            if station == last_stop and trip_arrival_time <= event["start_time"] * 60 + TIME_TOLERANCE:
+                stops.insert(-1, {
+                    "busStop": station,
+                    "until": str(int(event["end_time"] * 60)),
+                    "duration": str(int(event["end_time"] * 60) - int(event["start_time"] * 60)),
                     "parking": "true",
-                    "tripId": str(trip)
-                }
-                stops.insert(-1, charging_stop)
+                    "tripId": str(trip),
+                })
                 del charging_events[0]
 
         return stops
+
+    def charging_station(self, event):
+        """Bus stop id of the charging station of a charging event."""
+        return str(self.station_id_dict.get(str(event["station_id"])))
+
+    def report_unplaced_event(self, event, reason):
+        self.unplaced_events.append(event)
+        logger.warning("Bus %s: charging event at station %s (%s, %.0f-%.0f s) could not be placed %s.",
+                       event["bus_id"], event["station_id"], self.charging_station(event),
+                       event["start_time"] * 60, event["end_time"] * 60, reason)
 
     def build_xml_routes(self, new_routes, output_path):
         root = etree.Element("routes")
@@ -213,13 +246,3 @@ class BuildRoutes:
                 "stops": [stop.attrib for stop in route.findall("stop")]
             }
         return routes_dict
-    
-if __name__ == "__main__":
-    solution_path = Path(r"best-ebus\scenario\eBuS\files\postprocessing_input\solution.json")
-    station_id_map_path = Path(r"best-ebus\scenario\eBuS\files\postprocessing_input\station_id_mapping.txt")
-    trips_path = Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\files\postprocessing_input\trips_vbb.txt")
-    routes_path = Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\files\postprocessing_input\e_preprocessed_routes.rou.xml")
-    deadhead_timing_path = Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\eBuS\files\postprocessing_input\deadhead_times.txt")
-    output_path = Path(r"C:\Users\svens\Documents\FU-Berlin\BeST-eBuS\best-ebus\scenario\sumo\electric\e_routes.rou.xml")
-    build_routes = BuildRoutes(solution_path, station_id_map_path, trips_path, routes_path, deadhead_timing_path, output_path)
-    build_routes.main()

@@ -76,7 +76,7 @@ class OutputFiles:
 class SeedOutputFiles:
     """
     Resolves output files for a single seed's run folder, as produced by
-    tools.order_output.order_output (files named "<seed>_multirun_<type>.xml",
+    output_processing.order_output.order_output (files named "<seed>_multirun_<type>.xml",
     grouped under run_<timestamp>/<seed>_directory/).
     """
 
@@ -163,7 +163,7 @@ class MultiSeedRunFiles:
     """
     Resolves output files for an overarching `run_<timestamp>` folder
     holding one `<seed>_directory` subfolder per seed (as produced by
-    tools.order_output.order_output). Seed `BASELINE_SEED` is the
+    output_processing.order_output.order_output). Seed `BASELINE_SEED` is the
     baseline; every other seed present is treated as a confidence-interval
     seed.
     """

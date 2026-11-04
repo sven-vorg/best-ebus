@@ -1,4 +1,4 @@
-""" Skript for adding coordinates as custom xml parameter to berlin_bus_stops.add.xml """
+""" Skript for adding coordinates as custom xml parameter to a copy of berlin_bus_stops.add.xml """
 
 from lxml import etree
 import sumolib
@@ -41,8 +41,10 @@ class CoordinateCalculator:
 
         return self.bus_stops_tree
 
-    def save(self, output_path=None):
-        output_path = output_path or self.bus_stops_file_path
+    def save(self, output_path: Path):
+        """Write the bus stops with coordinates to output_path; the input file stays untouched."""
+        if Path(output_path).resolve() == Path(self.bus_stops_file_path).resolve():
+            raise ValueError(f"Refusing to overwrite the input file {output_path}.")
         self.bus_stops_tree.write(
             output_path,
             pretty_print=True,
@@ -54,7 +56,8 @@ class CoordinateCalculator:
 if __name__ == "__main__":
     net_file_path = "best-ebus/scenario/sumo/berlin.net.xml"
     bus_stops_file_path = "best-ebus/scenario/sumo/berlin_bus_stops.add.xml"
+    output_path = "best-ebus/scenario/sumo/electric/e_bus_stops.add.xml"
     coordinate_calculator = CoordinateCalculator(net_file_path, bus_stops_file_path)
     coordinate_calculator.add_coordinates_to_bus_stops()
     #coordinate_calculator.remove_coordinates_from_bus_stops()
-    coordinate_calculator.save()
+    coordinate_calculator.save(output_path)
