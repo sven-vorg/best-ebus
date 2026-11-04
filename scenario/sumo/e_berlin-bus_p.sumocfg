@@ -16,7 +16,7 @@
     <chargingstations-output.aggregated.write-unfinished value="true"/>
     <tripinfo-output value="tripinfo.xml"/>
     <tripinfo-output.write-unfinished value="true"/>
-    <stop-output value="stopinfo.parquet"/>
+    <stop-output value="stopinfo.xml"/>
     <stationary-energy-storage-output value="ses.parquet"/>
     <!--<stationary-energy-storage-output.period value="60"/>-->
     <!--<fcd-output value="fcdinfo.xml"/>
