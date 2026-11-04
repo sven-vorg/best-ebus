@@ -1,11 +1,28 @@
 [project]
 name = "best-ebus"
 version = "0.1.0"
-requires-python = ">=3.11"
+description = "eBuS: electric bus scenario for Berlin with SUMO"
+requires-python = ">=3.14"
+# traci / libsumo are deliberately not listed: they come from the own SUMO build
+# (SUMO_HOME/tools), which contains the stationary energy storage.
 dependencies = [
     "duckdb>=2.0.0",
     "lxml>=6.1.3",
     "pandas>=3.1.0",
+    "pyproj>=3.8.0",
     "requests>=2.34.2",
     "sumolib>=1.28.0",
 ]
+
+[dependency-groups]
+# notebooks and plots in scenario/eBuS/analysis
+analysis = [
+    "ipykernel>=7.4.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "scipy>=1.18.1",
+]
+
+[tool.uv]
+# install the analysis group by default as well, e.g. with "uv sync"
+default-groups = "all"
