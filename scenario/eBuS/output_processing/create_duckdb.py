@@ -3,7 +3,7 @@ import re
 import duckdb
 
 
-SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc","pscbase","wbase")
+SCENARIOS = ("increased", "winter", "reduced", "summer","gridsoc","sbase","wbase")
 
 
 # Maps file extension -> DuckDB table function used to read it
