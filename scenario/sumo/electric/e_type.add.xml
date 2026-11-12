@@ -2,13 +2,13 @@
 <additional>
  <vType id="Ebusco2.2electric12m" vClass="bus" guiShape="bus" length="1.0" color="yellow" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">                                        <!-- Sigma 0.0 means perfect drivers, maybe worth changing, Overrides Option TimeToTeleport from Main Config-->
         <param key="frontSurfaceArea" value="8.29"/>      
-        <param key="airDragCoefficient" value="0.35"/>              
+        <param key="airDragCoefficient" value="0.6"/>              
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="5000"/>              
+        <param key="constantPowerIntake" value="1000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value="0.38"/>           
+        <param key="recuperationEfficiency" value="0.54"/>           
         <param key="personCapacity" value="70"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
@@ -25,13 +25,13 @@
 
     <vType id="SolarisUrbino18electric" vClass="bus" guiShape="bus/flexible" length="1.5" color="blue" sigma="0.5" emissionClass="Energy/unknown" mass="30000" timeToTeleport="-1"> 
         <param key="frontSurfaceArea" value="8.415"/>      
-        <param key="airDragCoefficient" value="0.35"/>              
+        <param key="airDragCoefficient" value="0.6"/>              
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="5000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
+        <param key="constantPowerIntake" value="1000"/>              <!-- When Heating + 37kW / When Cooling + 57 kW -->
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value="0.38"/>
+        <param key="recuperationEfficiency" value="0.54"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
         <param key="device.battery.capacity" value="700000"/>                         
@@ -47,13 +47,13 @@
 
     <vType id="SolarisUrbino12electric" vClass="bus" guiShape="bus" length="1.0" color="green" sigma="0.5" emissionClass="Energy/unknown" mass="12850" timeToTeleport="-1">           
         <param key="frontSurfaceArea" value="8.415"/>      
-        <param key="airDragCoefficient" value="0.35"/>              
+        <param key="airDragCoefficient" value="0.6"/>              
         <param key="rotatingMass" value="100"/>                      
         <param key="radialDragCoefficient" value="0.5"/>            
         <param key="rollDragCoefficient" value="0.01"/>             
-        <param key="constantPowerIntake" value="5000"/>              
+        <param key="constantPowerIntake" value="1000"/>              
         <param key="propulsionEfficiency" value=".9"/>             
-        <param key="recuperationEfficiency" value="0.38"/>
+        <param key="recuperationEfficiency" value="0.54"/>
         <!-- Device Battery -->
         <param key="has.battery.device" value="true"/>              
         <param key="device.battery.capacity" value="300000"/>                        
