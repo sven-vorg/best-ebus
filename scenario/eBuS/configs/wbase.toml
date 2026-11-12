@@ -49,7 +49,7 @@ X83 = ["cicerostrasse", "GN"]
 
 [heuristic_postprocessing]
 #Solution file to be utilized
-solution = "winter"
+solution = "base"
 # Starting State of Charge for Electric Buses in %
 soc_percentage = 80
 # Power that a single bus can be charged at in W
@@ -59,7 +59,7 @@ chargingstation_power = 250000
 # Untested for values <1
 total_power_factor = 4.0
 # Charging Time at Start-Depot
-offset = 360
+#offset = 360
 # Seconds added to a bus's final depot arrival before it despawns.
 #despawn_offset = 3600
 # Whether the depot charging stations are allowed to charge buses.
