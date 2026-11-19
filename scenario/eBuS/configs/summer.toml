@@ -100,6 +100,10 @@ efficiency = 0.95
 constant_power_intake = 1000
 energy_recuperation = 0.54
 
+[simulation]
+days = 5
+# Number of days * 86400 + buffer for delays, about 6600
+time = 438600
 
 [run_simulation_seeds]
 # SUMO configuration in scenario/sumo used for the simulation runs

@@ -11,6 +11,7 @@ SCENARIO_ROOT = EBUS_DIR.parent
 # eBuS
 CONFIG_DIR = EBUS_DIR / "configs"
 FILES_DIR = EBUS_DIR / "files"
+DATABASE_DIR = EBUS_DIR / "database"
 PREPROCESSING_INPUT_DIR = FILES_DIR / "preprocessing_input"
 POSTPROCESSING_INPUT_DIR = FILES_DIR / "postprocessing_input"
 PV_DATA_DIR = EBUS_DIR / "pv_estimation/data"
@@ -47,6 +48,7 @@ STATIONS_OUTPUT_FILE = ELECTRIC_DIR / "e_stations.add.xml"
 ROUTES_OUTPUT_FILE = ELECTRIC_DIR / "e_routes.rou.xml"
 VEHICLES_OUTPUT_FILE = ELECTRIC_DIR / "e_vehicles.rou.xml"
 TYPE_FILE = ELECTRIC_DIR / "e_type.add.xml"
+
 
 
 def solution_file(name: str) -> Path:
