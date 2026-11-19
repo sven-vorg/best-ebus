@@ -18,11 +18,13 @@ import logging
 from lxml import etree
 
 from output_processing.order_output import order_output
+from output_processing.xml2csv import xml2csv
+from output_processing.create_duckdb import import_files_into_db
 from paths import (
     AREA_FILE, BUS_ROUTES_FILE, BUS_STOPS_COORDINATES_FILE, BUS_STOPS_FILE, CONFIG_DIR, DEADHEAD_FILE,
     NETWORK_FILE, PREPROCESSED_ROUTES_FILE, ROUTES_OUTPUT_FILE, STATION_ID_FILE, STATIONS_OUTPUT_FILE,
     SUMO_DIR, SUMO_OUTPUT_DIR, TERMINATION_POINTS_FILE, TRIP_FILE, TRIPS_BEST_FILE, TYPE_FILE,
-    VEHICLES_OUTPUT_FILE, pv_raw_data_file, pv_raw_power_file, pv_scaled_power_file, solution_file,
+    VEHICLES_OUTPUT_FILE, pv_raw_data_file, pv_raw_power_file, pv_scaled_power_file, solution_file, DATABASE_DIR,
 )
 from postprocessing.build_routes import BuildRoutes
 from postprocessing.build_vehicles import BuildVehicles
@@ -61,7 +63,9 @@ class EBusMain:
         self.run_update_types()
         self.run_simulation_seeds()
         run_dir = order_output(SUMO_OUTPUT_DIR)
-        self.rename_scenario_directory(run_dir)
+        new_dir = self.rename_scenario_directory(run_dir)
+        self.run_xml_conversion(new_dir)
+        self.run_create_duckdb(DATABASE_DIR)
 
     def run_heuristic_preprocessing(self):
         depots: tuple[str, ...] = tuple(self.config["heuristic_preprocessing"]["depots"])
@@ -204,7 +208,6 @@ class EBusMain:
         logger.info("Renamed output directory %s -> %s", run_dir.name, new_dir.name)
         return new_dir
 
-
     def run_simulation_seeds(self):
         """
         Execute the SUMO simulation once per seed via libsumo (see simulation.depot_charging_control),
@@ -240,6 +243,18 @@ class EBusMain:
             for seed, time in restored_at.items():
                 logger.info("Seed %s: depot charging restored at %s s", seed, time)
 
+    def run_xml_conversion(self, results_dir: Path):
+        """Convert the XML outputs of the final results directory (all seeds) to CSV."""
+        threads: int = self.config["run_simulation_seeds"].get("threads", 1)
+        xml2csv(results_dir, threads)
+        logger.info("XML to CSV conversion completed for %s", results_dir)
+
+    def run_create_duckdb(self, database_dir: Path) -> Path:
+        """Import the CSV outputs of the results directory into ebus_<date>.duckdb."""
+        db_file = database_dir / f"ebus_{date.today().isoformat()}.duckdb"
+        import_files_into_db(database_dir, db_file)
+        logger.info("DuckDB database created: %s", db_file)
+        return db_file
 
 def resolve_config(name: str) -> Path:
     """Accept a path to a config file, a file name in configs/ or a scenario name, e.g. "winter"."""
