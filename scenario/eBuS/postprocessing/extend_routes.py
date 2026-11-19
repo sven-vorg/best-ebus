@@ -18,20 +18,27 @@ class ExtendRoutes:
         self.route_types = self._build_route_type_map()
         self.route_elems = {r.get("id"): r for r in self.routes_root.iter("route")}
 
-    def main(self, output_path: Path):
+    def main(self, output_path: Path, days: int):
         routes_list = self.get_routes_list()
-        depots = self._match_arrival_and_departure_depot(routes_list)   # 1. by depot
+        info = {r["id"]: r for r in routes_list}
+        depots = self._match_arrival_and_departure_depot(routes_list)
 
         pairs = []
         for depot, lists in depots.items():
             types = {r["type"] for r in lists["arrivals"] + lists["departures"]}
-            for vtype in types:                                          # 2. by type
+            for vtype in types:
                 arrivals = [r for r in lists["arrivals"] if r["type"] == vtype]
                 departures = [r for r in lists["departures"] if r["type"] == vtype]
                 print(f"--- {depot} / {vtype} ---")
-                pairs.extend(self.match_fifo_routes(arrivals, departures))  # 3. FIFO
+                pairs.extend(self.match_fifo_routes(arrivals, departures))
 
-        new_routes = [self.shift_and_copy_routes(pair) for pair in pairs]
+        # arriving id -> id of the route it is followed by
+        partner = {arriving["id"]: leaving["id"] for arriving, leaving in pairs}
+
+        new_routes = [
+            self.build_multiday_route(route_id, partner, info, days)
+            for route_id in partner
+        ]
         for route in new_routes:
             self.clean_route(route)
         self.write_xml(new_routes, output_path)
@@ -94,28 +101,34 @@ class ExtendRoutes:
                 f"{leaving['id']} ({leaving['leaves_depot']})")
         return pairs
 
-    def shift_and_copy_routes(self, pair: tuple) -> etree._Element:
-        arriving, leaving = pair
-        first = copy.deepcopy(self.route_elems[arriving["id"]])
-        second = copy.deepcopy(self.route_elems[leaving["id"]])
+    def build_multiday_route(self, route_id: str, partner: dict, info: dict, days: int) -> etree._Element:
+        route = copy.deepcopy(self.route_elems[route_id])      # day 0, keeps its id
+        edges = [route.get("edges")]
+        current = route_id
 
-        # All stops of the second route happen one day later
-        for stop in second.findall("stop"):
-            until = stop.get("until")
-            if until is not None:
-                stop.set("until", str(float(until) + DAY))
+        for day in range(1, days):
+            if current not in partner:
+                print(f"WARNING: {route_id} has no partner after {current}, "
+                    f"route only covers {day} day(s)")
+                break
+            current = partner[current]
+            offset = day * DAY
 
-        # Depot stop of the first route now lasts until the (shifted) departure of the second
-        first.findall("stop")[-1].set("until", str(leaving["leaves_depot"] + DAY))
+            nxt = copy.deepcopy(self.route_elems[current])
+            for stop in nxt.findall("stop"):
+                until = stop.get("until")
+                if until is not None:
+                    stop.set("until", str(float(until) + offset))
 
-        # Concatenate edges (they are an attribute, not a child element)
-        first.set("edges", f"{first.get('edges')} {second.get('edges')}")
+            # depot stop of the previous day lasts until the shifted departure of the next route
+            route.findall("stop")[-1].set("until", str(info[current]["leaves_depot"] + offset))
 
-        # Append the stops of the second route
-        for stop in second.findall("stop"):
-            first.append(stop)
+            edges.append(nxt.get("edges"))
+            for stop in nxt.findall("stop"):
+                route.append(stop)
 
-        return first
+        route.set("edges", " ".join(edges))
+        return route
 
     def write_xml(self, new_routes: list, output_path: Path):
         root = etree.Element("routes", nsmap=self.routes_root.nsmap)
@@ -178,4 +191,4 @@ if __name__ == "__main__":
     routes_path = (HERE / "../../sumo/electric/e_routes.rou.xml").resolve()
     vehicles_path = (HERE / "../../sumo/electric/e_vehicles.rou.xml").resolve()
     output_path = (HERE / "../../sumo/electric/e_routes_extended.rou.xml").resolve()
-    ExtendRoutes(routes_path, vehicles_path).main(output_path)
+    ExtendRoutes(routes_path, vehicles_path).main(output_path, days=5)
